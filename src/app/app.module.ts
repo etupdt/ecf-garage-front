@@ -18,6 +18,12 @@ import { MatFormFieldModule } from  '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from  '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { GarageComponent } from './pages/garage/garage.component';
+import { ServiceComponent } from './pages/service/service.component';
+import { CarComponent } from './pages/car/car.component';
+import { UserComponent } from './pages/user/user.component';
+import { CommentComponent } from './pages/User/comment/comment.component';
+import { OptionComponent } from './pages/User/option/option.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +33,12 @@ import { MatMenuModule } from '@angular/material/menu';
     OccasionsComponent,
     ContactComponent,
     LoginComponent,
+    GarageComponent,
+    ServiceComponent,
+    CarComponent,
+    UserComponent,
+    CommentComponent,
+    OptionComponent,
   ],
   imports: [
     BrowserModule,

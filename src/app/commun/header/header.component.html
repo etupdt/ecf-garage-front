@@ -6,24 +6,36 @@
     <img src="assets/img/logo.jpg">
     <mat-tab-group [color]="'primary'"
       [(selectedIndex)]="selectedTabIndex"
-      (selectedTabChange)="callRoute(this.items[selectedTabIndex])"
+      (selectedTabChange)="callRoute(selectedTabIndex !== 3 ? this.items[selectedTabIndex] : '')"
       mat-stretch-tabs="false"
       mat-align-tabs="center">
       <mat-tab *ngFor="let item of ['Accueil', 'Occasions', 'Contact']"
         label="{{item}}">
       </mat-tab>
-      <mat-tab label="Administration"  mat-button [matMenuTriggerFor]="menu">
+      <mat-tab label="Administration"  mat-button [matMenuTriggerFor]="menu" *ngIf="roles.indexOf('ROLE_USER') >= 0">
         <ng-template mat-tab-label>
-          <button mat-button [matMenuTriggerFor]="menu" *ngIf="roles.indexOf('ROLE_USER') >= 0">Administration</button>
+          <button mat-button [matMenuTriggerFor]="menu">Administration</button>
         </ng-template>
       </mat-tab>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item *ngIf="roles.indexOf('ROLE_ADMIN')>= 0">Garage</button>
-          <button mat-menu-item *ngIf="roles.indexOf('ROLE_ADMIN')>= 0">Services</button>
-          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Employés</button>
-          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Voitures</button>
-          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Commentaires</button>
-          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Options</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_ADMIN')>= 0"
+            (click)="callRoute('Garage')"
+            >Garage</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_ADMIN')>= 0"
+            (click)="callRoute('Service')"
+            >Services</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0"
+            (click)="callRoute('User')"
+            >Employés</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0"
+            (click)="callRoute('Car')"
+            >Voitures</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0"
+            (click)="callRoute('Comment')"
+            >Commentaires</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0"
+            (click)="callRoute('Option')"
+            >Options</button>
         </mat-menu>
 
     </mat-tab-group>
