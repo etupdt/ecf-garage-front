@@ -1,0 +1,50 @@
+
+<mat-toolbar>
+
+  <mat-toolbar-row class="toolbar-text">
+
+    <img src="assets/img/logo.jpg">
+    <mat-tab-group [color]="'primary'"
+      [(selectedIndex)]="selectedTabIndex"
+      (selectedTabChange)="callRoute(this.items[selectedTabIndex])"
+      mat-stretch-tabs="false"
+      mat-align-tabs="center">
+      <mat-tab *ngFor="let item of items"
+        label="{{item}}">
+      </mat-tab>
+    </mat-tab-group>
+    <span class="title">Automobiles</span>
+    <div class="login-zone">
+      <a mat-button></a>
+      <a mat-button (click)="callRoute('user')" class="email">{{email}}</a>
+      <mat-icon class="login-icon">
+        <ng-container *ngIf="email === ''" [ngTemplateOutlet]="sign"></ng-container>
+        <ng-container *ngIf="email !== ''" [ngTemplateOutlet]="signout"></ng-container>
+      </mat-icon>
+      <mat-icon class="burger-icon">
+        <svg (click)="burgerMenu = (burgerMenu === '') ? 'cache' : ''" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" id="burger">
+          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+      </mat-icon>
+    </div>
+
+  </mat-toolbar-row>
+
+  <mat-toolbar-row *ngFor="let item of items" class="burger-visible">
+    <a (click)="callRoute(item)" mat-button>{{item}}</a>
+  </mat-toolbar-row>
+
+</mat-toolbar>
+
+<ng-template #sign>
+    <svg (click)="callRoute('signin')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
+      <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+    </svg>
+</ng-template>
+<ng-template #signout>
+    <svg (click)="signOut()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+      <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+    </svg>
+</ng-template>

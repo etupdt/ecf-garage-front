@@ -1,0 +1,108 @@
+mat-toolbar {
+  background-color: #dddddd;
+}
+
+.toolbar-content {
+    width: 100%;
+//    background-color: $site-background-color;
+}
+
+.toolbar-text {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.example-spacer {
+    flex: 0 0 auto;
+}
+
+.cache {
+  display: none;
+}
+
+.login-icon {
+  display: inline-block;
+}
+
+.burger-icon {
+  display: none;
+}
+
+.login-zone {
+  display: flex;
+  flex-direction: row;
+}
+
+.login-zone a {
+  width: 0px
+}
+
+button {
+  padding: 0px;
+}
+
+mat-flat-button {
+  padding: 0px;
+}
+
+.burger-visible {
+  display: none;
+}
+
+.title {
+  display: none;
+}
+
+@media screen and (max-width: 1080px) {
+
+  .email {
+    display: none;
+  }
+
+  .toolbar-text {
+    flex: 1 1 auto;
+  }
+
+  .burger-visible {
+    display: none;
+  }
+
+}
+
+@media screen and (max-width: 800px) {
+
+  mat-tab-group {
+    display: none;
+  }
+
+  .login-icon {
+    display: none;
+  }
+
+  .burger-icon {
+    display: inline-block;
+  }
+
+  .toolbar-text {
+    justify-content: space-between;
+  }
+
+  .burger-visible {
+    display: inline-block;
+  }
+
+  .title {
+    display: inline-block;
+  }
+
+}
+
+@media screen and (max-width: 520px) {
+
+  .toolbar-text {
+    justify-content: space-between;
+  }
+
+}
