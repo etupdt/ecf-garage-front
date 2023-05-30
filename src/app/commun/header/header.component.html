@@ -9,14 +9,27 @@
       (selectedTabChange)="callRoute(this.items[selectedTabIndex])"
       mat-stretch-tabs="false"
       mat-align-tabs="center">
-      <mat-tab *ngFor="let item of items"
+      <mat-tab *ngFor="let item of ['Accueil', 'Occasions', 'Contact']"
         label="{{item}}">
       </mat-tab>
+      <mat-tab label="Administration"  mat-button [matMenuTriggerFor]="menu">
+        <ng-template mat-tab-label>
+          <button mat-button [matMenuTriggerFor]="menu" *ngIf="roles.indexOf('ROLE_USER') >= 0">Administration</button>
+        </ng-template>
+      </mat-tab>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_ADMIN')>= 0">Garage</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_ADMIN')>= 0">Services</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Employés</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Voitures</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Commentaires</button>
+          <button mat-menu-item *ngIf="roles.indexOf('ROLE_USER')>= 0">Options</button>
+        </mat-menu>
+
     </mat-tab-group>
     <span class="title">Automobiles</span>
     <div class="login-zone">
-      <a mat-button></a>
-      <a mat-button (click)="callRoute('user')" class="email">{{email}}</a>
+      <a mat-button (click)="callRoute('user')">{{email}}</a>
       <mat-icon class="login-icon">
         <ng-container *ngIf="email === ''" [ngTemplateOutlet]="sign"></ng-container>
         <ng-container *ngIf="email !== ''" [ngTemplateOutlet]="signout"></ng-container>

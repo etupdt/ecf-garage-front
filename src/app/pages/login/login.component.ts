@@ -27,12 +27,12 @@ export class LoginComponent {
   initForm = () => {
     this.signInForm = this.formBuilder.group({
       email: ["vincent.parrot@garage.com", [Validators.required, Validators.email]],
-      password: ["password", [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
+      password: ["achanger", [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
     })
   }
 
   onSubmit = () => {
-    
+
     const email = this.signInForm.get("email")!.value
     const password = this.signInForm.get("password")!.value
 

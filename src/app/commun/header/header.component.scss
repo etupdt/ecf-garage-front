@@ -36,7 +36,7 @@ mat-toolbar {
 }
 
 .login-zone a {
-  width: 0px
+//  width: 0px
 }
 
 button {
@@ -53,6 +53,10 @@ mat-flat-button {
 
 .title {
   display: none;
+}
+
+mat-menu-content button {
+  padding-left: 30px;
 }
 
 @media screen and (max-width: 1080px) {
