@@ -1,8 +1,6 @@
 
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { User } from 'src/app/models/user.model';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
