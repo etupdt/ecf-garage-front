@@ -1,1 +1,103 @@
-<p>service works!</p>
+<div *ngIf="serviceForm" mat-dialog-content [formGroup]="serviceForm" class="content">
+
+  <div class="row">
+
+    <div class="col col-1">
+
+      <h3 mat-dialog-title>Service</h3>
+
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+
+        <mat-form-field appearance="fill">
+          <mat-label>Service</mat-label>
+          <mat-select [(value)]="index" (selectionChange)="onServiceChange()">
+            <mat-option *ngFor="let service of services; let i = index;" value="{{i}}">{{service.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </mat-grid-list>
+
+    </div>
+
+  </div>
+  <div class="row">
+
+    <div class="col-2">
+
+      <h3 mat-dialog-title>Détail du service</h3>
+
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="name" type="name" name="name" placeholder="Nom du service"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+      <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
+
+      <mat-grid-list cols="4" rowHeight="200px" mat-dialog-content class="composant-desc">
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" type="description" name="description" placeholder="description"></textarea>
+          </mat-form-field>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+
+    </div>
+
+    <div class="col-2">
+
+      <h3 mat-dialog-title>Image de présentation</h3>
+
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+        <mat-grid-tile colspan="4">
+          <button type="button" mat-raised-button (click)="fileInput.click()">Image</button>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <img *ngIf="image !== null" src="{{image}}" alt="">
+      <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
+
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <div class="buttons">
+
+      <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-page">
+
+        <mat-grid-tile></mat-grid-tile>
+
+        <mat-grid-tile colspan="2">
+          <button class="field" mat-raised-button [disabled]="serviceForm.invalid" (click)="onSubmit()">Enregistrer</button>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2">
+          <button class="field" mat-raised-button (click)="getServices()">Réinitialiser</button>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2">
+          <button class="field" mat-raised-button (click)="getServices()">Supprimer</button>
+        </mat-grid-tile>
+
+        <mat-grid-tile></mat-grid-tile>
+
+      </mat-grid-list>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div>
+  <p class="text-danger">{{errorMessage}}</p>
+</div>

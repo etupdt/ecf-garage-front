@@ -1,3 +1,7 @@
+import { Car } from "./car.model"
+import { Service } from "./service.model"
+import { Comment } from "./comment.model"
+
 export class Garage {
 
   id: number
@@ -5,7 +9,7 @@ export class Garage {
   phone: string
   address1: string
   address2: string
-  zip: string
+  zip: number
   locality: string
   day1hours: string
   day2hours: string
@@ -15,12 +19,12 @@ export class Garage {
   day6hours: string
   day7hours: string
 //  contacts: Contact[]
-//  comments: Comment[]
-//  cars: Car[]
-//  services: Service[]
+  comments: Comment[]
+  cars: Car[]
+  services: Service[]
 //  users: User[]
 
-  constructor(data: any) {
+   constructor(data: any) {
     this.id = data.id;
     this.raison = data.raison
     this.phone = data.phone
@@ -35,28 +39,69 @@ export class Garage {
     this.day5hours = data.day5hours
     this.day6hours = data.day6hours
     this.day7hours = data.day7hours
+    this.comments = data.comments
+    this.cars = data.cars
+    this.services = data.services
   }
 
   toString() {
-    return "Garage{" +
+
+    let comments: string = "["
+    this.comments.forEach(comment => {
+      comments += ", " + comment.toString()
+    })
+    comments += "]"
+
+    let cars: string = "["
+    this.cars.forEach(car => {
+      cars += ", " + car.toString()
+    })
+    cars += "]"
+
+    let services: string = "["
+    this.services.forEach(service => {
+      services += ", " + service.toString()
+    })
+    services += "]"
+
+    let retour = "Garage{" +
       "id=" + this.id +
-      ", raison=" + this.raison + '\'' +
-      ", phone=" + this.phone + '\'' +
-      ", address1=" + this.address1 + '\'' +
-      ", address2=" + this.address2 + '\'' +
-      ", zip=" + this.zip + '\'' +
-      ", locality=" + this.locality + '\'' +
-      ", day1hours=" + this.day1hours + '\'' +
-      ", day2hours=" + this.day2hours + '\'' +
-      ", day3hours=" + this.day3hours + '\'' +
-      ", day4hours=" + this.day4hours + '\'' +
-      ", day5hours=" + this.day5hours + '\'' +
-      ", day6hours=" + this.day6hours + '\'' +
-      ", day7hours=" + this.day7hours + '\'' +
-      '}';
+      ", raison='" + this.raison + '\'' +
+      ", phone='" + this.phone + '\'' +
+      ", address1='" + this.address1 + '\'' +
+      ", address2='" + this.address2 + '\'' +
+      ", zip=" + this.zip +
+      ", locality='" + this.locality + '\'' +
+      ", day1hours='" + this.day1hours + '\'' +
+      ", day2hours='" + this.day2hours + '\'' +
+      ", day3hours='" + this.day3hours + '\'' +
+      ", day4hours='" + this.day4hours + '\'' +
+      ", day5hours='" + this.day5hours + '\'' +
+      ", day6hours='" + this.day6hours + '\'' +
+      ", day7hours='" + this.day7hours + '\'' +
+      ", comments=" + comments +
+      ", cars=" + cars +
+      ", services=" + services +
+    '}';
   }
 
-  serialize() {
+  public serialize() {
+
+    let commentsSerialized: any[] = []
+    this.comments.forEach(comment => {
+      commentsSerialized.push(comment.serialize())
+    })
+
+    let carsSerialized: any[] = []
+    this.cars.forEach(car => {
+      carsSerialized.push(car.serialize())
+    })
+
+    let servicesSerialized: any[] = []
+    this.services.forEach(service => {
+      servicesSerialized.push(service.serialize())
+    })
+
     return {
       id: this.id,
       raison: this.raison,
@@ -71,11 +116,37 @@ export class Garage {
       day4hours: this.day4hours,
       day5hours: this.day5hours,
       day6hours: this.day6hours,
-      day7hours: this.day7hours
+      day7hours: this.day7hours,
+      comments: commentsSerialized,
+      cars: carsSerialized,
+      services: servicesSerialized
     }
+
   }
 
-  deserialize(data: any) {
+  public deserialize(data: any) {
+
+    let commentsDeSerialized: any[] = []
+    if (data.comments !=null) {
+      data.comments.forEach((comment: Comment) => {
+        commentsDeSerialized.push(comment.deserialize(comment))
+      })
+    }
+
+    let carsDeSerialized: any[] = []
+    if (data.cars !=null) {
+      data.cars.forEach((car: Car) => {
+        carsDeSerialized.push(car.deserialize(car))
+      })
+    }
+
+    let servicesDeSerialized: any[] = []
+    if (data.cars !=null) {
+      data.services.forEach((service: Service) => {
+        servicesDeSerialized.push(service.deserialize(service))
+      })
+    }
+
     this.id = data.id,
     this.raison = data.raison
     this.phone = data.phone
@@ -90,7 +161,11 @@ export class Garage {
     this.day5hours = data.day5hours
     this.day6hours = data.day6hours
     this.day7hours = data.day7hours
+    this.comments = commentsDeSerialized
+    this.cars = carsDeSerialized
+    this.services = servicesDeSerialized
 
+    return this
   }
 
 }

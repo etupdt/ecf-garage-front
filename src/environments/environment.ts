@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   useBackend: 'https://localhost:8000',
+  useBackendImages: 'https://localhost:8000/images',
 };
 
 /*

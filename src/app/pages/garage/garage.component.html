@@ -1,1 +1,153 @@
-<p>garage works!</p>
+<div *ngIf="garageForm" mat-dialog-content [formGroup]="garageForm" class="content">
+
+  <div class="row">
+
+    <div class="col-2">
+
+      <h3 mat-dialog-title>Raison sociale et adresse</h3>
+
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Raison sociale</mat-label>
+            <input matInput formControlName="raison" type="raison" name="raison" placeholder="Raison sociale"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Téléphone</mat-label>
+            <input matInput formControlName="phone" type="phone" name="phone" placeholder="Téléphone"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Adresse</mat-label>
+            <input matInput formControlName="address1" type="address1" name="address1" placeholder="Adresse"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Complément d'adresse</mat-label>
+            <input matInput formControlName="address2" type="address2" name="address2" placeholder="Complément d'adresse"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="1">
+          <mat-form-field appearance="fill">
+            <mat-label>Code postal</mat-label>
+            <input matInput formControlName="zip" type="zip" name="zip" placeholder="Code postal"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="3">
+          <mat-form-field appearance="fill">
+            <mat-label>Ville</mat-label>
+            <input matInput formControlName="locality" type="locality" name="locality" placeholder="Ville"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+
+      <h3 mat-dialog-title>Services disponibles</h3>
+
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Services</mat-label>
+            <mat-select multiple>
+              <mat-option *ngFor="let service of serviceList" [value]="service">{{service}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+
+    </div>
+    <div class="col-2">
+
+      <h3 mat-dialog-title>Horaires d'ouvertures</h3>
+
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Lundi</mat-label>
+            <input matInput formControlName="day1hours" type="day1hours" name="day1hours" placeholder="Lundi"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Mardi</mat-label>
+            <input matInput formControlName="day2hours" type="day2hours" name="day2hours" placeholder="Mardi"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Mercredi</mat-label>
+            <input matInput formControlName="day3hours" type="day3hours" name="day3hours" placeholder="Mercredi"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Jeudi</mat-label>
+            <input matInput formControlName="day4hours" type="day4hours" name="day4hours" placeholder="Jeudi"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Vendredi</mat-label>
+            <input matInput formControlName="day5hours" type="day5hours" name="day5hours" placeholder="Vendredi"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Samedi</mat-label>
+            <input matInput formControlName="day6hours" type="day6hours" name="day6hours" placeholder="Samedi"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4">
+          <mat-form-field appearance="fill">
+            <mat-label>Dimanche</mat-label>
+            <input matInput formControlName="day7hours" type="day7hours" name="day7hours" placeholder="Dimanche"/>
+          </mat-form-field>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+
+    </div>
+    
+  </div>
+
+</div>
+
+<div class="buttons">
+
+  <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+
+    <mat-grid-tile colspan="2">
+      <button class="field" mat-raised-button [disabled]="garageForm.invalid" (click)="onSubmit()">Enregistrer</button>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="2">
+      <button class="field" mat-raised-button (click)="getGarage()">Réinitialiser</button>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+</div>
+
+<div>
+  <p class="text-danger">{{errorMessage}}</p>
+</div>
+

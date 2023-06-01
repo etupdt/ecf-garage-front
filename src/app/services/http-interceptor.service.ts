@@ -1,6 +1,7 @@
 import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,14 +9,13 @@ import { Observable } from 'rxjs/internal/Observable';
 export class HttpInterceptorService {
 
   constructor(
-    @Inject('optionsAuthent') private options: {useBackend: boolean},
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     console.log('interceptor http')
 
-    if (request.method === 'POST' && (request.url === `${this.options?.useBackend}/api/login` || request.url === `${this.options?.useBackend}/api/subscribe`)) {
+    if (request.method === 'POST' && (request.url === `${environment.useBackend}/api/login`)) {
 
       console.log('   interceptor http : tranfert sans ano')
       return next.handle(request)
@@ -24,7 +24,7 @@ export class HttpInterceptorService {
 
       console.log('   interceptor http : tranfert avec token')
       const token = localStorage.getItem('tokenAuth');
-      
+
       if (token) {
         console.log('       interceptor http : token trouvé')
         request = request.clone({

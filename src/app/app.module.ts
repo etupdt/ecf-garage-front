@@ -11,7 +11,7 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from  '@angular/material/form-field';
@@ -22,8 +22,12 @@ import { GarageComponent } from './pages/garage/garage.component';
 import { ServiceComponent } from './pages/service/service.component';
 import { CarComponent } from './pages/car/car.component';
 import { UserComponent } from './pages/user/user.component';
-import { CommentComponent } from './pages/User/comment/comment.component';
-import { OptionComponent } from './pages/User/option/option.component';
+import { CommentComponent } from './pages/comment/comment.component';
+import { OptionComponent } from './pages/option/option.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSelectModule } from '@angular/material/select';
+import { HttpInterceptorService } from './services/http-interceptor.service';
+import { ErrorInterceptorService } from './services/error-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -53,9 +57,14 @@ import { OptionComponent } from './pages/User/option/option.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatGridListModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

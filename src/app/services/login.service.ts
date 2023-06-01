@@ -37,7 +37,8 @@ export class LoginService {
         this.roles.next(res.data.roles)
     },
       error: (error) => {
-        this.errorMessage = error.error.message
+        console.log(error)
+//        this.errorMessage = error.error
       },
       complete () {
         console.log('header connection complete')
