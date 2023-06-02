@@ -6,11 +6,11 @@
     <img src="assets/img/logo.jpg">
     <mat-tab-group [color]="'primary'"
       [(selectedIndex)]="selectedTabIndex"
-      (selectedTabChange)="callRoute(selectedTabIndex !== 3 ? this.items[selectedTabIndex] : '')"
+      (selectedTabChange)="callRoute(selectedTabIndex !== 3 ? this.onglets[selectedTabIndex] : '')"
       mat-stretch-tabs="false"
       mat-align-tabs="center">
-      <mat-tab *ngFor="let item of ['Accueil', 'Occasions', 'Contact']"
-        label="{{item}}">
+      <mat-tab *ngFor="let onglet of onglets"
+        label="{{onglet}}">
       </mat-tab>
       <mat-tab label="Administration"  mat-button [matMenuTriggerFor]="menu" *ngIf="roles.indexOf('ROLE_USER') >= 0">
         <ng-template mat-tab-label>
@@ -55,8 +55,8 @@
 
   </mat-toolbar-row>
 
-  <mat-toolbar-row *ngFor="let item of items" class="burger-visible">
-    <a (click)="callRoute(item)" mat-button>{{item}}</a>
+  <mat-toolbar-row *ngFor="let onglet of onglets" class="burger-visible">
+    <a (click)="callRoute(onglet)" mat-button>{{onglet}}</a>
   </mat-toolbar-row>
 
 </mat-toolbar>

@@ -28,6 +28,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSelectModule } from '@angular/material/select';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { ErrorInterceptorService } from './services/error-interceptor.service';
+import { MessageDialogComponent } from './dialogs/message-dialog/message-dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import { ErrorInterceptorService } from './services/error-interceptor.service';
     UserComponent,
     CommentComponent,
     OptionComponent,
+    MessageDialogComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,

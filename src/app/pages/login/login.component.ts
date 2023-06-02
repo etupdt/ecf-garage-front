@@ -38,10 +38,25 @@ export class LoginComponent {
 
     this.loginService.connection(email, password)
 
-  }
+    this.loginService.connection(email, password).subscribe({
+      next: (res: any) => {
 
-  navigateTo(target: string) {
-    this.router.navigate([target])
+        localStorage.setItem('tokenAuth', res.token)
+        this.loginService.email.next(email)
+        this.loginService.roles.next(res.data.roles)
+
+        this.router.navigate([this.loginService.onglets[this.loginService.selectedTabIndex]])
+
+      },
+      error: (error) => {
+        console.log(error)
+//        this.errorMessage = error.error
+      },
+      complete () {
+        console.log('header connection complete')
+      }
+    })
+
   }
 
 }

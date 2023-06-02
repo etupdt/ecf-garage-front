@@ -18,10 +18,24 @@ export class ServiceComponent implements OnInit {
   errorMessage!: string
 
   services: Service[] = []
-  index: number = 0
+  serviceSelected: string = ""
+  serviceActive!: Service
 
   image!: string
   frontImage!: FormData
+
+  message = ""
+  selectStyle = {'visibility': 'visible'}
+
+  buttons!: {
+    label: string
+    invalid: Function,
+    click: Function
+  }[]
+
+  button0 = "Créer"
+  button1 = "Enregistrer"
+  button2 = "Supprimer"
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,13 +74,13 @@ export class ServiceComponent implements OnInit {
 
   }
 
-  onSubmit = () => {
+  create = () => {
 
-    this.frontImage.append('id', `${this.services[this.index].id}`)
+    this.frontImage.append('id', `${this.serviceActive.id}`)
     this.frontImage.append('name', this.serviceForm.get("name")!.value)
     this.frontImage.append('description', this.serviceForm.get("description")!.value)
 
-    if (this.services[this.index].id === 0) {
+    if (this.serviceActive.id === 0) {
       this.save(this.frontImage)
     } else {
       this.update(this.frontImage)
@@ -78,9 +92,12 @@ export class ServiceComponent implements OnInit {
 
     this.serviceService.postService(service).subscribe({
       next: (res: any) => {
-        this.services.push(new Service().deserialize(res[0] as Service))
+        this.serviceActive = new Service().deserialize(res[0] as Service)
+        this.services.push(this.serviceActive)
         this.reInit()
-        this.index = this.services.length - 1
+        this.serviceSelected = this.serviceActive.name
+        this.onServiceChange()
+        this.displayMessage(0)
       },
       error: (error: { error: { message: any; }; }) => {
         this.errorMessage = error.error.message
@@ -96,7 +113,11 @@ export class ServiceComponent implements OnInit {
 
     this.serviceService.putService(service).subscribe({
       next: (res: any) => {
-        this.services[this.index] = new Service().deserialize(res[0] as Service)
+        this.serviceActive = new Service().deserialize(res[0] as Service)
+        this.serviceSelected = this.serviceActive.name
+        this.services[this.services.findIndex(service => service.name === this.serviceSelected)]
+          = this.serviceActive
+        this.onServiceChange()
       },
       error: (error: { error: { message: any; }; }) => {
         this.errorMessage = error.error.message
@@ -108,23 +129,48 @@ export class ServiceComponent implements OnInit {
 
   }
 
-  getServices = () => {
+  delete = () => {
 
-//    this.services.push(new Service())
-    this.reInit()
-    this.index = 0
+    let index = this.services.findIndex(service => service.name === this.serviceSelected)
 
-    this.serviceService.getServices().subscribe({
+    this.serviceService.deleteService(this.serviceActive.id).subscribe({
       next: (res: any) => {
-        console.log(res)
-        res.forEach((service: Service) => {
-          this.services.push(service)
-        })
-        this.initForm(this.services[this.index])
+
+        this.services = this.services.filter(service => service.name !== this.serviceSelected)
+        index = index < this.services.length - 1 ? index : index - 1
+        this.serviceSelected = this.services[index].name
+        this.onServiceChange()
+        this.displayMessage(0)
+
       },
       error: (error: { error: { message: any; }; }) => {
         this.errorMessage = error.error.message
-        this.initForm(this.services[this.index])
+      },
+      complete () {
+        console.log('Sauvegarde put service complete')
+      }
+    })
+
+  }
+
+
+  getServices = () => {
+
+//    this.services.push(new Service())
+
+    this.reInit()
+
+    this.serviceService.getServices().subscribe({
+      next: (res: any) => {
+        res.forEach((service: Service) => {
+          this.services.push(service)
+        })
+        this.displayMessage(0)
+        this.onServiceChange()
+      },
+      error: (error: { error: { message: any; }; }) => {
+        console.log(error)
+        this.errorMessage = error.error.message
       },
       complete () {
         console.log('getServices complete')
@@ -134,7 +180,10 @@ export class ServiceComponent implements OnInit {
   }
 
   onServiceChange = () => {
-    this.initForm(this.services[this.index])
+    this.serviceActive = this.services.find(service => service.name === this.serviceSelected)!
+    console.log('toto', this.serviceSelected, this.serviceActive)
+    this.initForm(this.serviceActive)
+    this.displayMessage(0)
   }
 
   onFileSelected = () => {
@@ -142,8 +191,6 @@ export class ServiceComponent implements OnInit {
     const inputNode: any = document.querySelector('#file');
 
     if (inputNode.files[0]) {
-
-      this.frontImage = new FormData();
 
       this.frontImage.append("garage_image", inputNode.files[0]);
 
@@ -156,6 +203,86 @@ export class ServiceComponent implements OnInit {
       };
 
     }
+
+  }
+
+  displayMessage = (phase: number) => {
+
+    if (phase === 0) {
+      this.frontImage = new FormData();
+      this.selectStyle = {'visibility': 'visible'}
+      if (this.serviceForm)
+        this.serviceForm.disable()
+      this.buttons = [
+        {
+          label: "Créer",
+          invalid: ()  => {return false},
+          click: () => {
+            this.serviceSelected = ""
+            this.onServiceChange()
+            this.displayMessage(1)
+          }
+        }
+      ]
+
+      if (this.services.length === 1) {
+
+        this.serviceSelected = this.services[0].name
+        this.message = "Vous pouvez créer un nouveau service avec le bouton 'Créer'"
+        this.selectStyle = {'visibility': 'hidden'}
+
+      } else {
+
+        if (this.serviceSelected !== "") {
+          this.buttons.push(
+            {
+              label: "Modifier",
+              invalid: ()  => {return false},
+              click: () => {
+                this.serviceForm.enable()
+                this.displayMessage(1)
+              }
+            }
+          )
+          this.buttons.push(
+            {
+              label: "Supprimer",
+              invalid: ()  => {return false},
+              click: () => {
+                this.delete()
+              }
+            }
+          )
+        }
+
+        this.message = "Sélectionnez un service existant ou créez en un avec le bouton 'Créer'"
+
+      }
+
+    }
+
+    if (phase === 1) {
+      this.selectStyle = {'visibility': 'hidden'}
+      this.serviceForm.enable()
+      this.buttons = [
+        {
+          label: "Enregistrer",
+          invalid: () => {return this.serviceForm.invalid || this.image === `${environment.useBackendImages}/0_default.jpg`},
+          click: () => {
+            this.create()
+          }
+        },
+        {
+          label: "Abandonner",
+          invalid:  ()  => {return false},
+          click: () => {
+            this.onServiceChange()
+          }
+        },
+      ]
+    }
+
+
 
   }
 

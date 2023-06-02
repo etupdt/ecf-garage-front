@@ -2,16 +2,16 @@
 
   <div class="row">
 
-    <div class="col col-1">
+    <div class="col col-1" [ngStyle]="selectStyle">
 
-      <h3 mat-dialog-title>Service</h3>
+      <h3 mat-dialog-title>{{message}}</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content>
 
         <mat-form-field appearance="fill">
           <mat-label>Service</mat-label>
-          <mat-select [(value)]="index" (selectionChange)="onServiceChange()">
-            <mat-option *ngFor="let service of services; let i = index;" value="{{i}}">{{service.name}}</mat-option>
+          <mat-select [(value)]="serviceSelected" (selectionChange)="onServiceChange()">
+            <mat-option *ngFor="let service of services;" value="{{service.name}}">{{service.name}}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -29,7 +29,7 @@
       <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
 
         <mat-grid-tile colspan="4">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" enabled="'false'">
             <mat-label>Nom</mat-label>
             <input matInput formControlName="name" type="name" name="name" placeholder="Nom du service"/>
           </mat-form-field>
@@ -70,29 +70,15 @@
 
   <div class="row">
 
-    <div class="buttons">
+      <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-buttons">
 
-      <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-page">
-
-        <mat-grid-tile></mat-grid-tile>
-
-        <mat-grid-tile colspan="2">
-          <button class="field" mat-raised-button [disabled]="serviceForm.invalid" (click)="onSubmit()">Enregistrer</button>
+        <mat-grid-tile colspan="{{4 - buttons.length}}"></mat-grid-tile>
+        <mat-grid-tile colspan="2" *ngFor="let button of buttons">
+          <button class="field" mat-raised-button [disabled]="button.invalid()" (click)="button.click()">{{button.label}}</button>
         </mat-grid-tile>
-
-        <mat-grid-tile colspan="2">
-          <button class="field" mat-raised-button (click)="getServices()">Réinitialiser</button>
-        </mat-grid-tile>
-
-        <mat-grid-tile colspan="2">
-          <button class="field" mat-raised-button (click)="getServices()">Supprimer</button>
-        </mat-grid-tile>
-
         <mat-grid-tile></mat-grid-tile>
 
       </mat-grid-list>
-
-    </div>
 
   </div>
 

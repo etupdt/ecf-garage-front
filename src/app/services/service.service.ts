@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Service } from '../models/service.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,14 @@ export class ServiceService {
     return this.http.post(
       environment.useBackend + `/api/service/0`,
       service
+    )
+
+  }
+
+  deleteService(id: number): Observable<any>{
+
+    return this.http.delete(
+      environment.useBackend + `/api/service/${id}`
     )
 
   }
