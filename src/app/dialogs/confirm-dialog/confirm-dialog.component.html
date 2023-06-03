@@ -1,8 +1,8 @@
 
-<div class="dialog">
-  <h1 mat-dialog-title>Erreur</h1>
+<div class="confirm-dialog">
+  <h1 mat-dialog-title>{{data.type}}</h1>
   <div mat-dialog-content>{{data.message1}}</div>
-  <div class="buttons">
+  <div class="confirm-buttons">
     <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
       <mat-button-toggle value="bold" [mat-dialog-close]="'Enregistrer'">Enregistrer</mat-button-toggle>
       <mat-button-toggle value="italic" [mat-dialog-close]="'NePasEnregistrer'">Ne pas Enregistrer</mat-button-toggle>

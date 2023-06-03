@@ -80,11 +80,11 @@ export class ServiceComponent implements OnInit {
 
   }
 
-  create = () => {
+  record = () => {
 
     if (this.isUpdated) {
 
-      this.dialog.open(ConfirmDialogComponent, {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: {
           type: 'Confirmation',
           message1: `Voulez vous sauvegarder le service ?`,
@@ -93,7 +93,29 @@ export class ServiceComponent implements OnInit {
         }
       })
 
+      dialogRef.afterClosed().subscribe(result => {
+
+        switch (result) {
+          case 'Enregistrer' : {
+            this.create()
+            break
+          }
+          case 'Annuler' : {
+            break
+          }
+          default : {
+            this.isUpdated = false
+//            this.onServiceChange()
+            break
+          }
+        }
+      });
+
     }
+  }
+
+  create = () => {
+
 
     this.frontImage.append('id', `${this.serviceActive.id}`)
     this.frontImage.append('name', this.serviceForm.get("name")!.value)
@@ -111,6 +133,7 @@ export class ServiceComponent implements OnInit {
 
     this.serviceService.postService(service).subscribe({
       next: (res: any) => {
+        this.onServiceChange()
         this.serviceActive = new Service().deserialize(res[0] as Service)
         this.services.push(this.serviceActive)
         this.reInit()
@@ -127,9 +150,6 @@ export class ServiceComponent implements OnInit {
             delai: 0
           }
         })
-      },
-      complete () {
-        console.log('Sauvegarde post service complete')
       }
     })
 
@@ -139,8 +159,8 @@ export class ServiceComponent implements OnInit {
 
     this.serviceService.putService(service).subscribe({
       next: (res: any) => {
+        this.onServiceChange()
         this.serviceActive = new Service().deserialize(res[0] as Service)
-        console.log(this.serviceActive.name, this.serviceActive)
         this.services[this.services.findIndex(service => service.name === this.serviceSelected)]
           = this.serviceActive
         this.serviceSelected = this.serviceActive.name
@@ -155,9 +175,6 @@ export class ServiceComponent implements OnInit {
             delai: 0
           }
         })
-      },
-      complete () {
-        console.log('Sauvegarde put service complete')
       }
     })
 
@@ -253,6 +270,10 @@ export class ServiceComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+//    this.record()
+  }
+
   imageChange = () => {
 
     let img = new Image()
@@ -344,7 +365,7 @@ export class ServiceComponent implements OnInit {
           label: "Abandonner",
           invalid:  ()  => {return false},
           click: () => {
-            this.onServiceChange()
+//            this.record()
           }
         },
       ]

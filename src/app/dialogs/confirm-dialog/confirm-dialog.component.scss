@@ -1,12 +1,13 @@
 
-.dialog {
+.confirm-dialog {
+
   margin: 30px;
 
   div {
     margin-top: 20px;
   }
 
-  .buttons {
+  .confirm-buttons {
 
     margin-left: 60px;
 
@@ -15,10 +16,6 @@
       border-radius: 5px;
     }
 
-  }
-
-  .mat-dialog-actions {
-    background-color: red;
   }
 
 }
