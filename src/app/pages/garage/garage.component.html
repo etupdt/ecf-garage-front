@@ -59,8 +59,8 @@
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill">
             <mat-label>Services</mat-label>
-            <mat-select multiple>
-              <mat-option *ngFor="let service of serviceList" [value]="service">{{service}}</mat-option>
+            <mat-select formControlName="services" multiple [(ngModel)]="garage.services" [compareWith]="compareServices">
+              <mat-option *ngFor="let service of serviceList" [value]="service">{{service.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
@@ -126,17 +126,32 @@
       </mat-grid-list>
 
     </div>
-    
+
+  </div>
+
+  <div class="row">
+
+    <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-buttons">
+
+      <mat-grid-tile colspan="{{4 - buttons.length}}"></mat-grid-tile>
+      <mat-grid-tile colspan="2" *ngFor="let button of buttons">
+        <button class="field" mat-raised-button [disabled]="button.invalid()" (click)="button.click()">{{button.label}}</button>
+      </mat-grid-tile>
+      <mat-grid-tile></mat-grid-tile>
+
+    </mat-grid-list>
+
   </div>
 
 </div>
+<!--
 
-<div class="buttons">
+  <div class="buttons">
 
-  <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+    <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
 
-    <mat-grid-tile colspan="2">
-      <button class="field" mat-raised-button [disabled]="garageForm.invalid" (click)="onSubmit()">Enregistrer</button>
+      <mat-grid-tile colspan="2">
+        <button class="field" mat-raised-button [disabled]="garageForm.invalid" (click)="onSubmit()">Enregistrer</button>
     </mat-grid-tile>
 
     <mat-grid-tile colspan="2">
@@ -146,6 +161,7 @@
   </mat-grid-list>
 
 </div>
+-->
 
 <div>
   <p class="text-danger">{{errorMessage}}</p>

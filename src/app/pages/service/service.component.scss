@@ -13,22 +13,16 @@ mat-form-field {
 }
 
 .row {
-  width: 100%;
+  width: 80%;
   margin: auto;
   display: flex;
   flex-direction: row;
   justify-content: center;
 
-  mat-grid-list {
+}
 
-    div {
-      display: flex;
-      width: 100%;
-      flex-direction: row;
-    }
-
-  }
-
+mat-grid-list, img {
+  width: 100%;
 }
 
 button {
@@ -37,20 +31,19 @@ button {
   border: 1px solid black;
 }
 
-input {
-}
-
 h3 {
   margin-top: 31px;
 }
 
+.separate {
+  width: 4%;
+}
+
 .col-2 {
-  padding: 20px;
-  width: 50%;
+  width: 48%;
 }
 
 .col-1 {
-  padding: 20px;
   width: 100%;
 }
 
@@ -74,16 +67,25 @@ textarea {
   color: #d9777f;
 }*/
 
-img {
+.image-div {
   width: 100%;
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.image-h {
+  width: 100%;
+  height: auto;
+}
+
+.image-v {
+  width: auto;
+  height: 100%;
 }
 
 .composant-desc {
   margin-bottom: 30px;
-}
-
-.composant-buttons {
-  width: 100%;
 }
 
 @media screen and (max-width: 1080px) {

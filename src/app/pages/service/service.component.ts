@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
+import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { IService } from 'src/app/interface/service.interface';
-import { Image } from "src/app/models/image.model";
 import { Service } from 'src/app/models/service.model';
 import { ImageService } from 'src/app/services/image.service';
 import { ServiceService } from 'src/app/services/service.service';
@@ -15,6 +17,7 @@ import { environment } from 'src/environments/environment';
 export class ServiceComponent implements OnInit {
 
   serviceForm!: FormGroup
+  isUpdated = false
   errorMessage!: string
 
   services: Service[] = []
@@ -22,7 +25,9 @@ export class ServiceComponent implements OnInit {
   serviceActive!: Service
 
   image!: string
+  lastImage!: string
   frontImage!: FormData
+  imageClass = "image-h"
 
   message = ""
   selectStyle = {'visibility': 'visible'}
@@ -33,14 +38,12 @@ export class ServiceComponent implements OnInit {
     click: Function
   }[]
 
-  button0 = "Créer"
-  button1 = "Enregistrer"
-  button2 = "Supprimer"
-
   constructor(
     private formBuilder: FormBuilder,
     private imageService: ImageService,
     private serviceService: ServiceService,
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {
   }
   ngOnInit(): void {
@@ -57,6 +60,13 @@ export class ServiceComponent implements OnInit {
     })
 
     this.image = environment.useBackendImages + '/' + (service.image ? service.image.id + '_' + service.image.filename : '0_default.jpg')
+    this.lastImage = this.image
+
+    this.serviceForm.valueChanges.subscribe(change => {
+      this.isUpdated = this.checkChanges()
+    })
+
+    this.isUpdated = false
 
   }
 
@@ -66,15 +76,24 @@ export class ServiceComponent implements OnInit {
       'id': 0,
       'name': '',
       'description': '',
-      'image': new Image({
-        'id': 0,
-        'filename': 'default.jpg'
-      })
     } as Service)
 
   }
 
   create = () => {
+
+    if (this.isUpdated) {
+
+      this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          type: 'Confirmation',
+          message1: `Voulez vous sauvegarder le service ?`,
+          message2: "",
+          delai: 0
+        }
+      })
+
+    }
 
     this.frontImage.append('id', `${this.serviceActive.id}`)
     this.frontImage.append('name', this.serviceForm.get("name")!.value)
@@ -100,7 +119,14 @@ export class ServiceComponent implements OnInit {
         this.displayMessage(0)
       },
       error: (error: { error: { message: any; }; }) => {
-        this.errorMessage = error.error.message
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la création du service`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
       },
       complete () {
         console.log('Sauvegarde post service complete')
@@ -114,13 +140,21 @@ export class ServiceComponent implements OnInit {
     this.serviceService.putService(service).subscribe({
       next: (res: any) => {
         this.serviceActive = new Service().deserialize(res[0] as Service)
-        this.serviceSelected = this.serviceActive.name
+        console.log(this.serviceActive.name, this.serviceActive)
         this.services[this.services.findIndex(service => service.name === this.serviceSelected)]
           = this.serviceActive
+        this.serviceSelected = this.serviceActive.name
         this.onServiceChange()
       },
       error: (error: { error: { message: any; }; }) => {
-        this.errorMessage = error.error.message
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la modification du service`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
       },
       complete () {
         console.log('Sauvegarde put service complete')
@@ -144,7 +178,14 @@ export class ServiceComponent implements OnInit {
 
       },
       error: (error: { error: { message: any; }; }) => {
-        this.errorMessage = error.error.message
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la suppression du service`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
       },
       complete () {
         console.log('Sauvegarde put service complete')
@@ -169,8 +210,14 @@ export class ServiceComponent implements OnInit {
         this.onServiceChange()
       },
       error: (error: { error: { message: any; }; }) => {
-        console.log(error)
-        this.errorMessage = error.error.message
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la récupération des services`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
       },
       complete () {
         console.log('getServices complete')
@@ -181,8 +228,8 @@ export class ServiceComponent implements OnInit {
 
   onServiceChange = () => {
     this.serviceActive = this.services.find(service => service.name === this.serviceSelected)!
-    console.log('toto', this.serviceSelected, this.serviceActive)
     this.initForm(this.serviceActive)
+    this.imageChange()
     this.displayMessage(0)
   }
 
@@ -199,10 +246,30 @@ export class ServiceComponent implements OnInit {
 
       reader.onload = () => {
         this.image = reader.result as string
-        console.log(reader.result)
+        this.imageChange()
       };
 
     }
+
+  }
+
+  imageChange = () => {
+
+    let img = new Image()
+    img.src = this.image
+
+    this.isUpdated = true
+
+    img.onload = () => {
+      this.imageClass = img.width > img.height ? "image-h" : "image-v"
+    };
+
+  }
+
+  checkChanges = () => {
+    return this.image !== this.lastImage ||
+      this.serviceForm.get("name")!.value !== this.serviceActive.name ||
+      this.serviceForm.get("description")!.value !== this.serviceActive.description
 
   }
 
@@ -241,6 +308,7 @@ export class ServiceComponent implements OnInit {
               click: () => {
                 this.serviceForm.enable()
                 this.displayMessage(1)
+                this.isUpdated = false
               }
             }
           )
@@ -267,7 +335,7 @@ export class ServiceComponent implements OnInit {
       this.buttons = [
         {
           label: "Enregistrer",
-          invalid: () => {return this.serviceForm.invalid || this.image === `${environment.useBackendImages}/0_default.jpg`},
+          invalid: () => {return !this.isUpdated || this.serviceForm.invalid || this.image === `${environment.useBackendImages}/0_default.jpg`},
           click: () => {
             this.create()
           }
@@ -281,8 +349,6 @@ export class ServiceComponent implements OnInit {
         },
       ]
     }
-
-
 
   }
 

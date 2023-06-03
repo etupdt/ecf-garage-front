@@ -45,13 +45,14 @@ export class HeaderComponent implements OnInit {
 
       localStorage.removeItem('tokenAuth')
 
-      this.loginService.email.next("")
-      this.loginService.roles.next("")
+    }
 
-      if (this.selectedTabIndex > 2)
-        this.selectedTabIndex = 0
+    this.loginService.email.next("")
+    this.loginService.roles.next("")
 
-  }
+    if (this.selectedTabIndex > 2)
+      this.selectedTabIndex = 0
+
 
   }
 
@@ -61,7 +62,6 @@ export class HeaderComponent implements OnInit {
     this.loginService.selectedTabIndex = this.selectedTabIndex
 
     this.burgerMenu = 'cache'
-    this.loginService.routeSelected = target!
     this.router.navigate([target])
 
   }

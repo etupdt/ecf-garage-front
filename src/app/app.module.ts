@@ -9,7 +9,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { OccasionsComponent } from './pages/occasions/occasions.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
@@ -30,6 +30,8 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
 import { ErrorInterceptorService } from './services/error-interceptor.service';
 import { MessageDialogComponent } from './dialogs/message-dialog/message-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
     MatButtonModule,
     MatMenuModule,
     MatGridListModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule,
+    MatButtonToggleModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

@@ -2,7 +2,7 @@
 
   <div class="row">
 
-    <div class="col col-1" [ngStyle]="selectStyle">
+    <div class="col-1" [ngStyle]="selectStyle">
 
       <h3 mat-dialog-title>{{message}}</h3>
 
@@ -38,7 +38,7 @@
       </mat-grid-list>
       <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
 
-      <mat-grid-list cols="4" rowHeight="200px" mat-dialog-content class="composant-desc">
+      <mat-grid-list cols="4" rowHeight="400px" mat-dialog-content class="composant-desc">
 
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill">
@@ -50,18 +50,20 @@
       </mat-grid-list>
 
     </div>
-
+    <div class="separate"></div>
     <div class="col-2">
 
       <h3 mat-dialog-title>Image de présentation</h3>
 
       <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
         <mat-grid-tile colspan="4">
-          <button type="button" mat-raised-button (click)="fileInput.click()">Image</button>
+          <button [disabled]="serviceForm.disabled" type="button" mat-raised-button (click)="fileInput.click()">Image</button>
         </mat-grid-tile>
       </mat-grid-list>
 
-      <img *ngIf="image !== null" src="{{image}}" alt="">
+      <div class="image-div">
+        <img *ngIf="image !== null" src="{{image}}" alt="" [ngClass]="imageClass" >
+      </div>
       <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
 
     </div>

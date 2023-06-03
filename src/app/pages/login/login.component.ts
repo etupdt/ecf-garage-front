@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -17,6 +19,7 @@ export class LoginComponent {
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     private router: Router,
+    public dialog: MatDialog
   ) {
   }
 
@@ -44,16 +47,21 @@ export class LoginComponent {
         localStorage.setItem('tokenAuth', res.token)
         this.loginService.email.next(email)
         this.loginService.roles.next(res.data.roles)
-
-        this.router.navigate([this.loginService.onglets[this.loginService.selectedTabIndex]])
+console.log(this.loginService.selectedTabIndex)
+        this.router.navigate([this.loginService.onglets[
+          this.loginService.selectedTabIndex < 3 ? this.loginService.selectedTabIndex : 0
+        ]])
 
       },
       error: (error) => {
-        console.log(error)
-//        this.errorMessage = error.error
-      },
-      complete () {
-        console.log('header connection complete')
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur de connexion pour l'email : ${email}`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
       }
     })
 

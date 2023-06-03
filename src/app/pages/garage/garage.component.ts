@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, debounceTime, distinctUntilChanged, map, tap } from 'rxjs';
+import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { Garage } from 'src/app/models/garage.model';
+import { Service } from 'src/app/models/service.model';
 import { GarageService } from 'src/app/services/garage.service';
-import { LoginService } from 'src/app/services/login.service';
+import { ServiceService } from 'src/app/services/service.service';
 
 @Component({
   selector: 'app-garage',
@@ -17,16 +20,27 @@ export class GarageComponent implements OnInit {
 
   garage!: Garage
 
-  serviceList: string[] = ['Carrosserie', 'Mécaniqe', 'Révision']
+  serviceList: Service[] = []
+
+  buttons!: {
+    label: string
+    invalid: Function,
+    click: Function
+  }[]
+
+  message = ""
+
+  form$!: Observable<boolean>;
 
   constructor(
     private formBuilder: FormBuilder,
     private garageService: GarageService,
-  ) {
+    private serviceService: ServiceService,
+    public dialog: MatDialog
+    ) {
   }
-  ngOnInit(): void {
 
-//    this.garageService.listenGarage.subscribe((garage) => {this.garage = garage as Garage})
+  ngOnInit(): void {
 
     this.reInit()
     this.getGarage()
@@ -34,7 +48,7 @@ export class GarageComponent implements OnInit {
   }
 
   initForm = () => {
-
+console.log('garage', this.garage)
     this.garageForm = this.formBuilder.group({
       raison: ["Garage Vincent Parrot", [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
       phone: [this.garage.phone, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
@@ -42,6 +56,7 @@ export class GarageComponent implements OnInit {
       address2: [this.garage.address2, [Validators.nullValidator, Validators.pattern(/[0-9a-zA-Z \-]{6,}/)]],
       zip: [this.garage.zip, [Validators.required, Validators.pattern(/[0-9]{5,}/)]],
       locality: [this.garage.locality, [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
+      services: [this.garage.services],
       day1hours: [this.garage.day1hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
       day2hours: [this.garage.day2hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
       day3hours: [this.garage.day3hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
@@ -50,6 +65,8 @@ export class GarageComponent implements OnInit {
       day6hours: [this.garage.day6hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
       day7hours: [this.garage.day7hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
     })
+
+    this.garageForm.valueChanges.subscribe(change => {console.log(this.garageForm.get("services")?.value)})
 
   }
 
@@ -71,11 +88,12 @@ export class GarageComponent implements OnInit {
       "day7hours" : "Fermé",
     })
 
-    this.initForm()
+    this.displayMessage(0)
+    this.onGarageChange()
 
   }
 
-  onSubmit = () => {
+  create = () => {
 
     const garage = this.garage.deserialize({
 
@@ -96,17 +114,23 @@ export class GarageComponent implements OnInit {
 
     })
 
+    this.garageForm.get("services")!.value.forEach((service: Service) => garage.services.push(service))
+
     if (garage.id === 0) {
 
       this.garageService.postGarage(garage).subscribe({
         next: (res: any) => {
-          console.log(res)
+          this.displayMessage(0)
         },
         error: (error: { error: { message: any; }; }) => {
-          this.errorMessage = error.error.message
-        },
-        complete () {
-          console.log('Sauvegarde post garage complete')
+          this.dialog.open(MessageDialogComponent, {
+            data: {
+              type: 'Erreur',
+              message1: `Erreur lors de la création du garage`,
+              message2: error.error.message,
+              delai: 0
+            }
+          })
         }
       })
 
@@ -114,17 +138,45 @@ export class GarageComponent implements OnInit {
 
       this.garageService.putGarage(garage).subscribe({
         next: (res: any) => {
-          console.log(res)
+          this.displayMessage(0)
         },
         error: (error: { error: { message: any; }; }) => {
-          this.errorMessage = error.error.message
+          this.dialog.open(MessageDialogComponent, {
+            data: {
+              type: 'Erreur',
+              message1: `Erreur lors de la modification du garage`,
+              message2: error.error.message,
+              delai: 0
+            }
+          })
         },
-        complete () {
-          console.log('Sauvegarde put garage complete')
-        }
       })
 
     }
+
+  }
+
+  getServices = () => {
+
+    this.serviceService.getServices().subscribe({
+      next: (res: any) => {
+        res.forEach((service: Service) => {
+          const serviceDeserialized = new Service().deserialize(service as Service)
+          this.serviceList.push(serviceDeserialized)
+        })
+      },
+      error: (error: { error: { message: any; }; }) => {
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la récupération de la liste des services disponibles`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
+        this.reInit()
+      }
+    })
 
   }
 
@@ -133,10 +185,20 @@ export class GarageComponent implements OnInit {
     this.garageService.getGarageById(6).subscribe({
       next: (res: any) => {
         this.garage = this.garage.deserialize(res);
-        this.initForm()
+        this.garage.services = res.services
+        this.getServices()
+        this.displayMessage(0)
+        this.onGarageChange()
       },
       error: (error: { error: { message: any; }; }) => {
-        this.errorMessage = error.error.message
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la récupération du garage`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
         this.reInit()
       },
       complete () {
@@ -144,6 +206,56 @@ export class GarageComponent implements OnInit {
       }
     })
 
+  }
+
+  onGarageChange = () => {
+    this.initForm()
+    this.displayMessage(0)
+  }
+
+  displayMessage = (phase: number) => {
+
+    if (phase === 0) {
+      if (this.garageForm)
+        this.garageForm.disable()
+      this.buttons = [
+        {
+          label: "Modifier",
+          invalid: ()  => {return false},
+          click: () => {
+            this.displayMessage(1)
+          }
+        }
+      ]
+
+      this.message = ""
+
+    }
+
+    if (phase === 1) {
+      this.garageForm.enable()
+      this.buttons = [
+        {
+          label: "Enregistrer",
+          invalid: () => {return this.garageForm.invalid},
+          click: () => {
+            this.create()
+          }
+        },
+        {
+          label: "Abandonner",
+          invalid:  ()  => {return false},
+          click: () => {
+            this.onGarageChange()
+          }
+        },
+      ]
+    }
+
+  }
+
+  compareServices(i1: Service, i2: Service) {
+    return i1 && i2 && i1.id===i2.id;
   }
 
 }

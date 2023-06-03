@@ -18,7 +18,6 @@ export class LoginService {
   onglets: any = ['Accueil', 'Occasions', 'Contact']
   listenOnglets = new Observable<string[]>( observer => { this.onglets = observer })
 
-  routeSelected: string = 'Accueil'
   selectedTabIndex = 0
 
   constructor(
