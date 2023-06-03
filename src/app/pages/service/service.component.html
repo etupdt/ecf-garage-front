@@ -1,4 +1,5 @@
-<div *ngIf="serviceForm" mat-dialog-content [formGroup]="serviceForm" class="content">
+<div (window:beforeunload)="record()"></div>
+<div *ngIf="serviceForm" [formGroup]="serviceForm" class="content">
 
   <div class="row">
 
@@ -6,7 +7,7 @@
 
       <h3 mat-dialog-title>{{message}}</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content>
+      <mat-grid-list cols="4" rowHeight="70px">
 
         <mat-form-field appearance="fill">
           <mat-label>Service</mat-label>
@@ -26,7 +27,7 @@
 
       <h3 mat-dialog-title>Détail du service</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
 
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill" enabled="'false'">
@@ -38,7 +39,7 @@
       </mat-grid-list>
       <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
 
-      <mat-grid-list cols="4" rowHeight="400px" mat-dialog-content class="composant-desc">
+      <mat-grid-list cols="4" rowHeight="400px" class="composant-desc">
 
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill">
@@ -55,7 +56,7 @@
 
       <h3 mat-dialog-title>Image de présentation</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
         <mat-grid-tile colspan="4">
           <button [disabled]="serviceForm.disabled" type="button" mat-raised-button (click)="fileInput.click()">Image</button>
         </mat-grid-tile>
@@ -72,7 +73,7 @@
 
   <div class="row">
 
-      <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-buttons">
+      <mat-grid-list cols="8" rowHeight="70px" class="composant-buttons">
 
         <mat-grid-tile colspan="{{4 - buttons.length}}"></mat-grid-tile>
         <mat-grid-tile colspan="2" *ngFor="let button of buttons">

@@ -15,7 +15,7 @@ export class ConfirmDialogComponent {
   ) {}
 
   onbuttonClick(value: string): void {
-    this.data = {type: '', message1: '', message2: '', retour: value}
+    this.data = {type: '', message1: '', message2: '', buttons: [], retour: value}
     this.dialogRef.close();
   }
 

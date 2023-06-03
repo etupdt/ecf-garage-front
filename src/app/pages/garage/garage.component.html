@@ -1,4 +1,4 @@
-<div *ngIf="garageForm" mat-dialog-content [formGroup]="garageForm" class="content">
+<div *ngIf="garageForm" [formGroup]="garageForm" class="content">
 
   <div class="row">
 
@@ -6,7 +6,7 @@
 
       <h3 mat-dialog-title>Raison sociale et adresse</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
 
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill">
@@ -54,7 +54,7 @@
 
       <h3 mat-dialog-title>Services disponibles</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
 
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill">
@@ -72,7 +72,7 @@
 
       <h3 mat-dialog-title>Horaires d'ouvertures</h3>
 
-      <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
 
         <mat-grid-tile colspan="4">
           <mat-form-field appearance="fill">
@@ -131,7 +131,7 @@
 
   <div class="row">
 
-    <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-buttons">
+    <mat-grid-list cols="8" rowHeight="70px" class="composant-buttons">
 
       <mat-grid-tile colspan="{{4 - buttons.length}}"></mat-grid-tile>
       <mat-grid-tile colspan="2" *ngFor="let button of buttons">
@@ -148,7 +148,7 @@
 
   <div class="buttons">
 
-    <mat-grid-list cols="4" rowHeight="70px" mat-dialog-content class="composant-page">
+    <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
 
       <mat-grid-tile colspan="2">
         <button class="field" mat-raised-button [disabled]="garageForm.invalid" (click)="onSubmit()">Enregistrer</button>

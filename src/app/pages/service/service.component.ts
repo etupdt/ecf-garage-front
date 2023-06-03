@@ -1,13 +1,13 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { filter } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
-import { IService } from 'src/app/interface/service.interface';
 import { Service } from 'src/app/models/service.model';
-import { ImageService } from 'src/app/services/image.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { environment } from 'src/environments/environment';
+import { Router, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-service',
@@ -40,12 +40,18 @@ export class ServiceComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private imageService: ImageService,
     private serviceService: ServiceService,
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) {
-  }
+/*    let filtre = router.events
+    .pipe(filter(event => event instanceof RoutesRecognized))
+    .subscribe((event) => {
+      filtre.unsubscribe()
+      this.quit()
+      console.log(event);
+    });*/
+   }
   ngOnInit(): void {
 
     this.getServices()
@@ -80,16 +86,16 @@ export class ServiceComponent implements OnInit {
 
   }
 
-  record = () => {
+  quit = () => {
 
-    if (this.isUpdated) {
+    if (this.isUpdated && this.serviceActive.id !== 0) {
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: {
           type: 'Confirmation',
           message1: `Voulez vous sauvegarder le service ?`,
           message2: "",
-          delai: 0
+          buttons: ['Enregistrer', 'Ne pas enregistrer']
         }
       })
 
@@ -97,15 +103,7 @@ export class ServiceComponent implements OnInit {
 
         switch (result) {
           case 'Enregistrer' : {
-            this.create()
-            break
-          }
-          case 'Annuler' : {
-            break
-          }
-          default : {
-            this.isUpdated = false
-//            this.onServiceChange()
+            this.create(true)
             break
           }
         }
@@ -114,8 +112,45 @@ export class ServiceComponent implements OnInit {
     }
   }
 
-  create = () => {
+  record = () => {
 
+    if (!this.isUpdated) {
+
+      this.displayMessage(0)
+
+    } else {
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          type: 'Confirmation',
+          message1: `Voulez vous sauvegarder le service ?`,
+          message2: "",
+          buttons: ['Enregistrer', 'Ne pas enregistrer', 'Annuler']
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(result => {
+
+        switch (result) {
+          case 'Enregistrer' : {
+            this.create(false)
+            break
+          }
+          case 'Annuler' : {
+            break
+          }
+          default : {
+            this.isUpdated = false
+            this.onServiceChange()
+            break
+          }
+        }
+      });
+
+    }
+  }
+
+  create = (navigate: boolean) => {
 
     this.frontImage.append('id', `${this.serviceActive.id}`)
     this.frontImage.append('name', this.serviceForm.get("name")!.value)
@@ -124,7 +159,7 @@ export class ServiceComponent implements OnInit {
     if (this.serviceActive.id === 0) {
       this.save(this.frontImage)
     } else {
-      this.update(this.frontImage)
+      this.update(this.frontImage, navigate)
     }
 
   }
@@ -155,10 +190,13 @@ export class ServiceComponent implements OnInit {
 
   }
 
-  update = (service: FormData) => {
+  update = (service: FormData, navigate: boolean) => {
 
     this.serviceService.putService(service).subscribe({
       next: (res: any) => {
+        if (!navigate) {
+          return
+        }
         this.onServiceChange()
         this.serviceActive = new Service().deserialize(res[0] as Service)
         this.services[this.services.findIndex(service => service.name === this.serviceSelected)]
@@ -182,35 +220,54 @@ export class ServiceComponent implements OnInit {
 
   delete = () => {
 
-    let index = this.services.findIndex(service => service.name === this.serviceSelected)
-
-    this.serviceService.deleteService(this.serviceActive.id).subscribe({
-      next: (res: any) => {
-
-        this.services = this.services.filter(service => service.name !== this.serviceSelected)
-        index = index < this.services.length - 1 ? index : index - 1
-        this.serviceSelected = this.services[index].name
-        this.onServiceChange()
-        this.displayMessage(0)
-
-      },
-      error: (error: { error: { message: any; }; }) => {
-        this.dialog.open(MessageDialogComponent, {
-          data: {
-            type: 'Erreur',
-            message1: `Erreur lors de la suppression du service`,
-            message2: error.error.message,
-            delai: 0
-          }
-        })
-      },
-      complete () {
-        console.log('Sauvegarde put service complete')
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        type: 'Confirmation',
+        message1: `Désirez vous réellement supprimer ce service ?`,
+        message2: "",
+        buttons: ['Supprimer', 'Annuler']
       }
     })
 
-  }
+    dialogRef.afterClosed().subscribe(result => {
 
+      switch (result) {
+        case 'Supprimer' : {
+
+          let index = this.services.findIndex(service => service.name === this.serviceSelected)
+
+          this.serviceService.deleteService(this.serviceActive.id).subscribe({
+            next: (res: any) => {
+
+              this.services = this.services.filter(service => service.name !== this.serviceSelected)
+              index = index < this.services.length - 1 ? index : index - 1
+              this.serviceSelected = this.services[index].name
+              this.onServiceChange()
+              this.displayMessage(0)
+
+            },
+            error: (error: { error: { message: any; }; }) => {
+              this.dialog.open(MessageDialogComponent, {
+                data: {
+                  type: 'Erreur',
+                  message1: `Erreur lors de la suppression du service`,
+                  message2: error.error.message,
+                  delai: 0
+                }
+              })
+            },
+            complete () {
+              console.log('Sauvegarde put service complete')
+            }
+          })
+
+        }
+        
+      }
+
+    });
+
+  }
 
   getServices = () => {
 
@@ -271,7 +328,7 @@ export class ServiceComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-//    this.record()
+    this.quit()
   }
 
   imageChange = () => {
@@ -358,14 +415,14 @@ export class ServiceComponent implements OnInit {
           label: "Enregistrer",
           invalid: () => {return !this.isUpdated || this.serviceForm.invalid || this.image === `${environment.useBackendImages}/0_default.jpg`},
           click: () => {
-            this.create()
+            this.create(false)
           }
         },
         {
           label: "Abandonner",
-          invalid:  ()  => {return false},
+          invalid: () => {return false},
           click: () => {
-//            this.record()
+            this.record()
           }
         },
       ]

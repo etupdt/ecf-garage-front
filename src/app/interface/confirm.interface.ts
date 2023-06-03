@@ -4,4 +4,5 @@ export interface DialogConfirm {
   message2: string,
   retour: string,
   type: string
+  buttons: string[]
 }
