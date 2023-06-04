@@ -45,12 +45,11 @@ export class LoginComponent {
       next: (res: any) => {
 
         localStorage.setItem('tokenAuth', res.token)
-        this.loginService.email.next(email)
-        this.loginService.roles.next(res.data.roles)
-console.log(this.loginService.selectedTabIndex)
-        this.router.navigate([this.loginService.onglets[
-          this.loginService.selectedTabIndex < 3 ? this.loginService.selectedTabIndex : 0
-        ]])
+        this.loginService.login.next({
+          email: email,
+          roles: res.data.roles
+        })
+        this.router.navigate(['Accueil'])
 
       },
       error: (error) => {

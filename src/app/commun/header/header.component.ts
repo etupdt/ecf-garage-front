@@ -1,6 +1,7 @@
 
-import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Inject, Input, OnInit, Optional, SimpleChanges } from '@angular/core';
+import { Route, Router } from '@angular/router';
+import { Login } from 'src/app/interface/login.interface';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -10,9 +11,13 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class HeaderComponent implements OnInit {
 
-  email: string = ''
-  roles: string[] = []
-  onglets = ['Accueil', 'Occasions', 'Contact']
+  onglets!: Route[]
+  adminItems?: Route[]
+
+  @Input() login: Login = {
+    email: '',
+    roles: []
+  }
 
   burgerMenu = 'cache'
   selectedTabIndex: number = 0
@@ -24,46 +29,53 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loginService.listenEmail.subscribe((email) => {this.email = email as string})
-    this.loginService.listenRoles.subscribe((roles) => {this.roles = roles as string[]})
-
     const selectedTabIndex = localStorage.getItem('selectedTabIndex')
     if (selectedTabIndex)
-      this.selectedTabIndex = +localStorage.getItem('selectedTabIndex')!
-
-    this.loginService.initService()
-
-  //  this.router.config.forEach((route) => this.items.push(route.path as string))
+    this.selectedTabIndex = +localStorage.getItem('selectedTabIndex')!
 
   }
 
   signOut = () => {
 
-    const token = localStorage.getItem('tokenAuth');
-
-    if (token) {
-
-      localStorage.removeItem('tokenAuth')
-
-    }
-
-    this.loginService.email.next("")
-    this.loginService.roles.next("")
+    this.loginService.deConnection()
 
     if (this.selectedTabIndex > 2)
-      this.selectedTabIndex = 0
+    this.selectedTabIndex = 0
 
+  }
 
+  getRouterConfig = () => {
+    this.adminItems = this.getRouterChildConfig('Administration')
+    console.log('toto', this.login)
+    return this.router.config.filter(route => {
+      return route.path !== 'Signin' && (this.loginService.getToken() || !route.canActivate)
+    })
+  }
+
+  getRouterChildConfig = (path: string) => {
+    const retour =  this.router.config.find(route => route.path === path)!.children?.filter(child => {
+      return this.login.roles.indexOf(child.data!['role']) >= 0
+    })
+    return retour
   }
 
   callRoute = (target?: string) => {
 
     localStorage.setItem('selectedTabIndex', `${this.selectedTabIndex}`)
-    this.loginService.selectedTabIndex = this.selectedTabIndex
 
     this.burgerMenu = 'cache'
-    this.router.navigate([target])
+    if (target)
+      this.router.navigate([target])
+    else
+      this.router.navigate([this.router.config[this.selectedTabIndex].path])
 
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['login']) {
+      console.log('La valeur a changé de', changes['login'].previousValue, 'à', changes['login'].currentValue);
+      this.onglets = this.getRouterConfig()
+    }
   }
 
 }

@@ -10,6 +10,7 @@ import { CarComponent } from './pages/car/car.component';
 import { CommentComponent } from './pages/comment/comment.component';
 import { OptionComponent } from './pages/option/option.component';
 import { UserComponent } from './pages/user/user.component';
+import { AuthGuard } from './services/auth-guard';
 
 const routes: Routes = [
 
@@ -26,28 +27,53 @@ const routes: Routes = [
     component: ContactComponent,
   },
   {
-    path: 'Garage',
-    component: GarageComponent,
-  },
-  {
-    path: 'Service',
-    component: ServiceComponent,
-  },
-  {
-    path: 'User',
-    component: UserComponent,
-  },
-  {
-    path: 'Car',
-    component: CarComponent,
-  },
-  {
-    path: 'Comment',
-    component: CommentComponent,
-  },
-  {
-    path: 'Option',
-    component: OptionComponent,
+    path: 'Administration',
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'Garage',
+        component: GarageComponent,
+        data: {
+          role: 'ROLE_ADMIN'
+        }
+      },
+      {
+        path: 'Service',
+        component: ServiceComponent,
+        data: {
+          role: 'ROLE_ADMIN'
+        }
+      },
+      {
+        path: 'User',
+        component: UserComponent,
+        data: {
+          role: 'ROLE_USER'
+        }
+      },
+      {
+        path: 'Car',
+        component: CarComponent,
+        data: {
+          role: 'ROLE_USER'
+        }
+      },
+      {
+        path: 'Comment',
+        component: CommentComponent,
+        data: {
+          role: 'ROLE_USER'
+        }
+      },
+      {
+        path: 'Option',
+        component: OptionComponent,
+        data: {
+          role: 'ROLE_USER'
+        }
+      },
+    ]
   },
   {
     path: 'Signin',

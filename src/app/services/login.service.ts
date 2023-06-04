@@ -1,8 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Login } from '../interface/login.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,20 +12,52 @@ export class LoginService {
 
   errorMessage!: string
 
-  email!: any
-  listenEmail = new Observable( observer => { this.email = observer })
-  roles: any = []
-  listenRoles = new Observable( observer => { this.roles = observer })
-  onglets: any = ['Accueil', 'Occasions', 'Contact']
-  listenOnglets = new Observable<string[]>( observer => { this.onglets = observer })
+  token: string = ''
 
-  selectedTabIndex = 0
+  login = new BehaviorSubject<Login>({
+    email: '',
+    roles: []
+  })
+  listenLogin = this.login.asObservable()
 
   constructor(
     private http: HttpClient,
-  ) {  }
+  ) {
 
-  initService = (): void => {
+  }
+
+  connection = (email: string, password: string): Observable<any> => {
+
+    let headers = new HttpHeaders()
+    headers = headers.append('Content-Type', 'application/json')
+
+    return this.http.post (
+      environment.useBackend + `/api/login`,
+      {username: email, password: password},
+      {headers}
+    )
+
+  }
+
+  deConnection = () => {
+
+    const token = localStorage.getItem('tokenAuth');
+
+    if (token) {
+
+      localStorage.removeItem('tokenAuth')
+
+    }
+
+    this.login.next({
+      email: '',
+      roles: []
+    })
+
+  }
+
+
+  getToken = () => {
 
     const token = localStorage.getItem('tokenAuth');
 
@@ -36,31 +69,28 @@ export class LoginService {
 
         localStorage.removeItem('tokenAuth')
 
+        return null
+
       } else {
 
-        const decodedToken = jwtHelper.decodeToken(token);
+        if (token !== this.token) {
 
-        console.log(decodedToken)
+          const decodedToken = jwtHelper.decodeToken(token);
 
-        this.email.next(decodedToken.username)
-        this.roles.next(decodedToken.roles)
+          this.login.next({
+            email: decodedToken.username,
+            roles: decodedToken.roles
+          })
+
+          this.token = token
+
+        }
 
       }
 
     }
 
-  }
-
-  connection(email: string, password: string): Observable<any>  {
-
-    let headers = new HttpHeaders()
-    headers = headers.append('Content-Type', 'application/json')
-
-    return this.http.post (
-      environment.useBackend + `/api/login`,
-      {username: email, password: password},
-      {headers}
-    )
+    return token
 
   }
 
