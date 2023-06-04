@@ -4,28 +4,28 @@ import { Comment } from "./comment.model"
 
 export class Garage {
 
-  id: number
-  raison: string
-  phone: string
-  address1: string
-  address2: string
-  zip: number
-  locality: string
-  day1hours: string
-  day2hours: string
-  day3hours: string
-  day4hours: string
-  day5hours: string
-  day6hours: string
-  day7hours: string
+  id!: number
+  raison!: string
+  phone!: string
+  address1!: string
+  address2!: string
+  zip!: number
+  locality!: string
+  day1hours!: string
+  day2hours!: string
+  day3hours!: string
+  day4hours!: string
+  day5hours!: string
+  day6hours!: string
+  day7hours!: string
 //  contacts: Contact[]
-  comments: Comment[]
-  cars: Car[]
-  services: Service[]
+  comments!: Comment[]
+  cars!: Car[]
+  services!: Service[]
 //  users: User[]
 
-   constructor(data: any) {
-    this.id = data.id;
+   constructor() {
+/*    this.id = data.id;
     this.raison = data.raison
     this.phone = data.phone
     this.address1 = data.address1
@@ -41,7 +41,7 @@ export class Garage {
     this.day7hours = data.day7hours
     this.comments = data.comments
     this.cars = data.cars
-    this.services = data.services
+    this.services = data.services*/
   }
 
   toString() {
@@ -143,7 +143,7 @@ export class Garage {
     let servicesDeSerialized: any[] = []
     if (data.cars !=null) {
       data.services.forEach((service: Service) => {
-        servicesDeSerialized.push(service.deserialize(service))
+        servicesDeSerialized.push(new Service().deserialize(service))
       })
     }
 

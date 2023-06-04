@@ -4,6 +4,7 @@
   <mat-toolbar-row class="toolbar-text">
 
     <img src="assets/img/logo.jpg">
+    
     <mat-tab-group [color]="'primary'"
       [(selectedIndex)]="selectedTabIndex"
       (selectedTabChange)="callRoute()"
@@ -21,8 +22,8 @@
           >{{item.path}}
         </button>
       </mat-menu>
-
     </mat-tab-group>
+
     <span class="title">Automobiles</span>
     <div class="login-zone">
       <a mat-button (click)="callRoute('user')">{{login.email}}</a>

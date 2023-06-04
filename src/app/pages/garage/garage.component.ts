@@ -16,6 +16,7 @@ import { ServiceService } from 'src/app/services/service.service';
 export class GarageComponent implements OnInit {
 
   garageForm!: FormGroup
+  isUpdated = false
   errorMessage!: string
 
   garage!: Garage
@@ -66,13 +67,18 @@ console.log('garage', this.garage)
       day7hours: [this.garage.day7hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
     })
 
-    this.garageForm.valueChanges.subscribe(change => {console.log(this.garageForm.get("services")?.value)})
+    this.garageForm.valueChanges.subscribe(change => {
+      if (this.garageForm.get("services")!.value)
+        this.isUpdated = this.garageForm ? this.checkChanges() : false
+    })
+
+    this.isUpdated = false
 
   }
 
   reInit = () => {
 
-    this.garage = new Garage ({
+    this.garage = new Garage().deserialize({
       'raison': 'Garage Vincent Parrot',
       'phone': '',
       'address1': '',
@@ -97,13 +103,13 @@ console.log('garage', this.garage)
 
     const garage = this.garage.deserialize({
 
-      'id': this.garage.id,
-      'raison': this.garageForm.get("raison")!.value,
-      'phone': this.garageForm.get("phone")!.value,
-      'address1': this.garageForm.get("address1")!.value,
-      'address2': this.garageForm.get("address2")!.value,
-      'zip': this.garageForm.get("zip")!.value,
-      'locality': this.garageForm.get("locality")!.value,
+      'id':         this.garage.id,
+      'raison':     this.garageForm.get("raison")!.value,
+      'phone':      this.garageForm.get("phone")!.value,
+      'address1':   this.garageForm.get("address1")!.value,
+      'address2':   this.garageForm.get("address2")!.value,
+      'zip':        this.garageForm.get("zip")!.value,
+      'locality':   this.garageForm.get("locality")!.value,
       "day1hours" : this.garageForm.get("day1hours")!.value,
       "day2hours" : this.garageForm.get("day2hours")!.value,
       "day3hours" : this.garageForm.get("day3hours")!.value,
@@ -180,13 +186,42 @@ console.log('garage', this.garage)
 
   }
 
+  checkChanges = () => {
+    const diffLeft = this.garageForm.get("services")!.value.filter((s1: Service) => {
+      const c = this.garage.services.find(s2 => s1.id === s2.id)
+      return !c
+    }).length
+    const diffRight = this.garage.services.filter(s1 => {
+      const c = this.garageForm.get("services")!.value.find((s2: Service) => s1.id === s2.id)
+      return !c
+    }).length
+    console.log(this.garageForm.get("services")!.value, this.garage.services)
+    console.log('toto', diffLeft, diffRight)
+
+    return diffLeft !== 0  || diffRight !== 0 ||
+      this.garageForm.get("phone")!.value !== this.garage.phone ||
+      this.garageForm.get("address1")!.value  !== this.garage.address1 ||
+      this.garageForm.get("address2")!.value  !== this.garage.address2 ||
+      this.garageForm.get("zip")!.value       !== this.garage.zip ||
+      this.garageForm.get("locality")!.value  !== this.garage.locality ||
+      this.garageForm.get("day1hours")!.value !== this.garage.day1hours ||
+      this.garageForm.get("day2hours")!.value !== this.garage.day2hours ||
+      this.garageForm.get("day3hours")!.value !== this.garage.day3hours ||
+      this.garageForm.get("day4hours")!.value !== this.garage.day4hours ||
+      this.garageForm.get("day5hours")!.value !== this.garage.day5hours ||
+      this.garageForm.get("day6hours")!.value !== this.garage.day6hours ||
+      this.garageForm.get("day7hours")!.value !== this.garage.day7hours
+  }
+
   getGarage = () => {
 
     this.garageService.getGarageById(6).subscribe({
       next: (res: any) => {
-        this.garage = this.garage.deserialize(res);
-        this.garage.services = res.services
-        this.getServices()
+        this.garage = new Garage().deserialize(res);
+/*        res.services.forEach((service: Service) => {
+          this.garage.services = new Service().deserialize(service)
+        })
+*/        this.getServices()
         this.displayMessage(0)
         this.onGarageChange()
       },
@@ -237,7 +272,7 @@ console.log('garage', this.garage)
       this.buttons = [
         {
           label: "Enregistrer",
-          invalid: () => {return this.garageForm.invalid},
+          invalid: () => {return !this.isUpdated || this.garageForm.invalid},
           click: () => {
             this.create()
           }
