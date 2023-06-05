@@ -9,8 +9,8 @@ import { ServiceComponent } from './pages/service/service.component';
 import { CarComponent } from './pages/car/car.component';
 import { CommentComponent } from './pages/comment/comment.component';
 import { OptionComponent } from './pages/option/option.component';
-import { UserComponent } from './pages/user/user.component';
 import { AuthGuard } from './services/auth-guard';
+import { UsersComponent } from './pages/user/users.component';
 
 const routes: Routes = [
 
@@ -47,7 +47,7 @@ const routes: Routes = [
       },
       {
         path: 'User',
-        component: UserComponent,
+        component: UsersComponent,
         data: {
           role: 'ROLE_USER'
         }

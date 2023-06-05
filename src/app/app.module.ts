@@ -32,6 +32,8 @@ import { MessageDialogComponent } from './dialogs/message-dialog/message-dialog.
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { UsersComponent } from './pages/user/users.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -44,11 +46,12 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     GarageComponent,
     ServiceComponent,
     CarComponent,
-    UserComponent,
     CommentComponent,
     OptionComponent,
     MessageDialogComponent,
     ConfirmDialogComponent,
+    UsersComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +70,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatGridListModule,
     MatSelectModule,
     MatDialogModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTableModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

@@ -1,1 +1,81 @@
-<p>user works!</p>
+<div *ngIf="userForm" [formGroup]="userForm">
+
+  <mat-grid-list cols="30" rowHeight="50px">
+
+    <mat-grid-tile colspan="22">
+      <h3 mat-dialog-title>Utilisateur {{user ? user.lastname + ' ' + user.firstname : ''}}</h3>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="4">
+      <button *ngIf="['update', 'create'].indexOf(state) >= 0" class="button" mat-raised-button (click)="cancel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+        Abandonner
+      </button>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="4">
+      <button *ngIf="['update', 'create'].indexOf(state) >= 0" [disabled]="!isUpdated" class="button" mat-raised-button (click)="saveUser()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        </svg>
+        Enregistrer
+      </button>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+  <div class="mat-elevation-z8 detail">
+
+    <mat-grid-list cols="4" rowHeight="60px">
+
+      <mat-grid-tile colspan="4">
+        <mat-form-field enabled="'false'">
+          <mat-label>Id</mat-label>
+          <input matInput formControlName="id" type="id" name="id" placeholder="Id."/>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="4">
+        <mat-form-field enabled="'false'">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" name="email" placeholder="Email"/>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="4">
+        <mat-form-field enabled="'false'">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput formControlName="password" type="password" name="password" placeholder="Mot de passe"/>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="4">
+        <mat-form-field enabled="'false'">
+          <mat-label>Prénom</mat-label>
+          <input matInput formControlName="firstname" type="firstname" name="firstname" placeholder="Prénom"/>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="4">
+        <mat-form-field enabled="'false'">
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="lastname" type="lastname" name="lastname" placeholder="Nom"/>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="4">
+        <mat-form-field enabled="'false'">
+          <mat-label>Téléphone</mat-label>
+          <input matInput formControlName="phone" type="phone" name="phone" placeholder="Téléphone"/>
+        </mat-form-field>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+  </div>
+
+</div>
+
