@@ -1,14 +1,13 @@
+
+@import '../../app.component.scss';
+
+.content {
+  margin-top: 5vh;
+}
+
 mat-form-field {
   width: 100%;
   height: 90%;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  justify-content: center;
-  width: 100%;
 }
 
 .row {

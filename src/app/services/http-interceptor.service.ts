@@ -29,7 +29,7 @@ export class HttpInterceptorService {
         });
         return next.handle(request)
       } else {
-        throw({error: new Error('Erreur token non trouvé')});
+        return next.handle(request)
       }
 
     }

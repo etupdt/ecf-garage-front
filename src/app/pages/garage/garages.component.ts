@@ -3,41 +3,42 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
-import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
+import { Garage } from 'src/app/models/garage.model';
+import { GarageService } from 'src/app/services/garage.service';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
+  selector: 'app-garages',
+  templateUrl: './garages.component.html',
   styleUrls: [
-    './users.component.scss']
+    './garages.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class GaragesComponent implements OnInit {
 
   constructor(
-    private userService: UserService,
+    private garageService: GarageService,
     public dialog: MatDialog,
   ) { }
 
-  users!: User[]
+  garages: Garage[] = []
 
-  selectedUser!: User
+  selectedGarage!: Garage
   selectedIndex: number = 0
-  newUser!: User
+  newGarage!: Garage
   parentState: string = 'display'
 
   ngOnInit(): void {
 
-    this.userService.getUsers().subscribe({
-      next: (res: User[]) => {
-        this.users = res
-        this.selectedUser = this.users[0]
+    this.garageService.getGarageById(6).subscribe({
+      next: (res: Garage) => {
+        this.garages = []
+        this.garages.push(new Garage().deserialize(res))
+        this.selectedGarage = this.garages[0]
       },
       error: (error: { error: { message: any; }; }) => {
         this.dialog.open(MessageDialogComponent, {
           data: {
             type: 'Erreur',
-            message1: `Erreur lors de la création du service`,
+            message1: `Erreur lors de la recherche du garage`,
             message2: error.error.message,
             delai: 0
           }
@@ -47,33 +48,32 @@ export class UsersComponent implements OnInit {
     })
   }
 
-  displayedColumns: string[] = ['email', 'firstname', 'lastname', 'phone', 'update', 'delete']
-  dataSource = new MatTableDataSource(this.users);
+  displayedColumns: string[] = ['raison', 'address1', 'zip', 'locality', 'update']         //, 'delete']
+  dataSource = new MatTableDataSource(this.garages);
 
   applyFilter(event: Event) {
-    console.log((event.target as HTMLInputElement).value)
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   isSelected = (index: number) => {
-    return this.selectedUser.email === this.users[index].email && this.parentState !== 'create' ? "selected" : ""
+    return this.selectedGarage.raison === this.garages[index].raison && this.parentState !== 'create' ? "selected" : ""
   }
 
-  displayUser = (index: number) => {
+  displayGarage = (index: number) => {
     if (this.parentState === 'display') {
-      this.selectedUser = this.users[index]
+      this.selectedGarage = this.garages[index]
     }
   }
 
-  updateUser = (user: User) => {
+  updateGarage = (garage: Garage) => {
     if (['update', 'create'].indexOf(this.parentState) < 0) {
-      this.selectedUser = user
+      this.selectedGarage = garage
       this.parentState = 'update'
     }
   }
 
-  deleteUser = (user: User) => {
+  deleteGarage = (garage: Garage) => {
     if (['update', 'create'].indexOf(this.parentState) < 0) {
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -90,21 +90,21 @@ export class UsersComponent implements OnInit {
         if (result !== 'Supprimer')
           return
 
-        this.selectedUser = user
+        this.selectedGarage = garage
         this.parentState = 'delete'
 
-        if (user.id === 0) {
+        if (garage.id === 0) {
           this.deleteInDatasource()
           return
         }
 
-        this.userService.deleteUser(user.id).subscribe({
+        this.garageService.deleteGarage(garage.id).subscribe({
           next: (res) => {
             this.deleteInDatasource()
             this.dialog.open(MessageDialogComponent, {
               data: {
                 type: 'Information',
-                message1: `La suppression du user est effective !`,
+                message1: `La suppression du garage est effective !`,
                 message2: '',
                 delai: 2000
               }
@@ -114,7 +114,7 @@ export class UsersComponent implements OnInit {
             this.dialog.open(MessageDialogComponent, {
               data: {
                 type: 'Erreur',
-                message1: `Erreur lors de la suppression du user`,
+                message1: `Erreur lors de la suppression du garage`,
                 message2: error.error.message,
                 delai: 0
               }
@@ -126,36 +126,36 @@ export class UsersComponent implements OnInit {
   }
 
   deleteInDatasource = () => {
-    const index = this.users.findIndex(user => user.id === this.selectedUser.id)
-    this.users.splice(index, 1)
+    const index = this.garages.findIndex(garage => garage.id === this.selectedGarage.id)
+    this.garages.splice(index, 1)
     this.updateDatasource()
-    this.selectedUser = index > this.users.length - 1 ? this.users[index -1] : this.users[index]
+    this.selectedGarage = index > this.garages.length - 1 ? this.garages[index -1] : this.garages[index]
     this.parentState = 'display'
   }
 
-  onNewuser = (user: User) => {
-    this.users.push(user);
-    this.selectedUser = this.users[this.users.length - 1]
-    this.updateDatasource()
-    this.parentState = 'display'
-  }
-
-  onSameuser = (user: User) => {
-    this.users[this.users.findIndex(user => user.id === this.selectedUser.id)] = user
-    this.selectedUser = user
+  onNewgarage = (garage: Garage) => {
+    this.garages.push(garage);
+    this.selectedGarage = this.garages[this.garages.length - 1]
     this.updateDatasource()
     this.parentState = 'display'
   }
 
-  createUser = () => {
+  onSamegarage = (garage: Garage) => {
+    this.garages[this.garages.findIndex(garage => garage.id === this.selectedGarage.id)] = garage
+    this.selectedGarage = garage
+    this.updateDatasource()
+    this.parentState = 'display'
+  }
+
+  createGarage = () => {
     this.parentState = 'create'
   }
 
   updateDatasource = () => {
-    let newUsers: User[] = []
-    this.users.forEach(user => newUsers.push(user))
-    this.users = newUsers
-    this.dataSource.connect().next(this.users)
+    let newGarages: Garage[] = []
+    this.garages.forEach(garage => newGarages.push(garage))
+    this.garages = newGarages
+    this.dataSource.connect().next(this.garages)
   }
 
 }

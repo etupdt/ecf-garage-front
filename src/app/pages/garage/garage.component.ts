@@ -1,138 +1,336 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { Observable, debounceTime, distinctUntilChanged, map, tap } from 'rxjs';
-import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
-import { Garage } from 'src/app/models/garage.model';
-import { Service } from 'src/app/models/service.model';
-import { GarageService } from 'src/app/services/garage.service';
-import { ServiceService } from 'src/app/services/service.service';
+  import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+  import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+  import { MatDialog } from '@angular/material/dialog';
+  import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
+  import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+  import { Garage } from 'src/app/models/garage.model';
+  import { Service } from 'src/app/models/service.model';
+  import { GarageService } from 'src/app/services/garage.service';
+  import { ServiceService } from 'src/app/services/service.service';
 
-@Component({
-  selector: 'app-garage',
-  templateUrl: './garage.component.html',
-  styleUrls: ['./garage.component.scss']
-})
-export class GarageComponent implements OnInit {
+  @Component({
+    selector: 'app-garage',
+    templateUrl: './garage.component.html',
+    styleUrls: [
+      './garage.component.scss'
+    ]
+  })
+  export class GarageComponent implements OnInit {
 
-  garageForm!: FormGroup
-  isUpdated = false
-  errorMessage!: string
+    @Input() garage!: Garage
+    @Output() samegarage: EventEmitter<Garage> = new EventEmitter();
+    @Output() newgarage: EventEmitter<Garage> = new EventEmitter<Garage>();
+    @Input() state: string = "display"
+    @Output() stateChange: EventEmitter<string> = new EventEmitter();
 
-  garage!: Garage
 
-  serviceList: Service[] = []
+    lastGarage!: Garage
+    garageH3Label: string = ''
+    garageServices: Service[] = []
+    garageForm!: FormGroup
 
-  buttons!: {
-    label: string
-    invalid: Function,
-    click: Function
-  }[]
+    isUpdated = false
 
-  message = ""
-
-  form$!: Observable<boolean>;
-
-  constructor(
-    private formBuilder: FormBuilder,
-    private garageService: GarageService,
-    private serviceService: ServiceService,
-    public dialog: MatDialog
+    constructor(
+      private formBuilder: FormBuilder,
+      private garageService: GarageService,
+      private serviceService: ServiceService,
+      private dialog: MatDialog,
     ) {
-  }
+    }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
+      this.initForm(new Garage().deserialize({
+        id: 0,
+        raison: '',
+        phone: '',
+        address1: '',
+        address2: '',
+        zip: '',
+        locality: '',
+        day1hours: '',
+        day2hours: '',
+        day3hours: '',
+        day4hours: '',
+        day5hours: '',
+        day6hours: '',
+        day7hours: '',
+        services: []
+      }))
+      this.getServices()
+    }
 
-    this.reInit()
-    this.getGarage()
+    ngOnChanges(changes: SimpleChanges) {
+      console.log('onChangesGarage', changes)
+      if (this.state === 'create') {
+        this.initForm(new Garage().deserialize({
+          id: 0,
+          raison: '',
+          phone: '',
+          address1: '',
+          address2: '',
+          zip: '',
+          locality: '',
+          day1hours: '',
+          day2hours: '',
+          day3hours: '',
+          day4hours: '',
+          day5hours: '',
+          day6hours: '',
+          day7hours: '',
+          services: []
+          })
+      )} else {
+        this.initForm(this.garage)
+      }
+    }
 
-  }
+    ngOnDestroy(): void {
+      this.quit()
+    }
 
-  initForm = () => {
-console.log('garage', this.garage)
-    this.garageForm = this.formBuilder.group({
-      raison: ["Garage Vincent Parrot", [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
-      phone: [this.garage.phone, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-      address1: [this.garage.address1, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{6,}/)]],
-      address2: [this.garage.address2, [Validators.nullValidator, Validators.pattern(/[0-9a-zA-Z \-]{6,}/)]],
-      zip: [this.garage.zip, [Validators.required, Validators.pattern(/[0-9]{5,}/)]],
-      locality: [this.garage.locality, [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
-      services: [this.garage.services],
-      day1hours: [this.garage.day1hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-      day2hours: [this.garage.day2hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-      day3hours: [this.garage.day3hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-      day4hours: [this.garage.day4hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-      day5hours: [this.garage.day5hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-      day6hours: [this.garage.day6hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-      day7hours: [this.garage.day7hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z \-]{0,}/)]],
-    })
+    quit = () => {
 
-    this.garageForm.valueChanges.subscribe(change => {
-      if (this.garageForm.get("services")!.value)
-        this.isUpdated = this.garageForm ? this.checkChanges() : false
-    })
+      if (this.isUpdated && !this.garageForm.invalid) {
 
-    this.isUpdated = false
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            type: 'Confirmation',
+            message1: `Voulez vous sauvegarder l'utilisateur ?`,
+            message2: "",
+            buttons: ['Enregistrer', 'Ne pas enregistrer']
+          }
+        })
 
-  }
+        dialogRef.afterClosed().subscribe(result => {
 
-  reInit = () => {
+          switch (result) {
+            case 'Enregistrer' : {
+              this.saveGarage()
+              break
+            }
+          }
+        });
 
-    this.garage = new Garage().deserialize({
-      'raison': 'Garage Vincent Parrot',
-      'phone': '',
-      'address1': '',
-      'address2': '',
-      'zip': 0,
-      'locality': '',
-      "day1hours" : "09:00 - 12:00, 14:00 - 18;:00",
-      "day2hours" : "09:00 - 12:00, 14:00 - 18;:00",
-      "day3hours" : "09:00 - 12:00, 14:00 - 18;:00",
-      "day4hours" : "09:00 - 12:00, 14:00 - 18;:00",
-      "day5hours" : "09:00 - 12:00, 14:00 - 18;:00",
-      "day6hours" : "09:00 - 12:00, 14:00 - 18;:00",
-      "day7hours" : "Fermé",
-    })
+      }
+    }
 
-    this.displayMessage(0)
-    this.onGarageChange()
+    initForm = (garage: Garage) => {
 
-  }
+      if (garage) {
 
-  create = () => {
+        this.garageServices = new Garage().deserialize(garage).services
 
-    const garage = this.garage.deserialize({
+        this.garageForm = this.formBuilder.group({
+          id: [{value: garage.id, disabled: true}],
+          raison: [garage.raison, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+          phone: [garage.phone, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+          address1: [garage.address1, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+          address2: [garage.address2, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+          zip: [garage.zip, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
+          locality: [garage.locality, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
+          services: [this.garageServices],
+          day1hours: [garage.day1hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+          day2hours: [garage.day2hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,_: \-]{0,}/)]],
+          day3hours: [garage.day3hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+          day4hours: [garage.day4hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+          day5hours: [garage.day5hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+          day6hours: [garage.day6hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+          day7hours: [garage.day7hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+        })
 
-      'id':         this.garage.id,
-      'raison':     this.garageForm.get("raison")!.value,
-      'phone':      this.garageForm.get("phone")!.value,
-      'address1':   this.garageForm.get("address1")!.value,
-      'address2':   this.garageForm.get("address2")!.value,
-      'zip':        this.garageForm.get("zip")!.value,
-      'locality':   this.garageForm.get("locality")!.value,
-      "day1hours" : this.garageForm.get("day1hours")!.value,
-      "day2hours" : this.garageForm.get("day2hours")!.value,
-      "day3hours" : this.garageForm.get("day3hours")!.value,
-      "day4hours" : this.garageForm.get("day4hours")!.value,
-      "day5hours" : this.garageForm.get("day5hours")!.value,
-      "day6hours" : this.garageForm.get("day6hours")!.value,
-      "day7hours" : this.garageForm.get("day7hours")!.value,
+        this.garageH3Label = garage ? `Garage ${garage.raison}` : ''
 
-    })
+        switch (this.state) {
+          case 'display' : {
+            this.garageForm.disable()
+            break
+          }
+          case 'update' : {
+            this.garageForm.enable()
+            break
+          }
+          case 'create' : {
+            this.garageForm.enable()
+            this.garageH3Label = 'Nouvel utilisateur'
+            break
+          }
+        }
 
-    this.garageForm.get("services")!.value.forEach((service: Service) => garage.services.push(service))
+        this.garageForm.valueChanges.subscribe(change => {
+          this.isUpdated = this.checkChanges()
+        })
 
-    if (garage.id === 0) {
+        this.isUpdated = false
 
-      this.garageService.postGarage(garage).subscribe({
+      }
+
+    }
+
+    checkChanges(): boolean {
+
+      let servicesIdentical = true
+      this.garage.services
+        .forEach(s1 => {
+          if (this.garageForm.get('services')?.value.findIndex((s2: Service) => s2.id === s1.id) === -1) {
+            servicesIdentical = false
+          }
+        })
+
+      this.isUpdated = this.garage.raison !== this.garageForm.get("raison")!.value ||
+      this.garage.phone !== this.garageForm.get("phone")!.value ||
+      this.garage.address1 !== this.garageForm.get("address1")!.value ||
+      this.garage.address2 !== this.garageForm.get("address2")!.value ||
+      this.garage.zip !== this.garageForm.get("zip")!.value ||
+      this.garage.locality !== this.garageForm.get("locality")!.value ||
+      this.garage.day1hours !== this.garageForm.get("day1hours")!.value ||
+      this.garage.day2hours !== this.garageForm.get("day2hours")!.value ||
+      this.garage.day3hours !== this.garageForm.get("day3hours")!.value ||
+      this.garage.day4hours !== this.garageForm.get("day4hours")!.value ||
+      this.garage.day5hours !== this.garageForm.get("day5hours")!.value ||
+      this.garage.day6hours !== this.garageForm.get("day6hours")!.value ||
+      this.garage.day7hours !== this.garageForm.get("day7hours")!.value ||
+      !servicesIdentical ||
+      this.garage.services.length !== this.garageForm.get('services')?.value.length
+
+      return this.isUpdated
+
+    }
+
+    formatGarage = (garage: Garage): Garage => {
+
+      return garage.deserialize({
+        id: this.garageForm.get("id")?.value,
+        raison: this.garageForm.get("raison")?.value,
+        address1: this.garageForm.get("address1")?.value,
+        address2: this.garageForm.get("address2")?.value,
+        zip: this.garageForm.get("zip")?.value,
+        locality: this.garageForm.get("locality")?.value,
+        phone: this.garageForm.get("phone")?.value,
+        day1hours: this.garageForm.get("day1hours")!.value,
+        day2hours: this.garageForm.get("day2hours")!.value,
+        day3hours: this.garageForm.get("day3hours")!.value,
+        day4hours: this.garageForm.get("day4hours")!.value,
+        day5hours: this.garageForm.get("day5hours")!.value,
+        day6hours: this.garageForm.get("day6hours")!.value,
+        day7hours: this.garageForm.get("day7hours")!.value,
+        services: this.garageForm.get('services')?.value
+      })
+
+    }
+
+    saveGarage = () => {
+
+      let garage = this.formatGarage(new Garage())
+
+      if (this.state === 'create') {
+
+        this.garageService.postGarage(garage).subscribe({
+          next: (res) => {
+            this.newgarage.emit(garage)
+            this.dialog.open(MessageDialogComponent, {
+              data: {
+                type: 'Information',
+                message1: `La création du nouveau garage est effective !`,
+                message2: '',
+                delai: 2000
+              }
+            })
+          },
+          error: (error: { error: { message: any; }; }) => {
+            this.dialog.open(MessageDialogComponent, {
+              data: {
+                type: 'Erreur',
+                message1: `Erreur lors de la création du garage`,
+                message2: error.error.message,
+                delai: 0
+              }
+            })
+          }
+
+        })
+
+      } else if (this.state === 'update') {
+
+        this.garageService.putGarage(garage).subscribe({
+          next: (res) => {
+            this.samegarage.emit(garage)
+            this.dialog.open(MessageDialogComponent, {
+              data: {
+                type: 'Information',
+                message1: `La modification du garage est effective !`,
+                message2: '',
+                delai: 2000
+              }
+            })
+          },
+          error: (error: { error: { message: any; }; }) => {
+            this.dialog.open(MessageDialogComponent, {
+              data: {
+                type: 'Erreur',
+                message1: `Erreur lors de la modification du garage`,
+                message2: error.error.message,
+                delai: 0
+              }
+            })
+          }
+
+        })
+
+      }
+    }
+
+    cancel = () => {
+
+      if (!this.isUpdated) {
+        this.stateChange.emit('display')
+        this.samegarage.emit(this.garage)
+        return
+      }
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          type: 'Confirmation',
+          message1: `Désirez vous réellement abandonner cette saisie ?`,
+          message2: "",
+          buttons: ['Oui', 'Non']
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(result => {
+
+        if (result !== 'Oui')
+        return
+
+        this.stateChange.emit('display')
+        this.samegarage.emit(this.garage)
+
+      })
+
+    }
+
+
+    //=======================> Spécifique garage : liste de service disponible
+    serviceList: Service[] = []
+
+    compareServices(i1: Service, i2: Service) {
+      return i1 && i2 && i1.id===i2.id;
+    }
+
+    getServices = () => {
+
+      this.serviceService.getServices().subscribe({
         next: (res: any) => {
-          this.displayMessage(0)
+          res.forEach((service: Service) => {
+            const serviceDeserialized = new Service().deserialize(service as Service)
+            this.serviceList.push(serviceDeserialized)
+          })
         },
         error: (error: { error: { message: any; }; }) => {
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Erreur',
-              message1: `Erreur lors de la création du garage`,
+              message1: `Erreur lors de la récupération de la liste des services disponibles`,
               message2: error.error.message,
               delai: 0
             }
@@ -140,157 +338,8 @@ console.log('garage', this.garage)
         }
       })
 
-    } else {
-
-      this.garageService.putGarage(garage).subscribe({
-        next: (res: any) => {
-          this.displayMessage(0)
-        },
-        error: (error: { error: { message: any; }; }) => {
-          this.dialog.open(MessageDialogComponent, {
-            data: {
-              type: 'Erreur',
-              message1: `Erreur lors de la modification du garage`,
-              message2: error.error.message,
-              delai: 0
-            }
-          })
-        },
-      })
-
     }
 
-  }
-
-  getServices = () => {
-
-    this.serviceService.getServices().subscribe({
-      next: (res: any) => {
-        res.forEach((service: Service) => {
-          const serviceDeserialized = new Service().deserialize(service as Service)
-          this.serviceList.push(serviceDeserialized)
-        })
-      },
-      error: (error: { error: { message: any; }; }) => {
-        this.dialog.open(MessageDialogComponent, {
-          data: {
-            type: 'Erreur',
-            message1: `Erreur lors de la récupération de la liste des services disponibles`,
-            message2: error.error.message,
-            delai: 0
-          }
-        })
-        this.reInit()
-      }
-    })
+    //=======================>
 
   }
-
-  checkChanges = () => {
-    const diffLeft = this.garageForm.get("services")!.value.filter((s1: Service) => {
-      const c = this.garage.services.find(s2 => s1.id === s2.id)
-      return !c
-    }).length
-    const diffRight = this.garage.services.filter(s1 => {
-      const c = this.garageForm.get("services")!.value.find((s2: Service) => s1.id === s2.id)
-      return !c
-    }).length
-    console.log(this.garageForm.get("services")!.value, this.garage.services)
-    console.log('toto', diffLeft, diffRight)
-
-    return diffLeft !== 0  || diffRight !== 0 ||
-      this.garageForm.get("phone")!.value !== this.garage.phone ||
-      this.garageForm.get("address1")!.value  !== this.garage.address1 ||
-      this.garageForm.get("address2")!.value  !== this.garage.address2 ||
-      this.garageForm.get("zip")!.value       !== this.garage.zip ||
-      this.garageForm.get("locality")!.value  !== this.garage.locality ||
-      this.garageForm.get("day1hours")!.value !== this.garage.day1hours ||
-      this.garageForm.get("day2hours")!.value !== this.garage.day2hours ||
-      this.garageForm.get("day3hours")!.value !== this.garage.day3hours ||
-      this.garageForm.get("day4hours")!.value !== this.garage.day4hours ||
-      this.garageForm.get("day5hours")!.value !== this.garage.day5hours ||
-      this.garageForm.get("day6hours")!.value !== this.garage.day6hours ||
-      this.garageForm.get("day7hours")!.value !== this.garage.day7hours
-  }
-
-  getGarage = () => {
-
-    this.garageService.getGarageById(6).subscribe({
-      next: (res: any) => {
-        this.garage = new Garage().deserialize(res);
-/*        res.services.forEach((service: Service) => {
-          this.garage.services = new Service().deserialize(service)
-        })
-*/        this.getServices()
-        this.displayMessage(0)
-        this.onGarageChange()
-      },
-      error: (error: { error: { message: any; }; }) => {
-        this.dialog.open(MessageDialogComponent, {
-          data: {
-            type: 'Erreur',
-            message1: `Erreur lors de la récupération du garage`,
-            message2: error.error.message,
-            delai: 0
-          }
-        })
-        this.reInit()
-      },
-      complete () {
-        console.log('getGaragebyid complete')
-      }
-    })
-
-  }
-
-  onGarageChange = () => {
-    this.initForm()
-    this.displayMessage(0)
-  }
-
-  displayMessage = (phase: number) => {
-
-    if (phase === 0) {
-      if (this.garageForm)
-        this.garageForm.disable()
-      this.buttons = [
-        {
-          label: "Modifier",
-          invalid: ()  => {return false},
-          click: () => {
-            this.displayMessage(1)
-          }
-        }
-      ]
-
-      this.message = ""
-
-    }
-
-    if (phase === 1) {
-      this.garageForm.enable()
-      this.buttons = [
-        {
-          label: "Enregistrer",
-          invalid: () => {return !this.isUpdated || this.garageForm.invalid},
-          click: () => {
-            this.create()
-          }
-        },
-        {
-          label: "Abandonner",
-          invalid:  ()  => {return false},
-          click: () => {
-            this.onGarageChange()
-          }
-        },
-      ]
-    }
-
-  }
-
-  compareServices(i1: Service, i2: Service) {
-    return i1 && i2 && i1.id===i2.id;
-  }
-
-}

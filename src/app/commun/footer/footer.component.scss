@@ -1,0 +1,53 @@
+
+@import '../../app.component.scss';
+
+footer {
+  background-color: $color3;
+  bottom: 0px;
+  position: absolute;
+  height: 200px;
+  width: 100%;
+}
+
+.icon-facebook {
+  background: url('/assets/img/facebook.svg') no-repeat center;
+}
+
+.icon-twitter {
+  background: url('/assets/img/twitter.svg') no-repeat center;
+}
+
+.icon-instagram {
+  background: url('/assets/img/instagram.svg') no-repeat center;
+}
+
+.icon {
+  height: 25px;
+  width: 25px;
+  margin: 4px;
+  display: inline-block;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.hours {
+  width: 100%;
+  span {
+    text-align: center;
+  }
+  div ul {
+    li {
+      p {
+        width: 200px;
+        margin: 0px;
+        padding-left: 20px;
+      }
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    padding-left: 0px;
+  }
+}

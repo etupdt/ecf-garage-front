@@ -124,7 +124,7 @@ export class Garage {
     }
 
     let servicesDeSerialized: any[] = []
-    if (data.cars != null) {
+    if (data.services != null) {
       data.services.forEach((service: Service) => {
         servicesDeSerialized.push(new Service().deserialize(service))
       })

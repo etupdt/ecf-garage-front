@@ -35,6 +35,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UsersComponent } from './pages/user/users.component';
 import { MatTableModule } from '@angular/material/table';
 import { FooterComponent } from './commun/footer/footer.component';
+import { MatListModule } from '@angular/material/list';
+import { GaragesComponent } from './pages/garage/garages.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import { FooterComponent } from './commun/footer/footer.component';
     ConfirmDialogComponent,
     UsersComponent,
     UserComponent,
-    FooterComponent
+    FooterComponent,
+    GaragesComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +76,8 @@ import { FooterComponent } from './commun/footer/footer.component';
     MatSelectModule,
     MatDialogModule,
     MatButtonToggleModule,
-    MatTableModule
+    MatTableModule,
+    MatListModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

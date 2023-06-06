@@ -39,4 +39,12 @@ export class GarageService {
 
   }
 
+  deleteGarage(id: number): Observable<any>{
+
+    return this.http.delete(
+      environment.useBackend + `/api/garage/${id}`
+    )
+
+  }
+
 }

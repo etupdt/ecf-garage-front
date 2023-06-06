@@ -11,6 +11,7 @@ import { CommentComponent } from './pages/comment/comment.component';
 import { OptionComponent } from './pages/option/option.component';
 import { AuthGuard } from './services/auth-guard';
 import { UsersComponent } from './pages/user/users.component';
+import { GaragesComponent } from './pages/garage/garages.component';
 
 const routes: Routes = [
 
@@ -33,7 +34,7 @@ const routes: Routes = [
     children: [
       {
         path: 'Garage',
-        component: GarageComponent,
+        component: GaragesComponent,
         data: {
           role: 'ROLE_ADMIN'
         }

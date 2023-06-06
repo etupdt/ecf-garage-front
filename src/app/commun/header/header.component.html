@@ -1,52 +1,56 @@
 
-<mat-toolbar>
+<header>
 
-  <mat-toolbar-row class="toolbar-text">
+  <mat-toolbar>
 
-    <img src="assets/img/logo.jpg">
-    
-    <mat-tab-group [color]="'primary'"
-      [(selectedIndex)]="selectedTabIndex"
-      (selectedTabChange)="callRoute()"
-      mat-stretch-tabs="false"
-      mat-align-tabs="center">
-      <mat-tab *ngFor="let onglet of onglets"
-        label="{{onglet.path}}">
-        <ng-template mat-tab-label *ngIf="onglet.canActivate">
-          <button mat-button [matMenuTriggerFor]="menu">{{onglet.path}}</button>
-        </ng-template>
-      </mat-tab>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item *ngFor="let item of adminItems"
-          (click)="callRoute('/Administration/' + item.path)"
-          >{{item.path}}
-        </button>
-      </mat-menu>
-    </mat-tab-group>
+    <mat-toolbar-row class="toolbar-text">
 
-    <span class="title">Automobiles</span>
-    <div class="login-zone">
-      <a mat-button (click)="callRoute('user')">{{login.email}}</a>
-      <mat-icon class="login-icon">
-        <ng-container *ngIf="login.email === ''" [ngTemplateOutlet]="sign"></ng-container>
-        <ng-container *ngIf="login.email !== ''" [ngTemplateOutlet]="signout"></ng-container>
-      </mat-icon>
-      <mat-icon class="burger-icon">
-        <svg (click)="burgerMenu = (burgerMenu === '') ? 'cache' : ''" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" id="burger">
-          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-        </svg>
-      </mat-icon>
-    </div>
+      <img src="assets/img/logo.jpg">
 
-  </mat-toolbar-row>
-<!--
+      <mat-tab-group [color]="'primary'"
+        [(selectedIndex)]="selectedTabIndex"
+        (selectedTabChange)="callRoute()"
+        mat-stretch-tabs="false"
+        mat-align-tabs="center">
+        <mat-tab *ngFor="let onglet of onglets"
+          label="{{onglet.path}}">
+          <ng-template mat-tab-label *ngIf="onglet.canActivate">
+            <button mat-button [matMenuTriggerFor]="menu">{{onglet.path}}</button>
+          </ng-template>
+        </mat-tab>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item *ngFor="let item of adminItems"
+            (click)="callRoute('/Administration/' + item.path)"
+            >{{item.path}}
+          </button>
+        </mat-menu>
+      </mat-tab-group>
 
-  <mat-toolbar-row *ngFor="let onglet of getRouterConfig()" class="burger-visible">
-    <a (click)="callRoute(onglet.path)" mat-button>{{onglet.path}}</a>
-  </mat-toolbar-row>
--->
+      <span class="title">Automobiles</span>
+      <div class="login-zone">
+        <a mat-button (click)="callRoute('user')">{{login.email}}</a>
+        <mat-icon class="login-icon">
+          <ng-container *ngIf="login.email === ''" [ngTemplateOutlet]="sign"></ng-container>
+          <ng-container *ngIf="login.email !== ''" [ngTemplateOutlet]="signout"></ng-container>
+        </mat-icon>
+        <mat-icon class="burger-icon">
+          <svg (click)="burgerMenu = (burgerMenu === '') ? 'cache' : ''" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" id="burger">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+        </mat-icon>
+      </div>
 
-</mat-toolbar>
+    </mat-toolbar-row>
+  <!--
+
+    <mat-toolbar-row *ngFor="let onglet of getRouterConfig()" class="burger-visible">
+      <a (click)="callRoute(onglet.path)" mat-button>{{onglet.path}}</a>
+    </mat-toolbar-row>
+  -->
+
+  </mat-toolbar>
+
+</header>
 
 <ng-template #sign>
     <svg (click)="callRoute('Signin')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">

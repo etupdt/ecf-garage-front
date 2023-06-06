@@ -1,5 +1,8 @@
+
+@import '../../app.component.scss';
+
 mat-toolbar {
-  background-color: #ffffff;
+  background-color: $color3;
   height: 100px;
 }
 
@@ -36,12 +39,12 @@ mat-toolbar {
   flex-direction: row;
 }
 
-.login-zone a {
-//  width: 0px
-}
-
 button {
+  background-color: $color3;;
   padding: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
 }
 
 mat-flat-button {
