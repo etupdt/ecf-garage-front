@@ -48,6 +48,10 @@ export class User {
     this.firstname = data.firstname,
     this.lastname = data.lastname,
     this.phone = data.phone
+    this.garage = new Garage().deserialize({
+      raison: "Garage Vincent Parrot"
+    })
+
 
     return this
   }

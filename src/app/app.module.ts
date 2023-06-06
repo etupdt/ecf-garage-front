@@ -34,6 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UsersComponent } from './pages/user/users.component';
 import { MatTableModule } from '@angular/material/table';
+import { FooterComponent } from './commun/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { MatTableModule } from '@angular/material/table';
     MessageDialogComponent,
     ConfirmDialogComponent,
     UsersComponent,
-    UserComponent
+    UserComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

@@ -25,23 +25,6 @@ export class Garage {
 //  users: User[]
 
    constructor() {
-/*    this.id = data.id;
-    this.raison = data.raison
-    this.phone = data.phone
-    this.address1 = data.address1
-    this.address2 = data.address2
-    this.zip = data.zip
-    this.locality = data.locality
-    this.day1hours = data.day1hours
-    this.day2hours = data.day2hours
-    this.day3hours = data.day3hours
-    this.day4hours = data.day4hours
-    this.day5hours = data.day5hours
-    this.day6hours = data.day6hours
-    this.day7hours = data.day7hours
-    this.comments = data.comments
-    this.cars = data.cars
-    this.services = data.services*/
   }
 
   toString() {
@@ -127,21 +110,21 @@ export class Garage {
   public deserialize(data: any) {
 
     let commentsDeSerialized: any[] = []
-    if (data.comments !=null) {
+    if (data.comments != null) {
       data.comments.forEach((comment: Comment) => {
         commentsDeSerialized.push(comment.deserialize(comment))
       })
     }
 
     let carsDeSerialized: any[] = []
-    if (data.cars !=null) {
+    if (data.cars != null) {
       data.cars.forEach((car: Car) => {
         carsDeSerialized.push(car.deserialize(car))
       })
     }
 
     let servicesDeSerialized: any[] = []
-    if (data.cars !=null) {
+    if (data.cars != null) {
       data.services.forEach((service: Service) => {
         servicesDeSerialized.push(new Service().deserialize(service))
       })

@@ -1,4 +1,12 @@
 
+$color1: #D92332;
+$color2: #D94350;
+$color3: #D9777F;
+$color4: #262526;
+$color5: #F2F2F2;
+
+//$primary: $color3;
+
 .medium {
   height: 87vh;
   max-width:1200px;
@@ -29,11 +37,13 @@
 
 .col-1 {
   width: 80%;
+  margin: 10px;
 }
 
 h3 {
   text-align: left;
   width: 100%;
+  color: $color4;
 }
 
 table {
@@ -43,9 +53,60 @@ table {
 button {
   width: 100%;
   height: 80%;
-  border: 1px solid black;
+  border: 1px solid $color4;
+  background-color: $color5;
+  span, svg {
+    color: $color4
+  }
+}
+
+.update-button {
+  color: $color3;
+}
+
+.delete-button {
+  color: $color3;
 }
 
 .selected {
-  background-color: #CCCCCC;
+  background-color: $color3;
+  td, th, .delete-button, .update-button {
+    color: $color5;
+  }
+}
+
+.table-desactivate {
+  td, th {
+    color: #CCCCCC;
+  }
+  .delete-button svg, .update-button svg {
+    visibility: hidden;
+  }
+}
+
+.filter {
+  width: 100%;
+  input, mat-label {
+    color: $color1;
+  }
+}
+
+td, th {
+  color: $color3;
+}
+
+::ng-deep input.mat-input-element {
+  color: $color1;
+}
+
+::ng-deep .mat-focused .mat-form-field-underline .mat-form-field-ripple{
+  background-color: $color3;
+}
+
+::ng-deep input.mat-input-element {
+  color: $color3;
+}
+
+.cache {
+  display: none;
 }
