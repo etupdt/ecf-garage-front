@@ -4,7 +4,4 @@ export interface IImage {
   filename: string
   //  car: Car
 
-  serialize?: Function
-  deserialize?: Function
-
 }

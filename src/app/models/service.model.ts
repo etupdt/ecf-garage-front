@@ -1,7 +1,6 @@
-import { IService } from "../interface/service.interface";
 import { Image } from "../models/image.model";
 
-export class Service implements IService {
+export class Service {
 
   id!: number;
   name!: string;
@@ -9,13 +8,7 @@ export class Service implements IService {
   image!: Image;
 
   constructor()
-  {
-/*    console.log(data.image)
-    this.id = data.id
-    this.name = data.name
-    this.description = data.description
-    this.image = data.image*/
-  }
+  {}
 
   toString() {
     return "Service{" +
@@ -40,7 +33,7 @@ export class Service implements IService {
     this.id = data.id,
     this.name = data.name
     this.description = data.description
-    this.image = data.image
+    this.image = new Image().deserialize(data.image)
 
     return this
   }

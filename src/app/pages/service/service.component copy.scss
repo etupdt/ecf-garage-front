@@ -1,0 +1,103 @@
+
+@import '../../app.component.scss';
+
+mat-form-field {
+  width: 100%;
+  height: 90%;
+}
+
+.row {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+
+mat-grid-list, img {
+  width: 100%;
+}
+
+button {
+  width: 100%;
+  height: 90%;
+  border: 1px solid black;
+}
+
+h3 {
+  margin-top: 31px;
+}
+
+.separate {
+  width: 4%;
+}
+
+.col-2 {
+  width: 48%;
+}
+
+.col-1 {
+  width: 100%;
+}
+
+textarea {
+  height: 100%;
+}
+
+.mat-form-field-wrapper {
+  height: 100%;
+}
+/*
+::ng-deep input.mat-input-element {
+  color: #d9777f;
+}
+
+::ng-deep .mat-focused .mat-form-field-underline .mat-form-field-ripple{
+  background-color: #d9777f !important;
+}
+
+::ng-deep input.mat-input-element {
+  color: #d9777f;
+}*/
+
+.image-div {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.image-h {
+  width: 100%;
+  height: auto;
+}
+
+.image-v {
+  width: auto;
+  height: 100%;
+}
+
+.composant-desc {
+  margin-bottom: 30px;
+}
+
+@media screen and (max-width: 1080px) {
+
+}
+
+@media screen and (max-width: 800px) {
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col-2 {
+    width: 100%;
+  }
+
+}
+
+@media screen and (max-width: 520px) {
+
+}

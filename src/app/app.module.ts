@@ -37,6 +37,7 @@ import { MatTableModule } from '@angular/material/table';
 import { FooterComponent } from './commun/footer/footer.component';
 import { MatListModule } from '@angular/material/list';
 import { GaragesComponent } from './pages/garage/garages.component';
+import { ServicesComponent } from './pages/service/services.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { GaragesComponent } from './pages/garage/garages.component';
     UsersComponent,
     UserComponent,
     FooterComponent,
-    GaragesComponent
+    GaragesComponent,
+    ServicesComponent
   ],
   imports: [
     BrowserModule,

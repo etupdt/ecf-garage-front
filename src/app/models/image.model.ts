@@ -1,13 +1,11 @@
 import { IImage } from "../interface/image.interface";
 
-export class Image implements IImage {
+export class Image {
 
-  id: number
-  filename: string
+  id!: number
+  filename!: string
 
-  constructor(data: any) {
-    this.id = data.id;
-    this.filename = data.filename
+  constructor() {
   }
 
   toString() {
@@ -24,10 +22,12 @@ export class Image implements IImage {
     } as Image
   }
 
-  public deserialize(data: Image) {
+  deserialize(data: Image) {
 
     this.id = data.id,
     this.filename = data.filename
+
+    return this
 
   }
 

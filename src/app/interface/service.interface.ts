@@ -5,9 +5,6 @@ export interface IService {
   id: number
   name: string
   description: string
-  image: Image
-
-  serialize?: Function
-  deserialize?: Function
+  image?: Image
 
 }

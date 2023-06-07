@@ -1,92 +1,79 @@
-<div (window:beforeunload)="record()"></div>
-<div *ngIf="serviceForm" [formGroup]="serviceForm" class="content">
+<div *ngIf="serviceForm" [formGroup]="serviceForm">
 
-  <div class="row">
+  <mat-grid-list cols="30" rowHeight="50px">
 
-    <div class="col-1" [ngStyle]="selectStyle">
+    <mat-grid-tile colspan="22">
+      <h3 mat-dialog-title>{{serviceH3Label}}</h3>
+    </mat-grid-tile>
 
-      <h3 mat-dialog-title>{{message}}</h3>
+    <mat-grid-tile colspan="4">
+      <button *ngIf="['update', 'create'].indexOf(state) >= 0 && isUpdated && !serviceForm.invalid" class="button" mat-raised-button (click)="saveService()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        </svg>
+        <span> Enregistrer</span>
+      </button>
+    </mat-grid-tile>
 
-      <mat-grid-list cols="4" rowHeight="70px">
+    <mat-grid-tile colspan="4">
+      <button *ngIf="['update', 'create'].indexOf(state) >= 0" class="button" mat-raised-button (click)="cancel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+        <span> Abandonner</span>
+      </button>
+    </mat-grid-tile>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Service</mat-label>
-          <mat-select [(value)]="serviceSelected" (selectionChange)="onServiceChange()">
-            <mat-option *ngFor="let service of services;" value="{{service.name}}">{{service.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+  </mat-grid-list>
 
-      </mat-grid-list>
+  <div class="mat-elevation-z8 detail">
 
-    </div>
+    <div class="row">
 
-  </div>
-  <div class="row">
+      <div class="col-2">
 
-    <div class="col-2">
+        <mat-grid-list cols="4" rowHeight="70px">
 
-      <h3 mat-dialog-title>Détail du service</h3>
+          <mat-grid-tile colspan="4">
+            <mat-form-field enabled="'false'">
+              <mat-label>Nom</mat-label>
+              <input matInput formControlName="name" type="name" name="name" placeholder="Nom"/>
+            </mat-form-field>
+          </mat-grid-tile>
 
-      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
+        </mat-grid-list>
+        <mat-grid-list cols="4" rowHeight="400px">
 
-        <mat-grid-tile colspan="4">
-          <mat-form-field appearance="fill" enabled="'false'">
-            <mat-label>Nom</mat-label>
-            <input matInput formControlName="name" type="name" name="name" placeholder="Nom du service"/>
-          </mat-form-field>
-        </mat-grid-tile>
+          <mat-grid-tile colspan="4">
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" type="description" name="description" placeholder="description"></textarea>
+            </mat-form-field>
+          </mat-grid-tile>
 
-      </mat-grid-list>
-      <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
+        </mat-grid-list>
 
-      <mat-grid-list cols="4" rowHeight="400px" class="composant-desc">
-
-        <mat-grid-tile colspan="4">
-          <mat-form-field appearance="fill">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" type="description" name="description" placeholder="description"></textarea>
-          </mat-form-field>
-        </mat-grid-tile>
-
-      </mat-grid-list>
-
-    </div>
-    <div class="separate"></div>
-    <div class="col-2">
-
-      <h3 mat-dialog-title>Image de présentation</h3>
-
-      <mat-grid-list cols="4" rowHeight="70px" class="composant-page">
-        <mat-grid-tile colspan="4">
-          <button [disabled]="serviceForm.disabled" type="button" mat-raised-button (click)="fileInput.click()">Image</button>
-        </mat-grid-tile>
-      </mat-grid-list>
-
-      <div class="image-div">
-        <img *ngIf="image !== null" src="{{image}}" alt="" [ngClass]="imageClass" >
       </div>
-      <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
+      <div class="col-2">
+
+        <mat-grid-list cols="4" rowHeight="70px">
+          <mat-grid-tile colspan="4">
+            <button [disabled]="serviceForm.disabled" type="button" mat-raised-button (click)="fileInput.click()">Image</button>
+          </mat-grid-tile>
+        </mat-grid-list>
+
+        <div class="image-div">
+          <img *ngIf="image !== null" src="{{image}}" alt="" [ngClass]="imageClass" >
+        </div>
+        <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
+
+      </div>
 
     </div>
 
   </div>
 
-  <div class="row">
-
-      <mat-grid-list cols="8" rowHeight="70px" class="composant-buttons">
-
-        <mat-grid-tile colspan="{{4 - buttons.length}}"></mat-grid-tile>
-        <mat-grid-tile colspan="2" *ngFor="let button of buttons">
-          <button class="field" mat-raised-button [disabled]="button.invalid()" (click)="button.click()">{{button.label}}</button>
-        </mat-grid-tile>
-        <mat-grid-tile></mat-grid-tile>
-
-      </mat-grid-list>
-
-  </div>
-
 </div>
 
-<div>
-  <p class="text-danger">{{errorMessage}}</p>
-</div>

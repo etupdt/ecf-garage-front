@@ -12,6 +12,7 @@ import { OptionComponent } from './pages/option/option.component';
 import { AuthGuard } from './services/auth-guard';
 import { UsersComponent } from './pages/user/users.component';
 import { GaragesComponent } from './pages/garage/garages.component';
+import { ServicesComponent } from './pages/service/services.component';
 
 const routes: Routes = [
 
@@ -41,7 +42,7 @@ const routes: Routes = [
       },
       {
         path: 'Service',
-        component: ServiceComponent,
+        component: ServicesComponent,
         data: {
           role: 'ROLE_ADMIN'
         }
