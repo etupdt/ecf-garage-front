@@ -65,7 +65,7 @@
         </mat-grid-list>
 
         <div class="image-div">
-          <img formControlName="hash" *ngIf="image !== null" src="{{image}}" alt="" [ngClass]="imageClass" >
+          <img *ngIf="image !== null && image !== ''" src="{{image}}" alt="" [ngClass]="imageClass" >
         </div>
         <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
 

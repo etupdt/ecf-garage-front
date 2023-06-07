@@ -13,6 +13,19 @@ export class ServiceService {
     private http: HttpClient
   ) { }
 
+  initService = () => {
+    return new Service().deserialize({
+      id: 0,
+      name: '',
+      description: '',
+      image: {
+        id: 0,
+        filename: '',
+        hash: ''
+      }
+    } as Service)
+  }
+
   getServices(): Observable<any> {
 
     return this.http.get(

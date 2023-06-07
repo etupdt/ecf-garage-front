@@ -3,34 +3,35 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
-import { Service } from 'src/app/models/service.model';
-import { ServiceService } from 'src/app/services/service.service';
+import { Option } from 'src/app/models/option.model';
+import { OptionService } from 'src/app/services/option.service';
 
 @Component({
-  selector: 'app-services',
-  templateUrl: './services.component.html',
+  selector: 'app-options',
+  templateUrl: './options.component.html',
   styleUrls: [
-    './services.component.scss']
+    './options.component.scss']
 })
-export class ServicesComponent implements OnInit {
+export class OptionsComponent implements OnInit {
 
   constructor(
-    private serviceService: ServiceService,
+    private optionService: OptionService,
     public dialog: MatDialog,
   ) { }
 
-  services!: Service[]
+  options!: Option[]
 
-  selectedService: Service = this.serviceService.initService()
-  newService!: Service
+  selectedOption!: Option
+  selectedIndex: number = 0
+  newOption: Option = this.optionService.initOption()
   parentState: string = 'display'
 
   ngOnInit(): void {
 
-    this.serviceService.getServices().subscribe({
-      next: (res: Service[]) => {
-        this.services = res
-        this.selectedService = this.services[0]
+    this.optionService.getOptions().subscribe({
+      next: (res: Option[]) => {
+        this.options = res
+        this.selectedOption = this.options[0]
       },
       error: (error: { error: { message: any; }; }) => {
         this.dialog.open(MessageDialogComponent, {
@@ -47,7 +48,7 @@ export class ServicesComponent implements OnInit {
   }
 
   displayedColumns: string[] = ['name', 'description', 'update', 'delete']
-  dataSource = new MatTableDataSource(this.services);
+  dataSource = new MatTableDataSource(this.options);
 
   applyFilter(event: Event) {
     console.log((event.target as HTMLInputElement).value)
@@ -56,23 +57,23 @@ export class ServicesComponent implements OnInit {
   }
 
   isSelected = (index: number) => {
-    return this.selectedService?.name === this.services[index].name && this.parentState !== 'create' ? "selected" : ""
+    return this.selectedOption.name === this.options[index].name && this.parentState !== 'create' ? "selected" : ""
   }
 
-  displayService = (index: number) => {
+  displayOption = (index: number) => {
     if (this.parentState === 'display') {
-      this.selectedService = this.services[index]
+      this.selectedOption = this.options[index]
     }
   }
 
-  updateService = (service: Service) => {
+  updateOption = (option: Option) => {
     if (['update', 'create'].indexOf(this.parentState) < 0) {
-      this.selectedService = service
+      this.selectedOption = option
       this.parentState = 'update'
     }
   }
 
-  deleteService = (service: Service) => {
+  deleteOption = (option: Option) => {
     if (['update', 'create'].indexOf(this.parentState) < 0) {
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -89,21 +90,21 @@ export class ServicesComponent implements OnInit {
         if (result !== 'Supprimer')
           return
 
-        this.selectedService = service
+        this.selectedOption = option
         this.parentState = 'delete'
 
-        if (service.id === 0) {
+        if (option.id === 0) {
           this.deleteInDatasource()
           return
         }
 
-        this.serviceService.deleteService(service.id).subscribe({
+        this.optionService.deleteOption(option.id).subscribe({
           next: (res) => {
             this.deleteInDatasource()
             this.dialog.open(MessageDialogComponent, {
               data: {
                 type: 'Information',
-                message1: `La suppression du service est effective !`,
+                message1: `La suppression du option est effective !`,
                 message2: '',
                 delai: 2000
               }
@@ -113,7 +114,7 @@ export class ServicesComponent implements OnInit {
             this.dialog.open(MessageDialogComponent, {
               data: {
                 type: 'Erreur',
-                message1: `Erreur lors de la suppression du service`,
+                message1: `Erreur lors de la suppression du option`,
                 message2: error.error.message,
                 delai: 0
               }
@@ -125,39 +126,39 @@ export class ServicesComponent implements OnInit {
   }
 
   deleteInDatasource = () => {
-    const index = this.services.findIndex(service => service.id === this.selectedService?.id)
-    this.services.splice(index, 1)
+    const index = this.options.findIndex(option => option.id === this.selectedOption.id)
+    this.options.splice(index, 1)
     this.updateDatasource()
-    if (this.services.length === 0)
-      this.selectedService = this.serviceService.initService()
+    if (this.options.length === 0)
+      this.selectedOption = this.optionService.initOption()
     else
-      this.selectedService = index > this.services.length - 1 ? this.services[index -1] : this.services[index]
+      this.selectedOption = index > this.options.length - 1 ? this.options[index -1] : this.options[index]
     this.parentState = 'display'
   }
 
-  onNewservice = (service: Service) => {
-    this.services.push(service);
-    this.selectedService = this.services[this.services.length - 1]
+  onNewoption = (option: Option) => {
+    this.options.push(option);
+    this.selectedOption = this.options[this.options.length - 1]
     this.updateDatasource()
     this.parentState = 'display'
   }
 
-  onSameservice = (service: Service) => {
-    this.services[this.services.findIndex(service => service.id === this.selectedService?.id)] = service
-    this.selectedService = service
+  onSameoption = (option: Option) => {
+    this.options[this.options.findIndex(option => option.id === this.selectedOption.id)] = option
+    this.selectedOption = option
     this.updateDatasource()
     this.parentState = 'display'
   }
 
-  createService = () => {
+  createOption = () => {
     this.parentState = 'create'
   }
 
   updateDatasource = () => {
-    let newServices: Service[] = []
-    this.services.forEach(service => newServices.push(service))
-    this.services = newServices
-    this.dataSource.connect().next(this.services)
+    let newOptions: Option[] = []
+    this.options.forEach(option => newOptions.push(option))
+    this.options = newOptions
+    this.dataSource.connect().next(this.options)
   }
 
 }

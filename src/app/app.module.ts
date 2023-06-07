@@ -38,6 +38,8 @@ import { FooterComponent } from './commun/footer/footer.component';
 import { MatListModule } from '@angular/material/list';
 import { GaragesComponent } from './pages/garage/garages.component';
 import { ServicesComponent } from './pages/service/services.component';
+import { OptionsComponent } from './pages/option/options.component';
+import { CommentsComponent } from './pages/comment/comments/comments.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { ServicesComponent } from './pages/service/services.component';
     UserComponent,
     FooterComponent,
     GaragesComponent,
-    ServicesComponent
+    ServicesComponent,
+    OptionsComponent,
+    CommentsComponent
   ],
   imports: [
     BrowserModule,

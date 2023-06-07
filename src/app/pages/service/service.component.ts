@@ -44,31 +44,13 @@ export class ServiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initForm(new Service().deserialize({
-      id: 0,
-      name: '',
-      description: '',
-      image: {
-        id: 0,
-        filename: '',
-        hash: ''
-      }
-    } as Service))
+    this.initForm(this.serviceService.initService())
   }
 
   ngOnChanges(changes: SimpleChanges) {
     console.log('onChangesService')
     if (this.state === 'create') {
-      this.initForm(new Service().deserialize({
-        id: 0,
-        name: '',
-        description: '',
-        image: {
-          id: 0,
-          filename: '',
-          hash: ''
-        }
-      } as Service)
+      this.initForm(this.serviceService.initService()
     )} else {
       this.initForm(this.service)
     }
@@ -114,11 +96,16 @@ export class ServiceComponent implements OnInit {
         id: [{value: service.id, disabled: true}],
         name: [service.name, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
         description: [service.description, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-        hash: [service.image.hash],
+        hash: [service.image.hash, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{1,}/)]],
       })
 
-      this.image = environment.useBackendImages + '/' + (service.image ? service.image.id + '_' + service.image.filename : '0_default.jpg')
-      this.imageChange()
+      if (service.image) {
+        this.image = ''
+        if (service.image.filename !== '') {
+          this.image = environment.useBackendImages + '/' + service.image.id + '_' + service.image.filename
+          this.imageChange()
+        }
+      }
 
       this.serviceH3Label = service ? `Service ${service.name}` : ''
 
@@ -149,12 +136,10 @@ export class ServiceComponent implements OnInit {
   }
 
   checkChanges(): boolean {
-    console.log(this.service.name !== this.serviceForm.get("name")!.value)
-    console.log(this.service.description !== this.serviceForm.get("description")!.value)
-    console.log(this.service.image.hash !== this.serviceForm.get("hash")!.value)
-    this.isUpdated = this.service.name !== this.serviceForm.get("name")!.value ||
-    this.service.description !== this.serviceForm.get("description")!.value ||
-    this.service.image.hash !== this.serviceForm.get("hash")!.value
+    this.isUpdated = this.service?.name !== this.serviceForm.get("name")!.value ||
+    this.service?.description !== this.serviceForm.get("description")!.value ||
+    this.service?.image.hash !== this.serviceForm.get("hash")!.value
+
 
     return this.isUpdated
   }

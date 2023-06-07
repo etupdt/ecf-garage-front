@@ -1,13 +1,10 @@
 export class Option {
 
-  id: number
-  name: string
-  description: string
+  id!: number
+  name!: string
+  description!: string
 
-  constructor(data: any) {
-    this.id = data.id;
-    this.name = data.name
-    this.description = data.description
+  constructor() {
   }
 
   toString() {
