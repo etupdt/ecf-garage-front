@@ -9,7 +9,7 @@
         <mat-grid-tile colspan="6">
           <h3 mat-dialog-title>Garages</h3>
         </mat-grid-tile>
-
+ 
         <mat-grid-tile colspan="4"></mat-grid-tile>
 
         <mat-grid-tile colspan="1">
@@ -87,10 +87,12 @@
 
   </div>
 
-  <div class="row">
-    <div class="col-1">
-      <app-garage [garage]="selectedGarage" (samegarage)="onSamegarage($event)" [(state)]="parentState" (newgarage)="onNewgarage($event)"></app-garage>
-    </div>
-  </div>
+  <app-garage
+    [garage]="selectedGarage"
+    (samegarage)="onSamegarage($event)"
+    [(state)]="parentState"
+    (newgarage)="onNewgarage($event)"
+    class="row">
+  </app-garage>
 
 </div>

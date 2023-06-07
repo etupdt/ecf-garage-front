@@ -28,7 +28,7 @@ export class ServiceComponent implements OnInit {
   serviceH3Label: string = ''
 
   image!: string
-  lastImage!: string
+  newImage!: string
   frontImage!: FormData
   imageClass = "image-h"
 
@@ -50,7 +50,8 @@ export class ServiceComponent implements OnInit {
       description: '',
       image: {
         id: 0,
-        filename: ''
+        filename: '',
+        hash: ''
       }
     } as Service))
   }
@@ -64,7 +65,8 @@ export class ServiceComponent implements OnInit {
         description: '',
         image: {
           id: 0,
-          filename: ''
+          filename: '',
+          hash: ''
         }
       } as Service)
     )} else {
@@ -112,10 +114,10 @@ export class ServiceComponent implements OnInit {
         id: [{value: service.id, disabled: true}],
         name: [service.name, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
         description: [service.description, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+        hash: [service.image.hash],
       })
 
       this.image = environment.useBackendImages + '/' + (service.image ? service.image.id + '_' + service.image.filename : '0_default.jpg')
-      this.lastImage = this.image
       this.imageChange()
 
       this.serviceH3Label = service ? `Service ${service.name}` : ''
@@ -147,12 +149,14 @@ export class ServiceComponent implements OnInit {
   }
 
   checkChanges(): boolean {
-
+    console.log(this.service.name !== this.serviceForm.get("name")!.value)
+    console.log(this.service.description !== this.serviceForm.get("description")!.value)
+    console.log(this.service.image.hash !== this.serviceForm.get("hash")!.value)
     this.isUpdated = this.service.name !== this.serviceForm.get("name")!.value ||
-      this.service.description !== this.serviceForm.get("description")!.value
+    this.service.description !== this.serviceForm.get("description")!.value ||
+    this.service.image.hash !== this.serviceForm.get("hash")!.value
 
     return this.isUpdated
-
   }
 
   formatService = (service: Service): Service => {
@@ -163,7 +167,8 @@ export class ServiceComponent implements OnInit {
       description: this.serviceForm.get("description")?.value,
       image: {
         id: 0,
-        filename: ''
+        filename: '',
+        hash: this.serviceForm.get("hash")?.value
       }
     } as Service)
 
@@ -181,7 +186,7 @@ export class ServiceComponent implements OnInit {
 
       this.serviceService.postService(this.frontImage).subscribe({
         next: (res) => {
-          this.newservice.emit(service)
+          this.newservice.emit(new Service().deserialize(res[0]))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -208,7 +213,7 @@ export class ServiceComponent implements OnInit {
 
       this.serviceService.putService(this.frontImage).subscribe({
         next: (res) => {
-          this.sameservice.emit(service)
+          this.sameservice.emit(new Service().deserialize(res[0]))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -248,7 +253,10 @@ export class ServiceComponent implements OnInit {
       reader.readAsDataURL(inputNode.files[0]);
 
       reader.onload = () => {
-        console.log(Md5.hashStr(reader.result as string))
+        const hash = Md5.hashStr(reader.result as string)
+        this.serviceForm.get("hash")!.setValue(hash)
+        this.serviceForm.get("name")!.setValue(this.serviceForm.get("name")!.value)
+        this.frontImage.append("image_hash", hash);
         this.image = reader.result as string
         this.imageChange()
       };
@@ -261,8 +269,6 @@ export class ServiceComponent implements OnInit {
 
     let img: HTMLImageElement = new Image()
     img.src = this.image
-
-    this.isUpdated = true
 
     img.onload = () => {
       this.imageClass = img.width > img.height ? "image-h" : "image-v"

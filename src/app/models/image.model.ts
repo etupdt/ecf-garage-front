@@ -4,6 +4,7 @@ export class Image {
 
   id!: number
   filename!: string
+  hash!: string
 
   constructor() {
   }
@@ -12,6 +13,7 @@ export class Image {
     return "Image{" +
       "id=" + this.id +
       ", filename='" + this.filename + '\'' +
+      ", hash='" + this.hash + '\'' +
       '}';
   }
 
@@ -19,6 +21,7 @@ export class Image {
     return {
       id: this.id,
       filename: this.filename,
+      hash: this.hash,
     } as Image
   }
 
@@ -26,6 +29,7 @@ export class Image {
 
     this.id = data.id,
     this.filename = data.filename
+    this.hash = data.hash
 
     return this
 

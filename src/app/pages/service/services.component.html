@@ -77,10 +77,12 @@
 
   </div>
 
-  <div class="row">
-    <div class="col-1">
-      <app-service [service]="selectedService" (sameservice)="onSameservice($event)" [(state)]="parentState" (newservice)="onNewservice($event)"></app-service>
-    </div>
-  </div>
+  <app-service
+    [service]="selectedService"
+    (sameservice)="onSameservice($event)"
+    [(state)]="parentState"
+    (newservice)="onNewservice($event)"
+    class="row">
+  </app-service>
 
 </div>

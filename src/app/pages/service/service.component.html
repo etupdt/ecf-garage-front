@@ -1,4 +1,4 @@
-<div *ngIf="serviceForm" [formGroup]="serviceForm">
+<div *ngIf="serviceForm" [formGroup]="serviceForm" class="col-1">
 
   <mat-grid-list cols="30" rowHeight="50px">
 
@@ -65,7 +65,7 @@
         </mat-grid-list>
 
         <div class="image-div">
-          <img *ngIf="image !== null" src="{{image}}" alt="" [ngClass]="imageClass" >
+          <img formControlName="hash" *ngIf="image !== null" src="{{image}}" alt="" [ngClass]="imageClass" >
         </div>
         <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
 

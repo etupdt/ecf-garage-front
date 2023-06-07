@@ -92,10 +92,12 @@
 
   </div>
 
-  <div class="row">
-    <div class="col-1">
-      <app-user [user]="selectedUser" (sameuser)="onSameuser($event)" [(state)]="parentState" (newuser)="onNewuser($event)"></app-user>
-    </div>
-  </div>
+  <app-user
+    [user]="selectedUser"
+    (sameuser)="onSameuser($event)"
+    [(state)]="parentState"
+    (newuser)="onNewuser($event)"
+    class="row">
+  </app-user>
 
 </div>
