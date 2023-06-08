@@ -14,6 +14,7 @@ import { UsersComponent } from './pages/user/users.component';
 import { GaragesComponent } from './pages/garage/garages.component';
 import { ServicesComponent } from './pages/service/services.component';
 import { OptionsComponent } from './pages/option/options.component';
+import { CommentsComponent } from './pages/comment/comments.component';
 
 const routes: Routes = [
 
@@ -64,7 +65,7 @@ const routes: Routes = [
       },
       {
         path: 'Comment',
-        component: CommentComponent,
+        component: CommentsComponent,
         data: {
           role: 'ROLE_USER'
         }

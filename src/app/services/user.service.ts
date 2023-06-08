@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
+import { Garage } from '../models/garage.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,23 @@ export class UserService {
 
     return this.http.get(
       environment.useBackend + `/api/user`
+    )
+
+  }
+
+  getUsersByGarage(garage_id: number): Observable<any> {
+
+    return this.http.get(
+      environment.useBackend + `/api/user/garage/${garage_id}`
+    )
+
+  }
+
+  postUsersByGarage(garage: Garage): Observable<any> {
+
+    return this.http.post(
+      environment.useBackend + `/api/user/garage`,
+      garage
     )
 
   }

@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Login } from 'src/app/interface/login.interface';
 import { User } from 'src/app/models/user.model';
+import { GarageService } from 'src/app/services/garage.service';
+import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -16,10 +19,17 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    public dialog: MatDialog,
+    private garageService: GarageService,
+    private dialog: MatDialog,
+    private loginService: LoginService
   ) { }
 
   users!: User[]
+
+  login$: Login = {
+    email: '',
+    roles: []
+  }
 
   selectedUser!: User
   selectedIndex: number = 0
@@ -28,7 +38,9 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.userService.getUsers().subscribe({
+    this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+
+    this.userService.getUsersByGarage(this.garageService.garage.id).subscribe({
       next: (res: User[]) => {
         this.users = res
         this.selectedUser = this.users[0]

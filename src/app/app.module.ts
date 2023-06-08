@@ -39,7 +39,8 @@ import { MatListModule } from '@angular/material/list';
 import { GaragesComponent } from './pages/garage/garages.component';
 import { ServicesComponent } from './pages/service/services.component';
 import { OptionsComponent } from './pages/option/options.component';
-import { CommentsComponent } from './pages/comment/comments/comments.component';
+import { CommentsComponent } from './pages/comment/comments.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { CommentsComponent } from './pages/comment/comments/comments.component';
     MatDialogModule,
     MatButtonToggleModule,
     MatTableModule,
-    MatListModule
+    MatListModule,
+    MatCheckboxModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

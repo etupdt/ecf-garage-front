@@ -2,22 +2,15 @@ import { Garage } from "./garage.model"
 
 export class Comment {
 
-  id: number
-  firstname: string
-  lastname: string
-  comment: string
-  note: number
-  isApproved: boolean
-  garage: Garage
+  id!: number
+  firstname!: string
+  lastname!: string
+  comment!: string
+  note!: number
+  isApproved!: boolean
+  garage!: Garage
 
-  constructor(data: any) {
-    this.id = data.id
-    this.firstname = data.firstname
-    this.lastname = data.lastname
-    this.comment = data.comment
-    this.note = data.note
-    this.isApproved = data.isApproved
-    this.garage = data.garage
+  constructor() {
   }
 
   toString() {
@@ -51,7 +44,9 @@ export class Comment {
     this.comment = data.comment
     this.note = data.note
     this.isApproved = data.isApproved
-    this.garage = data.garage.deserialize()
+    this.garage = new Garage().deserialize(data.garage)
+
+    return this
   }
 
 }

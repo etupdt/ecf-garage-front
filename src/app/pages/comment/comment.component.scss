@@ -1,0 +1,23 @@
+
+@import '../../app.component.scss';
+
+.mat-mdc-form-field {
+  font-size: 14px;
+}
+
+mat-checkbox {
+  width: 100%;
+}
+
+textarea {
+  max-height: 270px;
+}
+
+
+.star-disbaled {
+  color: rgb(244, 226, 189);
+}
+
+.star-enabled {
+  color: rgb(253, 166, 3);
+}

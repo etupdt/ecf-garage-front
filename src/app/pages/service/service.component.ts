@@ -94,7 +94,7 @@ export class ServiceComponent implements OnInit {
 
       this.serviceForm = this.formBuilder.group({
         id: [{value: service.id, disabled: true}],
-        name: [service.name, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+        name: [service.name, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{3,}/)]],
         description: [service.description, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
         hash: [service.image.hash, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{1,}/)]],
       })
