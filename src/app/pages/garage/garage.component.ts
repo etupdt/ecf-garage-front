@@ -11,9 +11,7 @@
   @Component({
     selector: 'app-garage',
     templateUrl: './garage.component.html',
-    styleUrls: [
-      './garage.component.scss'
-    ]
+    styleUrls: ['./garage.component.scss']
   })
   export class GarageComponent implements OnInit {
 
@@ -40,46 +38,14 @@
     }
 
     ngOnInit(): void {
-      this.initForm(new Garage().deserialize({
-        id: 0,
-        raison: '',
-        phone: '',
-        address1: '',
-        address2: '',
-        zip: '',
-        locality: '',
-        day1hours: '',
-        day2hours: '',
-        day3hours: '',
-        day4hours: '',
-        day5hours: '',
-        day6hours: '',
-        day7hours: '',
-        services: []
-      }))
+      this.initForm(this.garageService.garageInit)
       this.getServices()
     }
 
     ngOnChanges(changes: SimpleChanges) {
       console.log('onChangesGarage', changes)
       if (this.state === 'create') {
-        this.initForm(new Garage().deserialize({
-          id: 0,
-          raison: '',
-          phone: '',
-          address1: '',
-          address2: '',
-          zip: '',
-          locality: '',
-          day1hours: '',
-          day2hours: '',
-          day3hours: '',
-          day4hours: '',
-          day5hours: '',
-          day6hours: '',
-          day7hours: '',
-          services: []
-          })
+        this.initForm(new Garage().deserialize(this.garageService.garageInit)
       )} else {
         this.initForm(this.garage)
       }
@@ -339,7 +305,5 @@
       })
 
     }
-
-    //=======================>
 
   }

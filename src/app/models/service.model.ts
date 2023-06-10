@@ -11,12 +11,14 @@ export class Service {
   {}
 
   toString() {
-    return "Service{" +
-      "id=" + this.id +
-      ", name='" + this.name + '\'' +
-      ", description='" + this.description + '\'' +
-      ", image=" + this.image.toString() +
-      '}';
+
+    return `{ \
+      "id": ${this.id}, \
+      "name": "${this.name}", \
+      "description": "${this.description}," \
+      "image": ${this.image.toString()} \
+    }`
+
   }
 
   public serialize = (): Service => {

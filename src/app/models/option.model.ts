@@ -8,11 +8,13 @@ export class Option {
   }
 
   toString() {
-    return "Option{" +
-      "id=" + this.id +
-      ", name='" + this.name + '\'' +
-      ", description='" + this.description + '\'' +
-      '}';
+
+    return `{ \
+      "id": ${this.id}, \
+      "name": "${this.name}", \ 
+      "description": "${this.description}" \
+    }`
+
   }
 
   serialize() {

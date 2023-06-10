@@ -29,43 +29,43 @@ export class Garage {
 
   toString() {
 
-    let comments: string = "["
+    let comments: string[] = []
     this.comments.forEach(comment => {
-      comments += ", " + comment.toString()
+      comments.push(comment.toString())
     })
-    comments += "]"
+    let commentsString = '[' + comments.join() + ']'
 
-    let cars: string = "["
+    let cars: string[] = []
     this.cars.forEach(car => {
-      cars += ", " + car.toString()
+      cars.push(car.toString())
     })
-    cars += "]"
+    let carsString = '[' + cars.join() + ']'
 
-    let services: string = "["
+    let services: string[] = []
     this.services.forEach(service => {
-      services += ", " + service.toString()
+      services.push(service.toString())
     })
-    services += "]"
+    let servicesString = '[' + services.join() + ']'
 
-    let retour = "Garage{" +
-      "id=" + this.id +
-      ", raison='" + this.raison + '\'' +
-      ", phone='" + this.phone + '\'' +
-      ", address1='" + this.address1 + '\'' +
-      ", address2='" + this.address2 + '\'' +
-      ", zip=" + this.zip +
-      ", locality='" + this.locality + '\'' +
-      ", day1hours='" + this.day1hours + '\'' +
-      ", day2hours='" + this.day2hours + '\'' +
-      ", day3hours='" + this.day3hours + '\'' +
-      ", day4hours='" + this.day4hours + '\'' +
-      ", day5hours='" + this.day5hours + '\'' +
-      ", day6hours='" + this.day6hours + '\'' +
-      ", day7hours='" + this.day7hours + '\'' +
-      ", comments=" + comments +
-      ", cars=" + cars +
-      ", services=" + services +
-    '}';
+    return `{ \
+      "id": ${this.id}, \
+      "phone": "${this.phone}", \
+      "address1": "${this.address1}", \
+      "address2": "${this.address2}", \
+      "zip": "${this.zip}", \
+      "locality": "${this.locality}", \
+      "day1hours": "${this.day1hours}", \
+      "day2hours": "${this.day2hours}", \
+      "day3hours": "${this.day3hours}", \
+      "day4hours": "${this.day4hours}", \
+      "day5hours": "${this.day5hours}", \
+      "day6hours": "${this.day6hours}", \
+      "day7hours": "${this.day7hours}", \
+      "comments": ${commentsString}, \
+      "cars": ${carsString}, \
+      "services": ${servicesString} \
+    }`
+
   }
 
   public serialize() {

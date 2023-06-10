@@ -5,6 +5,7 @@ import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-d
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { Login } from 'src/app/interface/login.interface';
 import { Comment } from 'src/app/models/comment.model';
+import { Garage } from 'src/app/models/garage.model';
 import { CommentService } from 'src/app/services/comment.service';
 import { GarageService } from 'src/app/services/garage.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -38,6 +39,8 @@ export class CommentComponent implements OnInit {
     roles: []
   }
 
+  garage$!: Garage
+
   constructor(
     private formBuilder: FormBuilder,
     private commentService: CommentService,
@@ -50,8 +53,11 @@ export class CommentComponent implements OnInit {
   ngOnInit(): void {
 
     this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
-    this.initForm(this.commentService.initComment())
+    this.comment = this.commentService.initComment()
+
+    this.initForm(this.comment)
 
   }
 
@@ -67,7 +73,6 @@ export class CommentComponent implements OnInit {
   ngOnDestroy(): void {
     this.quit()
   }
-
 
   quit = () => {
 
@@ -158,7 +163,7 @@ export class CommentComponent implements OnInit {
       comment: this.commentForm.get("comment")?.value,
       note: this.note,
       isApproved: this.comment.isApproved,
-      garage: this.garageService.garage.serialize()
+      garage: this.garage$
     })
 
   }
@@ -171,7 +176,7 @@ export class CommentComponent implements OnInit {
 
       this.commentService.postComment(comment).subscribe({
         next: (res) => {
-          this.newcomment.emit(new Comment().deserialize(res[0]))
+          this.newcomment.emit(new Comment().deserialize(res))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',

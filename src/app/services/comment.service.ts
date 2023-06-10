@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Comment } from '../models/comment.model';
+import { Garage } from '../models/garage.model';
+import { GarageService } from './garage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,14 @@ import { Comment } from '../models/comment.model';
 export class CommentService {
 
   constructor(
-    private http: HttpClient
-  ) { }
+    private http: HttpClient,
+    private garageService: GarageService
+
+  ) {
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
+  }
+
+  garage$!: Garage
 
   initComment = () => {
     return new Comment().deserialize({
@@ -21,7 +29,7 @@ export class CommentService {
       comment: '',
       note: 0,
       isApproved: false,
-      garage: {}
+      garage: this.garage$
     } as Comment)
   }
 
@@ -33,10 +41,10 @@ export class CommentService {
 
   }
 
-  getCommentByGarage(garage_id: number): Observable<any> {
+  getCommentsByGarage(garage_id: number): Observable<any> {
 
     return this.http.get(
-      environment.useBackend + `/api/user/garage/${garage_id}`
+      environment.useBackend + `/api/comment/garage/${garage_id}`
     )
 
   }

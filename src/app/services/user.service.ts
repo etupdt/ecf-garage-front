@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
 import { Garage } from '../models/garage.model';
+import { GarageService } from './garage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,26 @@ import { Garage } from '../models/garage.model';
 export class UserService {
 
   constructor(
-    private http: HttpClient
-  ) { }
+    private http: HttpClient,
+    private garageService: GarageService
+  ) {
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
+  }
+
+  garage$!: Garage
+
+  initUser = () => {
+    return new User().deserialize({
+      id: 0,
+      email: '',
+      password: '',
+      roles: [],
+      firstname: '',
+      lastname: '',
+      phone: '',
+      garage: this.garage$
+    })
+  }
 
   getUsers(): Observable<any> {
 

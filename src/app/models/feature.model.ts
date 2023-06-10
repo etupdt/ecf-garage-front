@@ -1,21 +1,20 @@
 export class Feature {
 
-  id: number
-  name: string
-  description: string
+  id!: number
+  name!: string
+  description!: string
 
-  constructor(data: any) {
-    this.id = data.id;
-    this.name = data.name
-    this.description = data.description
+  constructor() {
   }
 
   toString() {
-    return "Feature{" +
-      "id=" + this.id +
-      ", name='" + this.name + '\'' +
-      ", description='" + this.description + '\'' +
-      '}';
+
+    return `{ \
+      "id": ${this.id}, \
+      "name": "${this.name}", \ 
+      "description": "${this.description}" \
+    }`
+
   }
 
   serialize() {
@@ -27,7 +26,7 @@ export class Feature {
   }
 
   deserialize(data: any) {
-    
+
     this.id = data.id,
     this.name = data.name
     this.description = data.description

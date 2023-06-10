@@ -1,0 +1,22 @@
+@import '../../app.component.scss';
+
+.mat-mdc-form-field {
+  font-size: 14px;
+}
+
+.image-div {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.image-h {
+  width: 100%;
+  height: auto;
+}
+
+.image-v {
+  width: auto;
+  height: 100%;
+}

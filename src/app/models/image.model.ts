@@ -10,11 +10,13 @@ export class Image {
   }
 
   toString() {
-    return "Image{" +
-      "id=" + this.id +
-      ", filename='" + this.filename + '\'' +
-      ", hash='" + this.hash + '\'' +
-      '}';
+    
+    return `{ \
+      "id": ${this.id}, \
+      "filename": "${this.filename}", \ \
+      "hash": "${this.hash}" \
+    }`
+
   }
 
   serialize = (): Image => {

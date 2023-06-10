@@ -41,6 +41,7 @@ import { ServicesComponent } from './pages/service/services.component';
 import { OptionsComponent } from './pages/option/options.component';
 import { CommentsComponent } from './pages/comment/comments.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CarsComponent } from './pages/car/cars.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     GaragesComponent,
     ServicesComponent,
     OptionsComponent,
-    CommentsComponent
+    CommentsComponent,
+    CarsComponent
   ],
   imports: [
     BrowserModule,

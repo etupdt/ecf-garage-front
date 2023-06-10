@@ -15,13 +15,16 @@ export class Contact {
   }
 
   toString() {
-    return "Option{" +
-      "id=" + this.id +
-      ", subject='" + this.subject + '\'' +
-      ", message='" + this.message + '\'' +
-      ", garage=" + this.garage.toString() +
-    '}';
+
+    return `{ \
+      "id": ${this.id}, \
+      "subject": "${this.subject},", \
+      "message": "${this.message}," \
+      "garage": ${this.garage.toString()} \
+    }`
+
   }
+
 
   serialize() {
     return {

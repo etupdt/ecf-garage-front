@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Service } from '../models/service.model';
+import { ImageService } from './image.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ import { Service } from '../models/service.model';
 export class ServiceService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private imageService: ImageService
   ) { }
 
   initService = () => {
@@ -18,11 +20,7 @@ export class ServiceService {
       id: 0,
       name: '',
       description: '',
-      image: {
-        id: 0,
-        filename: '',
-        hash: ''
-      }
+      image: this.imageService.initImage()
     } as Service)
   }
 

@@ -15,15 +15,15 @@ export class AppComponent implements OnInit {
 
   constructor (
     private loginService: LoginService,
-  ) {
-
-  }
+    private garageService: GarageService,
+  ) {}
 
   ngOnInit(): void {
 
     this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
-    this.loginService.getToken()
+//    this.loginService.getToken()
 
   }
 
@@ -31,5 +31,7 @@ export class AppComponent implements OnInit {
     email: '',
     roles: []
   }
+
+  garage$!: Garage
 
 }

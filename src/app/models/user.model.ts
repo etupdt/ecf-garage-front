@@ -15,16 +15,18 @@ export class User {
   }
 
   toString() {
-    return "User{" +
-      "id=" + this.id +
-      ", email='" + this.email + '\'' +
-      ", roles='" + this.roles + '\'' +
-      ", password=****" +
-      ", firstname='" + this.firstname + '\'' +
-      ", lastname='" + this.lastname + '\'' +
-      ", phone='" + this.phone + '\'' +
-      ", garage='" + this.garage.toString() + '\'' +
-      '}';
+
+    return `{ \
+      "id": ${this.id}, \
+      "email": "${this.email}," \
+      "roles": "${this.roles}," \
+      "password": "${this.password}," \
+      "firstname": "${this.firstname}," \
+      "lastname": "${this.lastname}," \
+      "phone": "${this.phone}," \
+      "garage": ${this.garage.toString()} \
+    }`
+
   }
 
   serialize() {
@@ -48,9 +50,7 @@ export class User {
     this.firstname = data.firstname,
     this.lastname = data.lastname,
     this.phone = data.phone
-    this.garage = new Garage().deserialize({
-      raison: "Garage Vincent Parrot"
-    })
+    this.garage = new Garage().deserialize(data.garage)
 
 
     return this

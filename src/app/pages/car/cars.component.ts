@@ -1,53 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
-import { Login } from 'src/app/interface/login.interface';
-import { Garage } from 'src/app/models/garage.model';
-import { User } from 'src/app/models/user.model';
-import { GarageService } from 'src/app/services/garage.service';
-import { LoginService } from 'src/app/services/login.service';
-import { UserService } from 'src/app/services/user.service';
+import { Car } from 'src/app/models/car.model';
+import { CarService } from 'src/app/services/car.service';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
+  selector: 'app-cars',
+  templateUrl: './cars.component.html',
   styleUrls: [
-    './users.component.scss']
+    './cars.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class CarsComponent implements OnInit {
 
   constructor(
-    private userService: UserService,
-    private garageService: GarageService,
-    private dialog: MatDialog,
-    private loginService: LoginService
+    private carService: CarService,
+    public dialog: MatDialog,
   ) { }
 
-  users!: User[]
+  cars!: Car[]
 
-  login$: Login = {
-    email: '',
-    roles: []
-  }
-
-  garage$!: Garage
-
-  selectedUser!: User
+  selectedCar!: Car
   selectedIndex: number = 0
-  newUser!: User
+  newCar: Car = this.carService.initCar()
   parentState: string = 'display'
 
   ngOnInit(): void {
 
-    this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
-    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
-
-    this.userService.getUsersByGarage(this.garage$.id).subscribe({
-      next: (res: User[]) => {
-        this.users = res
-        this.selectedUser = this.users[0]
+    this.carService.getCars().subscribe({
+      next: (res: Car[]) => {
+        this.cars = res
+        this.selectedCar = this.cars[0]
       },
       error: (error: { error: { message: any; }; }) => {
         this.dialog.open(MessageDialogComponent, {
@@ -63,8 +47,8 @@ export class UsersComponent implements OnInit {
     })
   }
 
-  displayedColumns: string[] = ['email', 'firstname', 'lastname', 'phone', 'update', 'delete']
-  dataSource = new MatTableDataSource(this.users);
+  displayedColumns: string[] = ['brand', 'model', 'price', 'year', 'kilometer', 'update', 'delete']
+  dataSource = new MatTableDataSource(this.cars);
 
   applyFilter(event: Event) {
     console.log((event.target as HTMLInputElement).value)
@@ -73,23 +57,24 @@ export class UsersComponent implements OnInit {
   }
 
   isSelected = (index: number) => {
-    return this.selectedUser.email === this.users[index].email && this.parentState !== 'create' ? "selected" : ""
+    return this.selectedCar.id === this.cars[index].id && this.parentState !== 'create' ? "selected" : ""
   }
 
-  displayUser = (index: number) => {
+  displayCar = (index: number) => {
     if (this.parentState === 'display') {
-      this.selectedUser = this.users[index]
+      this.selectedCar = this.cars[index]
     }
   }
 
-  updateUser = (user: User) => {
+  updateCar = (car: Car) => {
     if (['update', 'create'].indexOf(this.parentState) < 0) {
-      this.selectedUser = user
+      this.selectedCar = car
       this.parentState = 'update'
     }
   }
 
-  deleteUser = (user: User) => {
+  deleteCar = (car: Car) => {
+    
     if (['update', 'create'].indexOf(this.parentState) < 0) {
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -106,21 +91,21 @@ export class UsersComponent implements OnInit {
         if (result !== 'Supprimer')
           return
 
-        this.selectedUser = user
+        this.selectedCar = car
         this.parentState = 'delete'
 
-        if (user.id === 0) {
+        if (car.id === 0) {
           this.deleteInDatasource()
           return
         }
 
-        this.userService.deleteUser(user.id).subscribe({
+        this.carService.deleteCar(car.id).subscribe({
           next: (res) => {
             this.deleteInDatasource()
             this.dialog.open(MessageDialogComponent, {
               data: {
                 type: 'Information',
-                message1: `La suppression du user est effective !`,
+                message1: `La suppression du car est effective !`,
                 message2: '',
                 delai: 2000
               }
@@ -130,7 +115,7 @@ export class UsersComponent implements OnInit {
             this.dialog.open(MessageDialogComponent, {
               data: {
                 type: 'Erreur',
-                message1: `Erreur lors de la suppression du user`,
+                message1: `Erreur lors de la suppression du car`,
                 message2: error.error.message,
                 delai: 0
               }
@@ -142,36 +127,39 @@ export class UsersComponent implements OnInit {
   }
 
   deleteInDatasource = () => {
-    const index = this.users.findIndex(user => user.id === this.selectedUser.id)
-    this.users.splice(index, 1)
+    const index = this.cars.findIndex(car => car.id === this.selectedCar.id)
+    this.cars.splice(index, 1)
     this.updateDatasource()
-    this.selectedUser = index > this.users.length - 1 ? this.users[index -1] : this.users[index]
+    if (this.cars.length === 0)
+      this.selectedCar = this.carService.initCar()
+    else
+      this.selectedCar = index > this.cars.length - 1 ? this.cars[index -1] : this.cars[index]
     this.parentState = 'display'
   }
 
-  onNewuser = (user: User) => {
-    this.users.push(user);
-    this.selectedUser = this.users[this.users.length - 1]
-    this.updateDatasource()
-    this.parentState = 'display'
-  }
-
-  onSameuser = (user: User) => {
-    this.users[this.users.findIndex(user => user.id === this.selectedUser.id)] = user
-    this.selectedUser = user
+  onNewcar = (car: Car) => {
+    this.cars.push(car);
+    this.selectedCar = this.cars[this.cars.length - 1]
     this.updateDatasource()
     this.parentState = 'display'
   }
 
-  createUser = () => {
+  onSamecar = (car: Car) => {
+    this.cars[this.cars.findIndex(car => car.id === this.selectedCar.id)] = car
+    this.selectedCar = car
+    this.updateDatasource()
+    this.parentState = 'display'
+  }
+
+  createCar = () => {
     this.parentState = 'create'
   }
 
   updateDatasource = () => {
-    let newUsers: User[] = []
-    this.users.forEach(user => newUsers.push(user))
-    this.users = newUsers
-    this.dataSource.connect().next(this.users)
+    let newCars: Car[] = []
+    this.cars.forEach(car => newCars.push(car))
+    this.cars = newCars
+    this.dataSource.connect().next(this.cars)
   }
 
 }

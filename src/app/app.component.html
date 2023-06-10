@@ -2,7 +2,7 @@
 
 <app-header [login]="login$"></app-header>
   <main class="medium">
-    <router-outlet></router-outlet>
+    <router-outlet *ngIf="garage$.id !== 0"></router-outlet>
   </main>
   <footer>
     <app-footer></app-footer>

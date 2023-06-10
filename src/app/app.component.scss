@@ -12,10 +12,10 @@ $color5: #F2F2F2;
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow-y: auto;
 
   main {
     width: 100%;
-    height: 100%;
   }
 
 }
@@ -133,14 +133,13 @@ td, th {
 
 mat-form-field {
   width: 100%;
-  height: 100%
 }
 
 .mat-grid-list {
   padding-bottom: 0px;
 }
 
-app-footer {
+footer {
   position: relative;
   width: 100%;
   margin-top: auto;

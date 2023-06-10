@@ -5,65 +5,57 @@ import { Garage } from "./garage.model"
 
 export class Car {
 
-  id: number
-  brand: string
-  model: string
-  price: number
-  year: number
-  kilometer: number
-  options: Option[]
-  features: Feature[]
-  garage: Garage
-  image: Image
-  images: Image[]
+  id!: number
+  brand!: string
+  model!: string
+  price!: number
+  year!: number
+  kilometer!: number
+  description!: string
+  options!: Option[]
+  features!: Feature[]
+  garage!: Garage
+  image!: Image
+  images!: Image[]
 
-  constructor(data: any) {
-    this.id = data.id
-    this.brand = data.brand
-    this.model = data.model
-    this.price = data.price
-    this.year = data.year
-    this.kilometer = data.kilometer
-    this.options = data.options
-    this.features = data.features
-    this.garage = data.garage
-    this.image = data.image
-    this.images = data.images
+  constructor() {
   }
 
   toString() {
 
-    let options: string = "["
+    let options: string[] = []
     this.options.forEach(option => {
-      options += ", " + option.toString()
+      options.push(option.toString())
     })
-    options += "]"
+    let optionsString = '[' + options.join() + ']'
 
-    let features: string = "["
+    let features: string[] = []
     this.features.forEach(feature => {
-      features += ", " + feature.toString()
+      features.push(feature.toString())
     })
-    features += "]"
+    let featuresString = '[' + features.join() + ']'
 
-    let images: string = "["
+    let images: string[] = []
     this.images.forEach(image => {
-      images += ", " + image.toString()
+      images.push(image.toString())
     })
-    images += "]"
+    let imagesString = '[' + images.join() + ']'
 
-    return "Car{" +
-      "id=" + this.id +
-      ", brand='" + this.brand + '\'' +
-      ", model='" + this.model + '\'' +
-      ", price='" + this.price + '\'' +
-      ", year='" + this.year + '\'' +
-      ", kilometer='" + this.kilometer + '\'' +
-      ", options=" + options +
-      ", features=" + features +
-      ", garage=" + this.garage.toString() +
-      ", image=" + this.image.toString() +
-      ", images=" + images +
-    '}';
+    return `{ \
+      "id": ${this.id}, \
+      "price": ${this.price}, \ \
+      "year": ${this.year}, \
+      "kilometer": ${this.kilometer}, \
+      "options": ${optionsString}, \
+      "garage": ${this.garage.toString()}, \
+      "features": ${featuresString}, \
+      "image": ${this.image.toString()}, \
+      "images": ${imagesString}, \
+      "brand": "${this.brand}", \
+      "model": "${this.model}", \
+      "description": "${this.description}" \
+    }`
+
   }
 
   serialize() {
@@ -90,6 +82,7 @@ export class Car {
       price: this.price,
       year: this.year,
       kilometer: this.kilometer,
+      description: this.description,
       options: optionsSerialized,
       features: featuresSerialized,
       garage: this.garage.serialize(),
@@ -100,21 +93,27 @@ export class Car {
   }
 
   deserialize(data: any) {
-
+console.log(data)
     let optionsDeSerialized: any[] = []
-    data.options.forEach((option: Option) => {
-      optionsDeSerialized.push(option.deserialize(option))
-    })
+    if (data.options != null) {
+      data.options.forEach((option: Option) => {
+        optionsDeSerialized.push(new Option().deserialize(option))
+      })
+    }
 
     let featuresDeSerialized: any[] = []
-    data.features.forEach((feature: Feature) => {
-      featuresDeSerialized.push(feature.deserialize(feature))
-    })
+    if (data.features != null) {
+      data.features.forEach((feature: Feature) => {
+        featuresDeSerialized.push(new Feature().deserialize(feature))
+      })
+    }
 
     let imagesDeSerialized: any[] = []
-    data.images.forEach((image: Image) => {
-      imagesDeSerialized.push(data.image.deserialize(image))
-    })
+    if (data.images != null) {
+      data.images.forEach((image: Image) => {
+        imagesDeSerialized.push(new Image().deserialize(image))
+      })
+    }
 
     this.id = data.id,
     this.brand = data.brand,
@@ -122,10 +121,11 @@ export class Car {
     this.price = data.price,
     this.year = data.year,
     this.kilometer = data.kilometer,
+    this.description = data.description
     this.options = optionsDeSerialized,
     this.features = featuresDeSerialized,
-    this.garage = data.garage.deserialize(),
-    this.image = data.image.deserialize(),
+    this.garage = data.garage ? new Garage().deserialize(data.garage) : {} as Garage,
+    this.image = new Image().deserialize(data.image),
     this.images = imagesDeSerialized
 
     return this

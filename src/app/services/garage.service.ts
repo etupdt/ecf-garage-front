@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Garage } from '../models/garage.model';
 import { MessageDialogComponent } from '../dialogs/message-dialog/message-dialog.component';
@@ -11,7 +11,28 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class GarageService {
 
-  garage!: Garage
+  garageInit = new Garage().deserialize({
+    id: 0,
+    raison: '',
+    phone: '',
+    address1: '',
+    address2: '',
+    zip: '',
+    locality: '',
+    day1hours: '',
+    day2hours: '',
+    day3hours: '',
+    day4hours: '',
+    day5hours: '',
+    day6hours: '',
+    day7hours: '',
+    comments: [],
+    cars: [],
+    services: []
+  })
+
+  garage: BehaviorSubject<Garage> = new BehaviorSubject<Garage>(this.garageInit)
+  listenGarage = this.garage.asObservable()
 
   constructor(
     private http: HttpClient,
@@ -19,7 +40,7 @@ export class GarageService {
   ) {
     this.getGarageByRaison('Garage Vincent Parrot').subscribe({
       next: (res: Garage) => {
-        this.garage = new Garage().deserialize(res)
+        this.garage.next(new Garage().deserialize(res))
       },
       error: (error: { error: { message: any; }; }) => {
         this.dialog.open(MessageDialogComponent, {
@@ -33,6 +54,10 @@ export class GarageService {
       }
 
     })
+  }
+
+  initGarage = () => {
+    return this.garageInit
   }
 
   getGarageById(id: number): Observable<any> {

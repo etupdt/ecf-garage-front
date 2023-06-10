@@ -3,10 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Login } from 'src/app/interface/login.interface';
 import { Comment } from 'src/app/models/comment.model';
 import { Garage } from 'src/app/models/garage.model';
 import { CommentService } from 'src/app/services/comment.service';
 import { GarageService } from 'src/app/services/garage.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-comments',
@@ -18,6 +20,7 @@ export class CommentsComponent implements OnInit {
 
   constructor(
     private commentService: CommentService,
+    private loginService: LoginService,
     private garageService: GarageService,
     public dialog: MatDialog,
   ) { }
@@ -26,6 +29,13 @@ export class CommentsComponent implements OnInit {
   commentsUpdated: Comment[] = []
   isApprovedDisabled: boolean = false
 
+  login$: Login = {
+    email: '',
+    roles: []
+  }
+
+  garage$!: Garage
+
   selectedComment!: Comment
   selectedIndex: number = 0
   newComment: Comment = this.commentService.initComment()
@@ -33,7 +43,10 @@ export class CommentsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.commentService.getComments().subscribe({
+    this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
+
+    this.commentService.getCommentsByGarage(this.garage$.id).subscribe({
       next: (res: Comment[]) => {
         this.comments = res
         this.selectedComment = this.comments[0]

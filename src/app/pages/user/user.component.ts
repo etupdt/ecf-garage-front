@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Login } from 'src/app/interface/login.interface';
 import { User } from 'src/app/models/user.model';
+import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -29,38 +31,31 @@ export class UserComponent implements OnInit {
 
   isUpdated = false
 
+  login$: Login = {
+    email: '',
+    roles: []
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private loginService: LoginService,
     private dialog: MatDialog,
   ) {
   }
 
   ngOnInit(): void {
-    this.initForm(new User().deserialize({
-      id: 0,
-      email: '',
-      password: '',
-      roles: [],
-      firstname: '',
-      lastname: '',
-      phone: '',
-    }))
+
+    this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+
+    this.initForm(this.userService.initUser())
   }
 
   ngOnChanges(changes: SimpleChanges) {
     console.log('onChangesUser')
     if (this.state === 'create') {
-      this.initForm(new User().deserialize({
-        id: 0,
-        email: '',
-        password: '',
-        roles: [],
-        firstname: '',
-        lastname: '',
-        phone: '',
-      })
-    )} else {
+      this.initForm(this.userService.initUser())
+    } else {
       this.initForm(this.user)
     }
   }
@@ -111,13 +106,17 @@ export class UserComponent implements OnInit {
 
       this.userH3Label = this.user ? `${user.roles.indexOf('ROLE_ADMIN') >= 0 ? 'Administrateur' : 'Utilisateur'} ${user.firstname} ${user.lastname}` : ''
 
+      this.userForm.disable()
+console.log(this.login$)
       switch (this.state) {
-        case 'display' : {
-          this.userForm.disable()
-          break
-        }
         case 'update' : {
-          this.userForm.enable()
+          if (this.login$.roles.indexOf('ROLE_ADMIN') >= 0) {
+            this.userForm.enable()
+            this.userForm.get('password')?.disable()
+          }
+          if (this.login$.email === this.user.email) {
+            this.userForm.get('password')?.enable()
+          }
           break
         }
         case 'create' : {
@@ -154,7 +153,7 @@ export class UserComponent implements OnInit {
     return user.deserialize({
       id: this.userForm.get("id")?.value,
       email: this.userForm.get("email")?.value,
-      password: this.userForm.get("password")?.value,
+      password: this.state === 'create' ? 'achanger' : this.userForm.get("password")?.value,
       firstname: this.userForm.get("firstname")?.value,
       lastname: this.userForm.get("lastname")?.value,
       phone: this.userForm.get("phone")?.value,
