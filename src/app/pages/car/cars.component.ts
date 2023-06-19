@@ -74,7 +74,7 @@ export class CarsComponent implements OnInit {
   }
 
   deleteCar = (car: Car) => {
-    
+
     if (['update', 'create'].indexOf(this.parentState) < 0) {
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -152,6 +152,7 @@ export class CarsComponent implements OnInit {
   }
 
   createCar = () => {
+    this.selectedCar = this.carService.initCar()
     this.parentState = 'create'
   }
 

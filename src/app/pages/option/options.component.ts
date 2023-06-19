@@ -51,13 +51,12 @@ export class OptionsComponent implements OnInit {
   dataSource = new MatTableDataSource(this.options);
 
   applyFilter(event: Event) {
-    console.log((event.target as HTMLInputElement).value)
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   isSelected = (index: number) => {
-    return this.selectedOption.name === this.options[index].name && this.parentState !== 'create' ? "selected" : ""
+    return this.selectedOption.id === this.options[index].id && this.parentState !== 'create' ? "selected" : ""
   }
 
   displayOption = (index: number) => {

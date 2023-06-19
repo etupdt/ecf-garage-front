@@ -102,7 +102,7 @@ export class ServiceComponent implements OnInit {
       if (service.image) {
         this.image = ''
         if (service.image.filename !== '') {
-          this.image = environment.useBackendImages + '/' + service.image.id + '_' + service.image.filename
+          this.image = environment.useBackendImages + '/' + service.image.filename
           this.imageChange()
         }
       }

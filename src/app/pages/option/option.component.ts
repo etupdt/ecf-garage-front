@@ -145,7 +145,7 @@ export class OptionComponent implements OnInit {
 
       this.optionService.postOption(option).subscribe({
         next: (res) => {
-          this.newoption.emit(option)
+          this.newoption.emit(new Option().deserialize(res))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -172,7 +172,7 @@ export class OptionComponent implements OnInit {
 
       this.optionService.putOption(option).subscribe({
         next: (res) => {
-          this.sameoption.emit(option)
+          this.sameoption.emit(new Option().deserialize(res))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',

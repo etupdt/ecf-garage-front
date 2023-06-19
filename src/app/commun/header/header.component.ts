@@ -46,7 +46,6 @@ export class HeaderComponent implements OnInit {
 
   getRouterConfig = () => {
     this.adminItems = this.getRouterChildConfig('Administration')
-    console.log('toto', this.login)
     return this.router.config.filter(route => {
       return route.path !== 'Signin' && (this.loginService.getToken() || !route.canActivate)
     })
@@ -73,7 +72,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['login']) {
-      console.log('La valeur a changé de', changes['login'].previousValue, 'à', changes['login'].currentValue);
       this.onglets = this.getRouterConfig()
     }
   }

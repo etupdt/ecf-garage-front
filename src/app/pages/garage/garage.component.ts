@@ -21,7 +21,6 @@
     @Input() state: string = "display"
     @Output() stateChange: EventEmitter<string> = new EventEmitter();
 
-
     lastGarage!: Garage
     garageH3Label: string = ''
     garageServices: Service[] = []
@@ -290,6 +289,7 @@
           res.forEach((service: Service) => {
             const serviceDeserialized = new Service().deserialize(service as Service)
             this.serviceList.push(serviceDeserialized)
+            console.log('res', serviceDeserialized)
           })
         },
         error: (error: { error: { message: any; }; }) => {

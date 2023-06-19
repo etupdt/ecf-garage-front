@@ -1,4 +1,3 @@
-import { IImage } from "../interface/image.interface";
 
 export class Image {
 
@@ -10,7 +9,7 @@ export class Image {
   }
 
   toString() {
-    
+
     return `{ \
       "id": ${this.id}, \
       "filename": "${this.filename}", \ \

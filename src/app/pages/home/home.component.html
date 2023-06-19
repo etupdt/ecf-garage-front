@@ -1,1 +1,9 @@
-<p>home works!</p>
+<div>
+  <div *ngFor="let service of garage$.services; let i = index;" class="{{i % 2 === 0 ? 'service' : 'service-reverse'}}">
+    <img src="{{useBackendImages + '/' + service.image.filename}}" alt="">
+    <div class="text">
+      <h4>{{service.name}}</h4>
+      <p>{{service.description}}</p>
+    </div>
+  </div>
+</div>

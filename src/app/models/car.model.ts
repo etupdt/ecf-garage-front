@@ -93,7 +93,7 @@ export class Car {
   }
 
   deserialize(data: any) {
-console.log(data)
+
     let optionsDeSerialized: any[] = []
     if (data.options != null) {
       data.options.forEach((option: Option) => {

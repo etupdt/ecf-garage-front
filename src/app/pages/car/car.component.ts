@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Photo } from 'src/app/interface/photo.interface';
 import { Car } from 'src/app/models/car.model';
 import { Feature } from 'src/app/models/feature.model';
 import { Garage } from 'src/app/models/garage.model';
@@ -33,20 +33,26 @@ export class CarComponent implements OnInit {
   @Input() state: string = "display"
   @Output() stateChange: EventEmitter<string> = new EventEmitter();
 
-  lastCar!: Car
+  lastCar: Car = this.carService.initCar()
+
   carH3Label: string = ''
 
   carForm!: FormGroup
 
   garage$!: Garage
 
+  useBackendImages = ''
+
   carOptions: Option[] = []
   optionList: Option[] = []
 
-  image!: string
+  image: MImage = this.imageService.initImage()
   newImage!: string
   frontImage: FormData = new FormData()
   imageClass = "image-h"
+  imageGalleryIndex: number = 1
+
+  images: Photo[] = []
 
   isUpdated = false
 
@@ -58,17 +64,16 @@ export class CarComponent implements OnInit {
     private optionService: OptionService,
     private dialog: MatDialog,
     private featureService: FeatureService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.useBackendImages = environment.useBackendImages + '/'
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
     this.getOptions()
     this.initForm(this.carService.initCar())
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesCar')
     if (this.state === 'create') {
       this.initForm(this.carService.initCar()
     )} else {
@@ -79,7 +84,6 @@ export class CarComponent implements OnInit {
   ngOnDestroy(): void {
     this.quit()
   }
-
 
   quit = () => {
 
@@ -124,14 +128,41 @@ export class CarComponent implements OnInit {
         imageId: [car.image.id],
         hash: [car.image.hash],
         options: [this.carOptions],
+        features: this.formBuilder.array([])
       })
 
       if (car.image) {
-        this.image = ''
+        this.image.filename = ''
         if (car.image.filename !== '') {
-          this.image = environment.useBackendImages + '/car_' + car.id + '_' + car.image.filename
+          this.image.filename = car.image.filename
           this.imageChange()
         }
+      }
+
+      this.images = []
+      if (car.images) {
+        this.imageGalleryIndex = 1
+        car.images.forEach(image => {
+          this.images.push({
+            index: 0,
+            image: new MImage().deserialize({
+              id: image.id,
+              filename: image.filename,
+              hash: image.hash
+            } as MImage)
+          })
+          this.imageGalleryIndex++
+        })
+      }
+
+      if (car.features) {
+        car.features.forEach(feature => {
+          this.features.push(this.formBuilder.group({
+            id: [feature.id],
+            name: [feature.name, Validators.required],
+            description: [feature.description, Validators.required]
+          }))
+        })
       }
 
       this.carH3Label = this.car ? `Voiture ${this.car.model} ${this.car.brand}` : ''
@@ -172,13 +203,44 @@ export class CarComponent implements OnInit {
     this.car?.price !== this.carForm.get("price")!.value ||
     this.car?.year !== this.carForm.get("year")!.value ||
     this.car?.kilometer !== this.carForm.get("kilometer")!.value ||
-    this.car?.image.hash !== this.carForm.get("hash")!.value
+    this.car?.image.hash !== this.carForm.get("hash")!.value ||
+    this.features.controls.length !== this.car.features.length 
+
+    for (let i = 0; i < this.features.controls.length; i++) {
+      const f1 = this.features.at(i)
+      const f2 = this.car.features.find((f2: Feature) => f2.id === f1.get('id')?.value)
+      this.isUpdated = this.isUpdated ||
+        f2 === null ||
+        f2!.name !== f1.get('name')?.value ||
+        f2!.description !== f1.get('description')?.value
+    }
 
     return this.isUpdated
 
   }
 
   formatCar = (car: Car): Car => {
+
+    let images: {
+      index: number,
+      image: MImage
+    }[] = []
+
+    this.images.forEach(image => {
+      car.images.push(new MImage().deserialize({
+        id: image.image.id,
+        filename: image.index !== 0 ? `${image.index}` : image.image.filename,
+        hash: image.image.hash
+      } as MImage))
+    })
+
+    for (let i = 0; i < this.features.controls.length; i++) {
+      car.features.push(new Feature().deserialize({
+        id: this.features.at(i).get('id')?.value,
+        name: this.features.at(i).get('name')?.value,
+        description: this.features.at(i).get('description')?.value
+      } as Feature))
+    }
 
     return car.deserialize({
       id: this.carForm.get("id")?.value,
@@ -194,8 +256,8 @@ export class CarComponent implements OnInit {
         hash: this.carForm.get("hash")?.value
       } as MImage),
       options: this.carForm.get('options')?.value,
-      features: [],
-      images: [],
+      features: car.features,
+      images: car.images,
       garage: this.garage$
     })
 
@@ -203,7 +265,7 @@ export class CarComponent implements OnInit {
 
   saveCar = () => {
 
-    let car = this.formatCar(new Car())
+    let car = this.formatCar(this.carService.initCar())
 
     this.frontImage.append('car', car.toString())
     this.frontImage.append('id', `${car.id}`)
@@ -212,8 +274,7 @@ export class CarComponent implements OnInit {
 
       this.carService.postCar(this.frontImage).subscribe({
         next: (res) => {
-          car = new Car().deserialize(res)
-          this.newcar.emit(car)
+          this.newcar.emit(new Car().deserialize(res))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -240,6 +301,7 @@ export class CarComponent implements OnInit {
 
       this.carService.putCar(this.frontImage).subscribe({
         next: (res) => {
+          console.log('res', res)
           car = new Car().deserialize(res)
           this.samecar.emit(car)
           this.dialog.open(MessageDialogComponent, {
@@ -267,25 +329,44 @@ export class CarComponent implements OnInit {
     }
   }
 
-  onFileSelected = () => {
+  onFileSelected = (origine: string) => {
 
 //    this.frontImage = new FormData()
 
-    const inputNode: any = document.querySelector('#file');
+    const inputNode: any = document.querySelector('#' + origine);
 
     if (inputNode.files[0]) {
-
-      this.frontImage.append("garage_image", inputNode.files[0]);
 
       var reader = new FileReader();
       reader.readAsDataURL(inputNode.files[0]);
 
       reader.onload = () => {
+
         const hash = Md5.hashStr(reader.result as string)
-        this.carForm.get("hash")!.setValue(hash)
+
         this.carForm.get("brand")!.setValue(this.carForm.get("brand")!.value)
-        this.frontImage.append("image_hash", hash);
-        this.image = reader.result as string
+
+        if (origine === 'principale') {
+          this.frontImage.append("car_image", inputNode.files[0]);
+          this.carForm.get("hash")?.setValue(hash)
+          this.image = new MImage().deserialize({
+            id: 0,
+            filename: reader.result as string,
+            hash: hash
+          } as MImage)
+      } else {
+          this.frontImage.append(`${this.imageGalleryIndex}_image`, inputNode.files[0]);
+          this.images.push({
+            index: this.imageGalleryIndex,
+            image: new MImage().deserialize({
+              id: 0,
+              filename: reader.result as string,
+              hash: hash
+            } as MImage
+          )})
+          this.imageGalleryIndex++
+        }
+
         this.imageChange()
       };
 
@@ -296,11 +377,11 @@ export class CarComponent implements OnInit {
   imageChange = () => {
 
     let img: HTMLImageElement = new Image()
-    img.src = this.image
+    img.src = this.image.filename.indexOf('data:image') === 0 ? this.image.filename : environment.useBackendImages + '/' + this.image.filename
 
     img.onload = () => {
       this.imageClass = img.width > img.height ? "image-h" : "image-v"
-    };
+    }
 
   }
 
@@ -361,11 +442,25 @@ export class CarComponent implements OnInit {
   }
 
   addFeature = () => {
-    this.car.features.push(this.featureService.initFeature());
+    this.features.push(this.formBuilder.group({
+      id: [0],
+      name: ['', Validators.required],
+      description: ['', Validators.required]
+    }))
   }
 
   deleteFeature = (index: number) => {
+    this.features.removeAt(index)
+  }
 
+  get features() {
+    return this.carForm.controls['features'] as FormArray
+  }
+
+  onSamephotos = (photos: Photo[]) => {
+    console.log('photos', photos)
+    this.images = photos
+    console.log('images', this.car.images)
   }
 
 }
