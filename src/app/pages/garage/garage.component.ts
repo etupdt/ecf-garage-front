@@ -37,8 +37,8 @@
     }
 
     ngOnInit(): void {
-      this.initForm(this.garageService.garageInit)
       this.getServices()
+      this.initForm(this.garage)
     }
 
     ngOnChanges(changes: SimpleChanges) {

@@ -20,11 +20,11 @@ export class LoginService {
   })
   listenLogin = this.login.asObservable()
 
+  selectedTabIndex: number = 0
+
   constructor(
     private http: HttpClient,
-  ) {
-
-  }
+  ) { }
 
   connection = (email: string, password: string): Observable<any> => {
 

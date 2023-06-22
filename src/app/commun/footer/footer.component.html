@@ -5,18 +5,18 @@
 
     <mat-grid-tile colspan="2" class="hours">
 
-      <div *ngIf="garage">
+      <div *ngIf="garage$">
 
         <span>Horaires</span>
 
         <ul>
-          <li><span>Lundi&nbsp;</span><p>{{garage.day1hours}}</p></li>
-          <li><span>Mardi</span><p>{{garage.day2hours}}</p></li>
-          <li><span>Mercredi</span><p>{{garage.day3hours}}</p></li>
-          <li><span>Jeudi</span><p>{{garage.day4hours}}</p></li>
-          <li><span>Vendredi</span><p>{{garage.day5hours}}</p></li>
-          <li><span>Samedi</span><p>{{garage.day6hours}}</p></li>
-          <li><span>Dimanche</span><p>{{garage.day7hours}}</p></li>
+          <li><span>Lundi&nbsp;</span><p>{{garage$.day1hours}}</p></li>
+          <li><span>Mardi</span><p>{{garage$.day2hours}}</p></li>
+          <li><span>Mercredi</span><p>{{garage$.day3hours}}</p></li>
+          <li><span>Jeudi</span><p>{{garage$.day4hours}}</p></li>
+          <li><span>Vendredi</span><p>{{garage$.day5hours}}</p></li>
+          <li><span>Samedi</span><p>{{garage$.day6hours}}</p></li>
+          <li><span>Dimanche</span><p>{{garage$.day7hours}}</p></li>
         </ul>
 
       </div>

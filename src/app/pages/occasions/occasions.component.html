@@ -1,1 +1,36 @@
-<p>occasions works!</p>
+<div class="occasions">
+
+  <div>
+    <mat-slider min="200" max="600" step="10" discrete="true">
+      <input matSliderStartThumb [(ngModel)]="startValue">
+      <input matSliderEndThumb [(ngModel)]="endValue">
+    </mat-slider>
+    <label>{{endValue}}</label>
+  </div>
+  <div *ngIf="cars" class="car-cards">
+
+    <mat-card *ngFor="let car of cars" class="car-card">
+      <mat-card-header>
+        <mat-card-title>{{car.brand}}</mat-card-title>
+        <mat-card-subtitle>{{car.model}}</mat-card-subtitle>
+      </mat-card-header>
+      <div class="image-div">
+        <img
+          mat-card-image
+          src="{{useBackendImages + '/' + car.image.filename}}"
+          alt="Photo of a Shiba Inu"
+          orientable
+        >
+      </div>
+      <mat-card-content>
+        <p>{{car.description}}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button>LIKE</button>
+        <button mat-button>SHARE</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+
+</div>

@@ -21,31 +21,22 @@ export class GaragesComponent implements OnInit {
 
   garages: Garage[] = []
 
-  selectedGarage!: Garage
+  garage$!: Garage
+
+  selectedGarage$!: Garage
   selectedIndex: number = 0
   newGarage!: Garage
-  parentState: string = 'display'
+  parentState: string = ''
 
   ngOnInit(): void {
-
-    this.garageService.getGarageById(6).subscribe({
-      next: (res: Garage) => {
-        this.garages = []
-        this.garages.push(new Garage().deserialize(res))
-        this.selectedGarage = this.garages[0]
-      },
-      error: (error: { error: { message: any; }; }) => {
-        this.dialog.open(MessageDialogComponent, {
-          data: {
-            type: 'Erreur',
-            message1: `Erreur lors de la recherche du garage`,
-            message2: error.error.message,
-            delai: 0
-          }
-        })
-      }
-
+    this.garageService.listenGarage.subscribe((garage) => {
+      console.log(garage)
+      this.garages = []
+      this.garages.push(garage)
+      this.selectedGarage$ = garage as Garage
+      this.parentState = 'display'
     })
+
   }
 
   displayedColumns: string[] = ['raison', 'address1', 'zip', 'locality', 'update']         //, 'delete']
@@ -57,18 +48,18 @@ export class GaragesComponent implements OnInit {
   }
 
   isSelected = (index: number) => {
-    return this.selectedGarage.raison === this.garages[index].raison && this.parentState !== 'create' ? "selected" : ""
+    return this.selectedGarage$.raison === this.garages[index].raison && this.parentState !== 'create' ? "selected" : ""
   }
 
   displayGarage = (index: number) => {
     if (this.parentState === 'display') {
-      this.selectedGarage = this.garages[index]
+      this.selectedGarage$ = this.garages[index]
     }
   }
 
   updateGarage = (garage: Garage) => {
     if (['update', 'create'].indexOf(this.parentState) < 0) {
-      this.selectedGarage = garage
+      this.selectedGarage$ = garage
       this.parentState = 'update'
     }
   }
@@ -90,7 +81,7 @@ export class GaragesComponent implements OnInit {
         if (result !== 'Supprimer')
           return
 
-        this.selectedGarage = garage
+        this.selectedGarage$ = garage
         this.parentState = 'delete'
 
         if (garage.id === 0) {
@@ -126,23 +117,23 @@ export class GaragesComponent implements OnInit {
   }
 
   deleteInDatasource = () => {
-    const index = this.garages.findIndex(garage => garage.id === this.selectedGarage.id)
+    const index = this.garages.findIndex(garage => garage.id === this.selectedGarage$.id)
     this.garages.splice(index, 1)
     this.updateDatasource()
-    this.selectedGarage = index > this.garages.length - 1 ? this.garages[index -1] : this.garages[index]
+    this.selectedGarage$ = index > this.garages.length - 1 ? this.garages[index -1] : this.garages[index]
     this.parentState = 'display'
   }
 
   onNewgarage = (garage: Garage) => {
     this.garages.push(garage);
-    this.selectedGarage = this.garages[this.garages.length - 1]
+    this.selectedGarage$ = this.garages[this.garages.length - 1]
     this.updateDatasource()
     this.parentState = 'display'
   }
 
   onSamegarage = (garage: Garage) => {
-    this.garages[this.garages.findIndex(garage => garage.id === this.selectedGarage.id)] = garage
-    this.selectedGarage = garage
+    this.garages[this.garages.findIndex(garage => garage.id === this.selectedGarage$.id)] = garage
+    this.selectedGarage$ = garage
     this.updateDatasource()
     this.parentState = 'display'
   }

@@ -43,6 +43,11 @@ import { CommentsComponent } from './pages/comment/comments.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CarsComponent } from './pages/car/cars.component';
 import { GalleryComponent } from './commun/gallery/gallery.component';
+import { IsEmployeDirective } from './directives/is-employe.directive';
+import { MatCardModule } from '@angular/material/card';
+import { RoleDirective } from './directives/role.directive';
+import { OrientableDirective } from './directives/orientable.directive';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -67,7 +72,10 @@ import { GalleryComponent } from './commun/gallery/gallery.component';
     OptionsComponent,
     CommentsComponent,
     CarsComponent,
-    GalleryComponent
+    GalleryComponent,
+    IsEmployeDirective,
+    RoleDirective,
+    OrientableDirective,
   ],
   imports: [
     BrowserModule,
@@ -89,7 +97,9 @@ import { GalleryComponent } from './commun/gallery/gallery.component';
     MatButtonToggleModule,
     MatTableModule,
     MatListModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatCardModule,
+    MatSliderModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

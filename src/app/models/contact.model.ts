@@ -19,7 +19,7 @@ export class Contact {
     return `{ \
       "id": ${this.id}, \
       "subject": "${this.subject},", \
-      "message": "${this.message}," \
+      "message": ${JSON.stringify(this.message, undefined, 2)} \
       "garage": ${this.garage.toString()} \
     }`
 

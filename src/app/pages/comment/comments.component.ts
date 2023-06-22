@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
@@ -40,10 +40,16 @@ export class CommentsComponent implements OnInit {
   selectedIndex: number = 0
   newComment: Comment = this.commentService.initComment()
   parentState: string = 'display'
+  @Input() grandParentState!: string
 
   ngOnInit(): void {
 
-    this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+    this.loginService.listenLogin.subscribe((login) => {
+      this.login$ = login as Login
+      if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.grandParentState) {
+        this.parentState = this.grandParentState
+      }
+    })
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
     this.commentService.getCommentsByGarage(this.garage$.id).subscribe({
@@ -66,6 +72,7 @@ export class CommentsComponent implements OnInit {
   }
 
   displayedColumns: string[] = ['firstname', 'lastname', 'note', 'isApproved', 'delete']
+
   dataSource = new MatTableDataSource(this.comments);
 
   applyFilter(event: Event) {
@@ -157,14 +164,23 @@ export class CommentsComponent implements OnInit {
     this.comments.push(comment);
     this.selectedComment = this.comments[this.comments.length - 1]
     this.updateDatasource()
-    this.parentState = 'display'
+    if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.grandParentState) {
+      this.selectedComment = this.commentService.initComment()
+    } else {
+      this.parentState = 'display'
+    }
   }
 
   onSamecomment = (comment: Comment) => {
-    this.comments[this.comments.findIndex(comment => comment.id === this.selectedComment.id)] = comment
-    this.selectedComment = comment
-    this.updateDatasource()
-    this.parentState = 'display'
+    if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.grandParentState) {
+      this.selectedComment = this.commentService.initComment()
+      this.parentState = 'create'
+    } else {
+      this.comments[this.comments.findIndex(comment => comment.id === this.selectedComment.id)] = comment
+      this.selectedComment = comment
+      this.updateDatasource()
+      this.parentState = 'display'
+    }
   }
 
   createComment = () => {
@@ -185,7 +201,7 @@ export class CommentsComponent implements OnInit {
   }
 
   updateApproved = () => {
-console.log(this.commentsUpdated, this.comments)
+
     this.commentsUpdated.forEach(comment =>
       this.commentService.putComment(comment).subscribe({
         next: (res) => {

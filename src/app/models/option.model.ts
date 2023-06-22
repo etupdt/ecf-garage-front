@@ -11,8 +11,8 @@ export class Option {
 
     return `{ \
       "id": ${this.id}, \
-      "name": "${this.name}", \ 
-      "description": "${this.description}" \
+      "name": "${this.name}", \
+      "description": ${JSON.stringify(this.description, undefined, 2)} \
     }`
 
   }

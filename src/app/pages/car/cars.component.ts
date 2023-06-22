@@ -17,7 +17,7 @@ export class CarsComponent implements OnInit {
   constructor(
     private carService: CarService,
     public dialog: MatDialog,
-  ) { }
+  ) {}
 
   cars!: Car[]
 

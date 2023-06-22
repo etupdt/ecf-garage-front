@@ -20,18 +20,25 @@ export class HeaderComponent implements OnInit {
   }
 
   burgerMenu = 'cache'
-  selectedTabIndex: number = 0
 
   constructor (
     private loginService: LoginService,
     private router: Router,
   ) {}
 
+  get selectedTabIndex () {
+    return this.loginService.selectedTabIndex
+  }
+
+  set selectedTabIndex (index: number) {
+    this.loginService.selectedTabIndex = index
+  }
+
   ngOnInit(): void {
 
     const selectedTabIndex = localStorage.getItem('selectedTabIndex')
     if (selectedTabIndex)
-    this.selectedTabIndex = +localStorage.getItem('selectedTabIndex')!
+      this.selectedTabIndex = +localStorage.getItem('selectedTabIndex')!
 
   }
 
@@ -40,7 +47,7 @@ export class HeaderComponent implements OnInit {
     this.loginService.deConnection()
 
     if (this.selectedTabIndex > 2)
-    this.selectedTabIndex = 0
+      this.selectedTabIndex = 0
 
   }
 

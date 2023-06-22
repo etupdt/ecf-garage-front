@@ -19,7 +19,7 @@ export class Comment {
       "id": ${this.id}, \
       "firstname": "${this.firstname}", \
       "lastname": "${this.lastname}", \
-      "comment": "${this.comment}", \
+      "comment": ${JSON.stringify(this.comment, undefined, 2)}, \
       "note": ${this.note}, \
       "isApproved": ${this.isApproved}, \
       "garage": ${this.garage.toString()} \

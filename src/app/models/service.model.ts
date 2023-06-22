@@ -7,27 +7,28 @@ export class Service {
   description!: string;
   image!: Image;
 
-  constructor()
-  {}
+  constructor() {}
 
   toString() {
 
     return `{ \
       "id": ${this.id}, \
       "name": "${this.name}", \
-      "description": "${this.description}," \
+      "description": ${JSON.stringify(this.description, undefined, 2)}, \
       "image": ${this.image.toString()} \
     }`
 
   }
 
   public serialize = (): Service => {
+
     return {
       id: this.id,
       name: this.name,
       description: this.description,
       image: this.image.serialize()
     } as Service
+
   }
 
   public deserialize = (data: Service): Service => {
@@ -38,6 +39,7 @@ export class Service {
     this.image = new Image().deserialize(data.image)
 
     return this
+
   }
 
 }

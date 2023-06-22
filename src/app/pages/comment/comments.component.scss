@@ -9,3 +9,23 @@
   max-height: 200px;
   overflow: auto;
 }
+
+.comment-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.comment {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  background-color: #EEEEEE;
+}
+
+.login-icon {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+}

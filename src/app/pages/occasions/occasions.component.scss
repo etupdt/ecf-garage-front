@@ -1,0 +1,46 @@
+
+.car-card {
+  width: 300px;
+}
+
+.car-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.image-div {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  margin: auto;
+}
+
+.image-h {
+  margin: auto;
+  width: 100%;
+  height: auto;
+}
+
+.image-v {
+  margin: auto;
+  width: auto;
+}
+
+.occasions {
+  display: flex;
+  flex-direction: row;
+}
+
+.car-cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap
+}
+
+.car-card {
+  margin: 10px;
+}
+
+mat-slider {
+  width: 300px;
+}

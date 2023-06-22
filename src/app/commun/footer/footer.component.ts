@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 })
 export class FooterComponent implements OnInit {
 
-  garage!: Garage
+  garage$!: Garage
 
   reseaux = [
     {
@@ -39,27 +39,7 @@ export class FooterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getGarage()
-  }
-
-  getGarage = () => {
-
-    this.garageService.getGarageById(6).subscribe({
-      next: (res: any) => {
-        this.garage = new Garage().deserialize(res);
-      },
-      error: (error: { error: { message: any; }; }) => {
-        this.dialog.open(MessageDialogComponent, {
-          data: {
-            type: 'Erreur',
-            message1: `Erreur lors de la récupération du garage`,
-            message2: error.error.message,
-            delai: 0
-          }
-        })
-      }
-    })
-
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
   }
 
 }

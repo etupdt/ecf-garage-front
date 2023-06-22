@@ -162,7 +162,7 @@ export class CommentComponent implements OnInit {
       lastname: this.commentForm.get("lastname")?.value,
       comment: this.commentForm.get("comment")?.value,
       note: this.note,
-      isApproved: this.comment.isApproved,
+      isApproved: this.commentForm.get("comment")?.value === true,
       garage: this.garage$
     })
 

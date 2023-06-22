@@ -41,6 +41,8 @@ export class Car {
     })
     let imagesString = '[' + images.join() + ']'
 
+    console.log('saut', this.description.replace(/\n/gm, '\\n'))
+
     return `{ \
       "id": ${this.id}, \
       "price": ${this.price}, \ \
@@ -53,7 +55,7 @@ export class Car {
       "images": ${imagesString}, \
       "brand": "${this.brand}", \
       "model": "${this.model}", \
-      "description": "${this.description}" \
+      "description": ${JSON.stringify(this.description, undefined, 2)} \
     }`
 
   }

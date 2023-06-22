@@ -51,7 +51,8 @@ export class LoginComponent {
           email: email,
           roles: res.data.roles
         })
-        this.router.navigate(['Accueil'])
+//        this.router.navigate(['Accueil'])
+        this.router.navigate([this.router.config[this.loginService.selectedTabIndex].path])
 
       },
       error: (error) => {
