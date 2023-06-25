@@ -83,7 +83,7 @@ button {
 .selected {
   background-color: $color3;
   td, th, .delete-button, .update-button {
-    color: $color5;
+    color: $color4;
   }
 }
 
@@ -107,15 +107,16 @@ td, th {
   color: $color3;
 }
 
-::ng-deep input.mat-input-element {
+::ng-deep input.mat-mdc-input-element {
   color: $color1;
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 ::ng-deep .mat-focused .mat-form-field-underline .mat-form-field-ripple{
   background-color: $color3;
 }
 
-::ng-deep input.mat-input-element {
+::ng-deep input.mat-mdc-input-element {
   color: $color3;
 }
 

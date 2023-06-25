@@ -48,6 +48,9 @@ import { MatCardModule } from '@angular/material/card';
 import { RoleDirective } from './directives/role.directive';
 import { OrientableDirective } from './directives/orientable.directive';
 import { MatSliderModule } from '@angular/material/slider';
+import { FilterPipe } from './pages/occasions/filter.pipe';
+import { OccasionComponent } from './pages/occasions/occasion.component';
+import { ContactsComponent } from './pages/contact/contacts.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +79,9 @@ import { MatSliderModule } from '@angular/material/slider';
     IsEmployeDirective,
     RoleDirective,
     OrientableDirective,
+    FilterPipe,
+    OccasionComponent,
+    ContactsComponent,
   ],
   imports: [
     BrowserModule,

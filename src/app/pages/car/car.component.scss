@@ -1,4 +1,7 @@
+
 @import '../../app.component.scss';
+
+$photo-witdh: 620px;
 
 .mat-mdc-form-field {
   font-size: 14px;
@@ -20,3 +23,17 @@
   width: auto;
   height: 100%;
 }
+
+.gallery {
+  overflow-x: hidden;
+  width:$photo-witdh;
+}
+
+.defile {
+  overflow-x: auto;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+

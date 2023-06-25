@@ -46,6 +46,14 @@ export class CarService {
 
   }
 
+  getCar(id: number): Observable<any> {
+
+    return this.http.get(
+      environment.useBackend + `/api/car/${id}`
+    )
+
+  }
+
   putCar(car: FormData): Observable<any> {
 
     return this.http.post(

@@ -1,0 +1,53 @@
+<div *ngIf="car">
+
+  <span [routerLink]="['/Occasions']">< Retour</span>
+  <h3>{{car.brand}} {{car.model}}</h3>
+  <div class="car-detail">
+    <div class="car-photos">
+      <img src="{{useBackendImages + '/' + car.image.filename}}" alt="">
+      <div class="car-gallery">
+        <div class="gallery">
+          <app-gallery
+          class="defile"
+          *ngIf="car"
+          [photos]="images"
+          [state]="'occasion'"
+          (photoSelected)="onPhotoSelected($event)"
+          ></app-gallery>
+        </div>
+      </div>
+    </div>
+    <div class="description">
+      <h4>A propos du véhicule</h4>
+      <p *ngFor="let para of car.description.split('\n')">{{para}}</p>
+    </div>
+  </div>
+  <div class="characteristics">
+    <div>
+      <ul>
+        <li>Année : {{car.year}}</li>
+        <li>{{car.kilometer}} km</li>
+        <li>{{car.price}} €</li>
+      </ul>
+    </div>
+    <div class="car-options">
+      <h5>Options</h5>
+      <ul>
+        <li *ngFor="let option of car.options">{{option.name}}</li>
+      </ul>
+    </div>
+    <div class="car-features">
+      <h5>Caractèristiques</h5>
+      <ul>
+        <li *ngFor="let feature of car.features">
+          <div>
+            {{feature.name}}
+          </div>
+          <div>
+            {{feature.description}}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

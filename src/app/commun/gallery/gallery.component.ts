@@ -12,6 +12,7 @@ export class GalleryComponent implements OnInit {
 
   @Input() photos: Photo[] = []
   @Output() samephotos: EventEmitter<Photo[]> = new EventEmitter();
+  @Output() photoSelected: EventEmitter<Photo> = new EventEmitter();
   @Input() state: string = "display"
 
   useBackendImages = ''
@@ -25,6 +26,10 @@ export class GalleryComponent implements OnInit {
   deletePhoto = (index: number) => {
     this.photos.splice(index, 1)
     this.samephotos.emit(this.photos)
+  }
+
+  selectPhoto = (index: number) => {
+    this.photoSelected.emit(this.photos[index])
   }
 
 }

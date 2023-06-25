@@ -11,6 +11,7 @@ import { ServicesComponent } from './pages/service/services.component';
 import { OptionsComponent } from './pages/option/options.component';
 import { CommentsComponent } from './pages/comment/comments.component';
 import { CarsComponent } from './pages/car/cars.component';
+import { OccasionComponent } from './pages/occasions/occasion.component';
 
 const routes: Routes = [
 
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'Occasions',
     component: OccasionsComponent,
+  },
+  {
+    path: 'occasion/:id',
+    component: OccasionComponent,
   },
   {
     path: 'Contact',

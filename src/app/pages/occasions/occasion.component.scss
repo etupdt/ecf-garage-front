@@ -1,0 +1,62 @@
+
+@import '../../app.component.scss';
+
+.car-detail {
+  display: flex;
+  flex-direction: row;
+}
+
+.car-gallery {
+  margin: auto;
+}
+
+$photo-witdh: 600px;
+
+.car-photos {
+  display: flex;
+  flex-direction: column;
+  width: $photo-witdh;
+  img {
+    width: $photo-witdh
+  }
+}
+
+.gallery {
+  overflow-x: hidden;
+  max-width: $photo-witdh;
+}
+
+.defile {
+  overflow-x: auto;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.description {
+  margin: 80px;
+}
+
+.characteristics {
+  display: flex;
+  flex-direction: row;
+  margin-top: 100px;
+  h5 {
+    width: 33%;
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+  > div {
+    width: 33%;
+    border: solid 1px black;
+    li {
+      display: flex;
+      flex-direction: row;
+      > div {
+        width: 50%;
+        margin: 0px;
+      }
+    }
+  }
+}

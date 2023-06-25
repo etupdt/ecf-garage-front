@@ -204,7 +204,7 @@ export class CarComponent implements OnInit {
     this.car?.year !== this.carForm.get("year")!.value ||
     this.car?.kilometer !== this.carForm.get("kilometer")!.value ||
     this.car?.image.hash !== this.carForm.get("hash")!.value ||
-    this.features.controls.length !== this.car.features.length 
+    this.features.controls.length !== this.car.features.length
 
     for (let i = 0; i < this.features.controls.length; i++) {
       const f1 = this.features.at(i)
@@ -349,12 +349,14 @@ export class CarComponent implements OnInit {
         if (origine === 'principale') {
           this.frontImage.append("car_image", inputNode.files[0]);
           this.carForm.get("hash")?.setValue(hash)
+          console.log('image', this.image)
           this.image = new MImage().deserialize({
             id: 0,
             filename: reader.result as string,
             hash: hash
           } as MImage)
-      } else {
+          console.log('image', this.image)
+        } else {
           this.frontImage.append(`${this.imageGalleryIndex}_image`, inputNode.files[0]);
           this.images.push({
             index: this.imageGalleryIndex,

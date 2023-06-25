@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSliderModule } from '@angular/material/slider';
+import { Router } from '@angular/router';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Filter } from 'src/app/interface/filter.interface';
 import { Car } from 'src/app/models/car.model';
 import { CarService } from 'src/app/services/car.service';
 import { environment } from 'src/environments/environment';
@@ -13,16 +14,46 @@ import { environment } from 'src/environments/environment';
 })
 export class OccasionsComponent implements OnInit {
 
-  cars: Car[] = []
+  cars!: Car[]
 
-  startValue: number = 0
-  endValue: number = 100
+  filters: Filter[] = [
+    {
+      name: 'Prix',
+      unit: '€',
+      inf: 0,
+      sup: 100000,
+      step: 1000,
+      startValue: 0,
+      endValue: 100000
+    },
+    {
+      name: 'Kilométrage',
+      unit: 'km',
+      inf: 0,
+      sup: 500000,
+      step: 1000,
+      startValue: 0,
+      endValue: 500000
+    },
+    {
+      name: 'Année',
+      unit: '',
+      inf: 1950,
+      sup: 2023,
+      step: 1,
+      startValue: 1950,
+      endValue: 2023
+    },
+  ]
+
+  filtre: number = 0
 
   useBackendImages!: string
 
   constructor(
     private carService: CarService,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +65,7 @@ export class OccasionsComponent implements OnInit {
 
     this.carService.getCars().subscribe({
       next: (res) => {
+        this.cars = []
         res.forEach((car: Car) => {
           this.cars.push(new Car().deserialize(car))
         })
@@ -50,17 +82,6 @@ export class OccasionsComponent implements OnInit {
       }
 
     })
-  }
-
-  imageChange = (image: string) => {
-
-    let img: HTMLImageElement = new Image()
-    img.src = environment.useBackendImages + '/' + image
-
-    img.onload = () => {
-      return img.width > img.height ? "image-h" : "image-v"
-    }
-
   }
 
 }

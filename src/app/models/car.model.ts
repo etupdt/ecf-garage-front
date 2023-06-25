@@ -41,8 +41,6 @@ export class Car {
     })
     let imagesString = '[' + images.join() + ']'
 
-    console.log('saut', this.description.replace(/\n/gm, '\\n'))
-
     return `{ \
       "id": ${this.id}, \
       "price": ${this.price}, \ \

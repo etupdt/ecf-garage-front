@@ -1,1 +1,175 @@
-<p>contact works!</p>
+<div class="content">
+
+  <ng-container [ngTemplateOutlet]="contact" *role="'USER'"></ng-container>
+  <ng-container [ngTemplateOutlet]="home" *role="'VISITOR'"></ng-container>
+
+  <app-contact
+    [contact]="selectedContact"
+    (samecontact)="onSamecontact($event)"
+    [(state)]="parentState"
+    (newcontact)="onNewcontact($event)"
+    class="row">
+  </app-contact>
+
+</div>
+
+<ng-template #contact>
+
+  <div class="row">
+
+    <div class="col-1">
+
+<!--      <mat-form-field class="filter">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+      </mat-form-field>-->
+
+      <mat-grid-list cols="11" rowHeight="50px">
+
+        <mat-grid-tile colspan="6">
+          <h3 mat-dialog-title>Contactaires</h3>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2"></mat-grid-tile>
+
+        <mat-grid-tile colspan="2">
+          <button *ngIf="contactsUpdated.length > 0" class="button" mat-raised-button (click)="updateApproved()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            <span> Sauvegarder</span>
+          </button>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="1">
+          <button *ngIf="['display'].indexOf(parentState) >= 0" class="button" mat-raised-button (click)="createContact()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            <span> Créer</span>
+          </button>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+
+      <section class="table-container mat-elevation-z8" tabindex="0">
+
+        <table mat-table [dataSource]="contacts" class="{{parentState === 'display' ? 'mat-elevation-z8' : 'table-desactivate'}}">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> Id. </th>
+            <td mat-cell *matCellDef="let element;"> {{element.id === 0 ? '' : element.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="firstname">
+            <th mat-header-cell *matHeaderCellDef> Prénom </th>
+            <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lastname">
+            <th mat-header-cell *matHeaderCellDef> Nom </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contact">
+            <th mat-header-cell *matHeaderCellDef> Contactaire </th>
+            <td mat-cell *matCellDef="let element">
+              <textarea name="" id="" cols="60" rows="3">{{element.contact}}</textarea>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="note">
+            <th mat-header-cell *matHeaderCellDef> Note </th>
+            <td mat-cell *matCellDef="let element" class="login-icon">
+              <mat-icon *ngFor="let index of [1, 2, 3, 4, 5]">
+                <ng-container *ngIf="index <= element.note" [ngTemplateOutlet]="starok"></ng-container>
+                <ng-container *ngIf="index > element.note" [ngTemplateOutlet]="starko"></ng-container>
+              </mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="isApproved">
+            <th mat-header-cell *matHeaderCellDef> Approuvé </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <mat-checkbox [disabled]="['create', 'update'].indexOf(parentState) >= 0" [(ngModel)]="element.isApproved" (change)="contactsUpdate(element)"></mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="update">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let i = index" class="update-button">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                </svg>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let i = index" class="delete-button">
+              <div (click)="deleteContact(element)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr [ngClass]="isSelected(i)" (click)="displayContact(i)" mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+
+  <!--        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">Pas d'utilisateur "{{input.value}}"</td>
+          </tr>-->
+
+        </table>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</ng-template>
+
+<ng-template #starok>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+  </svg>
+</ng-template>
+
+<ng-template #starko>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+  </svg>
+</ng-template>
+
+<ng-template #home>
+
+  <div class="row">
+
+    <div class="col-1">
+
+      <div *ngFor="let contact of contacts">
+        <div *ngIf="contact.isApproved" class="contact-list">
+          <p>{{contact.firstname}} {{contact.lastname}}</p>
+          <div class="login-icon">
+            <div *ngFor="let index of [1, 2, 3, 4, 5]">
+              <ng-container *ngIf="index <= contact.note" [ngTemplateOutlet]="starok"></ng-container>
+              <ng-container *ngIf="index > contact.note" [ngTemplateOutlet]="starko"></ng-container>
+            </div>
+          </div>
+        </div>
+        <textarea *ngIf="contact.isApproved" class="contact">{{contact.contact}}</textarea>
+      </div>
+
+    </div>
+
+  </div>
+
+</ng-template>

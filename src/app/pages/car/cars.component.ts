@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Filter } from 'src/app/interface/filter.interface';
 import { Car } from 'src/app/models/car.model';
 import { CarService } from 'src/app/services/car.service';
 

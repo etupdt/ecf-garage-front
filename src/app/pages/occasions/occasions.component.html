@@ -1,19 +1,26 @@
 <div class="occasions">
 
-  <div>
-    <mat-slider min="200" max="600" step="10" discrete="true">
-      <input matSliderStartThumb [(ngModel)]="startValue">
-      <input matSliderEndThumb [(ngModel)]="endValue">
-    </mat-slider>
-    <label>{{endValue}}</label>
+  <div class="filters-slider">
+    <h3>Filtres</h3>
+    <div *ngFor="let filter of filters" class="filter-slider">
+      <mat-label>{{filter.name}}</mat-label>
+      <mat-slider min="{{filter.inf}}" max="{{filter.sup}}" step="{{filter.step}}" discrete="true" showTickMarks="true">
+        <input matSliderStartThumb [(ngModel)]="filter.startValue" (change)="filtre = filtre + 1">
+        <input matSliderEndThumb  [(ngModel)]="filter.endValue" (change)="filtre = filtre + 1">
+      </mat-slider>
+      <p>{{filter.startValue}}{{filter.unit}} - {{filter.endValue}}{{filter.unit}}</p>
+      <button
+        mat-button
+        (click)="filter.startValue = filter.inf;
+                filter.endValue = filter.sup;
+                filtre = filtre + 1"
+      >Réinitialiser</button>
+    </div>
   </div>
+
   <div *ngIf="cars" class="car-cards">
 
-    <mat-card *ngFor="let car of cars" class="car-card">
-      <mat-card-header>
-        <mat-card-title>{{car.brand}}</mat-card-title>
-        <mat-card-subtitle>{{car.model}}</mat-card-subtitle>
-      </mat-card-header>
+    <mat-card *ngFor="let car of (cars | filter:filters:filtre)" class="car-card">
       <div class="image-div">
         <img
           mat-card-image
@@ -23,11 +30,17 @@
         >
       </div>
       <mat-card-content>
-        <p>{{car.description}}</p>
+        <mat-card-header>
+          <mat-card-title>{{car.brand}} {{car.model}}</mat-card-title>
+        </mat-card-header>
+        <p>Année : {{car.year}}</p>
+        <p>{{car.kilometer}} km</p>
+        <p>{{car.price}} €</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button>LIKE</button>
-        <button mat-button>SHARE</button>
+        <button
+          mat-button [routerLink]="['/occasion', car.id]"
+        >Détail</button>
       </mat-card-actions>
     </mat-card>
 
