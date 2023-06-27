@@ -71,7 +71,7 @@ export class ContactsComponent implements OnInit {
     })
   }
 
-  displayedColumns: string[] = ['firstname', 'lastname', 'note', 'isApproved', 'delete']
+  displayedColumns: string[] = ['firstname', 'lastname', 'email', 'delete']
 
   dataSource = new MatTableDataSource(this.contacts);
 

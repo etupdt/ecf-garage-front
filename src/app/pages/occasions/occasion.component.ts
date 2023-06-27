@@ -17,6 +17,8 @@ export class OccasionComponent {
 
   car!: Car
 
+  subject: string = ''
+
   images: Photo[] = []
 
   useBackendImages!: string
@@ -40,6 +42,7 @@ export class OccasionComponent {
     this.carService.getCar(id).subscribe({
       next: (res) => {
         this.car = new Car().deserialize(res)
+        this.subject = `Contact concernant l'occasion ${this.car.brand} ${this.car.model} à ${this.car.price} €`
         this.images.push({
           index: 0,
           image:  new MImage().deserialize({

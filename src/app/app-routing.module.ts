@@ -12,6 +12,7 @@ import { OptionsComponent } from './pages/option/options.component';
 import { CommentsComponent } from './pages/comment/comments.component';
 import { CarsComponent } from './pages/car/cars.component';
 import { OccasionComponent } from './pages/occasions/occasion.component';
+import { ContactsComponent } from './pages/contact/contacts.component';
 
 const routes: Routes = [
 
@@ -22,10 +23,6 @@ const routes: Routes = [
   {
     path: 'Occasions',
     component: OccasionsComponent,
-  },
-  {
-    path: 'occasion/:id',
-    component: OccasionComponent,
   },
   {
     path: 'Contact',
@@ -72,6 +69,13 @@ const routes: Routes = [
         }
       },
       {
+        path: 'Contact',
+        component: ContactsComponent,
+        data: {
+          role: 'ROLE_USER'
+        }
+      },
+      {
         path: 'Option',
         component: OptionsComponent,
         data: {
@@ -83,6 +87,10 @@ const routes: Routes = [
   {
     path: 'Signin',
     component: LoginComponent,
+  },
+  {
+    path: 'occasion/:id',
+    component: OccasionComponent,
   }
 
 ];

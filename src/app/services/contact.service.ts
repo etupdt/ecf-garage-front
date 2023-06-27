@@ -14,7 +14,6 @@ export class ContactService {
   constructor(
     private http: HttpClient,
     private garageService: GarageService
-
   ) {
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
   }

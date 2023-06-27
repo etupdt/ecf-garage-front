@@ -23,8 +23,13 @@ export class ContactComponent implements OnInit {
   @Input() contact!: Contact
   @Output() samecontact: EventEmitter<Contact> = new EventEmitter();
   @Output() newcontact: EventEmitter<Contact> = new EventEmitter<Contact>();
-  @Input() state: string = "display"
+  @Input() state!: string
   @Output() stateChange: EventEmitter<string> = new EventEmitter();
+
+  @Input() grandParentState!: string
+  @Input() subject!: string
+
+  header: boolean = false;
 
   lastContact!: Contact
   contactH3Label: string = ''
@@ -52,20 +57,31 @@ export class ContactComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.state = this.grandParentState ? this.grandParentState : this.state
+
+    if (!this.state) {
+      this.state = 'create'
+      this.header = true;
+    }
+
     this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
     this.contact = this.contactService.initContact()
+    this.contact.subject = this.subject ? this.subject : ''
 
     this.initForm(this.contact)
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesContact')
+    console.log('onChangesContact ' + this.state)
+
     if (this.state === 'create') {
-      this.initForm(this.contactService.initContact()
-    )} else {
+      let contact: Contact = this.contactService.initContact()
+      contact.subject = this.subject ? this.subject : ''
+      this.initForm(contact)
+    } else {
       this.initForm(this.contact)
     }
   }
@@ -107,6 +123,7 @@ export class ContactComponent implements OnInit {
 
       this.contactForm = this.formBuilder.group({
         id: [{value: contact.id, disabled: true}],
+        subject: [contact.subject, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
         firstname: [contact.firstname, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
         lastname: [contact.lastname, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
         message: [contact.message, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
@@ -114,7 +131,7 @@ export class ContactComponent implements OnInit {
         phone: [contact.phone, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
       })
 
-      this.contactH3Label = this.contact ? `Contact de ${this.contact.firstname} ${this.contact.lastname}` : ''
+      this.contactH3Label = this.contact.lastname !== '' ? `Contact de ${this.contact.firstname} ${this.contact.lastname}` : 'Contact'
 
       this.contactForm.disable()
 
@@ -127,7 +144,7 @@ export class ContactComponent implements OnInit {
         }
         case 'create' : {
           this.contactForm.enable()
-          this.contactH3Label = 'Nouveau contactaire'
+          this.contactH3Label = 'Nouveau contact'
           break
         }
       }
@@ -144,7 +161,8 @@ export class ContactComponent implements OnInit {
 
   checkChanges(): boolean {
 
-    this.isUpdated = this.contact?.firstname !== this.contactForm.get("firstname")!.value ||
+    this.isUpdated = this.contact?.subject !== this.contactForm.get("subject")!.value ||
+    this.contact?.firstname !== this.contactForm.get("firstname")!.value ||
     this.contact?.lastname !== this.contactForm.get("lastname")!.value ||
     this.contact?.message !== this.contactForm.get("message")!.value ||
     this.contact?.email !== this.contactForm.get("email")!.value ||
@@ -158,11 +176,12 @@ export class ContactComponent implements OnInit {
 
     return contact.deserialize({
       id: this.contactForm.get("id")?.value,
+      subject: this.contactForm.get("subject")?.value,
       firstname: this.contactForm.get("firstname")?.value,
       lastname: this.contactForm.get("lastname")?.value,
-      contact: this.contactForm.get("contact")?.value,
-      note: this.note,
-      isApproved: this.contactForm.get("contact")?.value === true,
+      message: this.contactForm.get("message")?.value,
+      email: this.contactForm.get("email")?.value,
+      phone: this.contactForm.get("phone")?.value,
       garage: this.garage$
     })
 
@@ -172,11 +191,19 @@ export class ContactComponent implements OnInit {
 
     let contact = this.formatContact(new Contact())
 
-    if (this.state === 'create') {
+    if (!this.state || this.state === 'create') {
 
       this.contactService.postContact(contact).subscribe({
         next: (res) => {
-          this.newcontact.emit(new Contact().deserialize(res))
+          const contact = new Contact().deserialize(res)
+          if (this.subject || this.header) {
+            this.isUpdated = false
+            let contact: Contact = this.contactService.initContact()
+            contact.subject = this.subject ? this.subject : ''
+            this.initForm(contact)
+          } else {
+            this.newcontact.emit(contact)
+          }
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -251,8 +278,14 @@ export class ContactComponent implements OnInit {
       if (result !== 'Oui')
         return
 
-      this.stateChange.emit('display')
-      this.samecontact.emit(this.contact)
+      if (this.subject || this.header) {
+        let contact: Contact = this.contactService.initContact()
+        contact.subject = this.subject ? this.subject : ''
+        this.initForm(contact)
+      } else {
+        this.stateChange.emit('display')
+        this.samecontact.emit(this.contact)
+      }
 
     })
 

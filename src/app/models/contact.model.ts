@@ -50,7 +50,7 @@ export class Contact {
     this.lastname = data.lastname
     this.email = data.email
     this.phone = data.phone
-    this.garage = data.garage.deserialize()
+    this.garage = new Garage().deserialize(data.garage)
 
     return this
   }

@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
   getRouterConfig = () => {
     this.adminItems = this.getRouterChildConfig('Administration')
     return this.router.config.filter(route => {
-      return route.path !== 'Signin' && (this.loginService.getToken() || !route.canActivate)
+      return ['Signin', 'occasion/:id'].indexOf(route.path!) === -1 && (this.loginService.getToken() || !route.canActivate)
     })
   }
 
