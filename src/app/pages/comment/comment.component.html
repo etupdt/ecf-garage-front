@@ -3,7 +3,7 @@
   <mat-grid-list cols="13" rowHeight="50px">
 
     <mat-grid-tile colspan="9">
-      <h3 mat-dialog-title *role="'USER'">{{commentH3Label}}</h3>
+      <h3 mat-dialog-title>{{commentH3Label}}</h3>
     </mat-grid-tile>
 
     <mat-grid-tile colspan="2">
@@ -17,7 +17,12 @@
     </mat-grid-tile>
 
     <mat-grid-tile colspan="2">
-      <button *ngIf="['update', 'create'].indexOf(state) >= 0" class="button" mat-raised-button (click)="cancel()">
+      <button *ngIf="['update', 'create'].indexOf(state) >= 0 &&
+          (isUpdated || !fromHome || login$.roles.indexOf('ROLE_USER') >= 0)"
+          class="button"
+          mat-raised-button
+          (click)="cancel()"
+        >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
           <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -51,7 +56,7 @@
     <mat-grid-list cols="4" rowHeight="200px">
 
       <mat-grid-tile colspan="4">
-        <mat-form-field>
+        <mat-form-field class="mat-area">
           <mat-label>Commentaire</mat-label>
           <textarea matInput formControlName="comment" type="comment" name="comment" placeholder="Commentaire"></textarea>
         </mat-form-field>
@@ -62,9 +67,13 @@
     <mat-grid-list cols="8" rowHeight="60px">
 
       <mat-grid-tile colspan="4">
-        <mat-icon *ngFor="let index of [1, 2, 3, 4, 5]" class="login-icon {{commentForm.disabled ? 'star-disbaled' : 'star-enabled'}}" (click)="note = ['create'].indexOf(state) >= 0 ? index : note">
-          <ng-container *ngIf="index <= note" [ngTemplateOutlet]="starok"></ng-container>
-          <ng-container *ngIf="index > note" [ngTemplateOutlet]="starko"></ng-container>
+        <mat-icon
+          *ngFor="let index of [1, 2, 3, 4, 5]"
+          class="login-icon {{commentForm.disabled ? 'star-disbaled' : 'star-enabled'}}"
+          (click)="commentForm.get('note')!.setValue(['create'].indexOf(state) >= 0 ? index : commentForm.get('note')!.value)"
+        >
+          <ng-container *ngIf="index <= commentForm.get('note')!.value" [ngTemplateOutlet]="starok"></ng-container>
+          <ng-container *ngIf="index > commentForm.get('note')!.value" [ngTemplateOutlet]="starko"></ng-container>
         </mat-icon>
       </mat-grid-tile>
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
@@ -26,12 +26,13 @@ export class CommentComponent implements OnInit {
   @Input() state: string = "display"
   @Output() stateChange: EventEmitter<string> = new EventEmitter();
 
+  @Input() fromHome: boolean = false
+
   lastComment!: Comment
   commentH3Label: string = ''
 
   commentForm!: FormGroup
 
-  note = 0
   isUpdated = false
 
   login$: Login = {
@@ -58,7 +59,7 @@ export class CommentComponent implements OnInit {
     this.comment = this.commentService.initComment()
 
     this.initForm(this.comment)
-
+console.log(this.fromHome)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -106,14 +107,39 @@ export class CommentComponent implements OnInit {
 
       this.commentForm = this.formBuilder.group({
         id: [{value: comment.id, disabled: true}],
-        firstname: [comment.firstname, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-        lastname: [comment.lastname, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-        comment: [comment.comment, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+        firstname: [
+          comment.firstname, [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(32),
+            Validators.pattern(/^[a-zA-Z -']{0,}$/)
+          ]
+        ],
+        lastname: [
+          comment.lastname, [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(32),
+            Validators.pattern(/^[a-zA-Z -']{0,}$/)
+          ]
+        ],
+        comment: [
+          comment.comment, [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+          ]
+        ],
+        note: [
+          comment.note, [
+            Validators.required,
+            Validators.min(1),
+            Validators.max(5)
+          ]
+        ]
       })
 
-      this.note = comment.note
-
-      this.commentH3Label = this.comment ? `Commentaire de ${this.comment.firstname} ${this.comment.lastname}` : ''
+      this.commentH3Label = this.comment ? `Commentaire de ${this.comment.firstname} ${this.comment.lastname}` : 'Commentaire'
 
       this.commentForm.disable()
 
@@ -134,6 +160,7 @@ export class CommentComponent implements OnInit {
       this.commentForm.valueChanges.subscribe(change => {
         this.isUpdated = this.checkChanges()
       })
+      console.log('toto', this.isUpdated, this.fromHome, (this.isUpdated || !this.fromHome))
 
       this.isUpdated = false
 
@@ -146,7 +173,7 @@ export class CommentComponent implements OnInit {
     this.isUpdated = this.comment?.firstname !== this.commentForm.get("firstname")!.value ||
     this.comment?.lastname !== this.commentForm.get("lastname")!.value ||
     this.comment?.comment !== this.commentForm.get("comment")!.value ||
-    !(this.comment?.note === this.note && this.note === 0) ||
+    this.commentForm.get("note")!.value !== 0 ||
     this.comment?.isApproved !== this.commentForm.get("isApproved")!.value ||
     this.state === 'update'
 
@@ -161,7 +188,7 @@ export class CommentComponent implements OnInit {
       firstname: this.commentForm.get("firstname")?.value,
       lastname: this.commentForm.get("lastname")?.value,
       comment: this.commentForm.get("comment")?.value,
-      note: this.note,
+      note: this.commentForm.get("note")!.value,
       isApproved: this.commentForm.get("comment")?.value === true,
       garage: this.garage$
     })

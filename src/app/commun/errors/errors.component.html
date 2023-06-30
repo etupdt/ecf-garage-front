@@ -1,0 +1,22 @@
+
+<div *ngIf="field!.invalid && (field!.dirty || field!.touched)" class="alert alert-danger">
+
+  <div *ngIf="field!.errors?.['required']">
+    Champ obligatoire
+  </div>
+  <div *ngIf="field!.errors?.['minlength']">
+    Ce champ doit faire au minimum {{field!.errors?.['minlength'].requiredLength}} caratères de long.
+  </div>
+  <div *ngIf="field!.errors?.['maxlength']">
+    Le nom doit faire au maximum {{field!.errors?.['maxlength'].requiredLength}} caratères de long.
+  </div>
+  <div *ngIf="field!.errors?.['pattern']">
+    {{patternMessage()}}
+  </div>
+  <div *ngIf="field!.errors?.['email']">
+    Email non valide.
+  </div>
+
+</div>
+
+<!--<ng-container [ngTemplateOutlet]="errors" [ngTemplateOutletContext]="{field:lastfield}"></ng-container>-->

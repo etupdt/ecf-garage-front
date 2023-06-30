@@ -96,12 +96,46 @@ export class UserComponent implements OnInit {
     if (user) {
 
       this.userForm = this.formBuilder.group({
-        id: [{value: user.id, disabled: true}],
-        email: [user.email, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-        password: [user.password, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-        firstname: [user.firstname, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
-        lastname: [user.lastname, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
-        phone: [user.phone, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+        email: [
+          user.email,
+          [
+            Validators.required,
+            Validators.email
+          ]
+        ],
+        password: [
+          user.password,
+          [
+            Validators.required,
+            Validators.minLength(10),
+            Validators.pattern(/[0-9a-zA-Z ]*$/)
+          ]
+        ],
+        firstname: [
+          user.firstname,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(32),
+            Validators.pattern(/^[0-9a-zA-Z -']{0,}$/)
+          ]
+        ],
+        lastname: [
+          user.lastname,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(32),
+            Validators.pattern(/^[0-9a-zA-Z -']{0,}$/)
+          ]
+        ],
+        phone: [
+          user.phone,
+          [
+            Validators.required,
+            Validators.pattern(/^(0)[1-9]( \d{2}){4}$/),
+          ]
+        ],
       })
 
       this.userH3Label = this.user ? `${user.roles.indexOf('ROLE_ADMIN') >= 0 ? 'Administrateur' : 'Utilisateur'} ${user.firstname} ${user.lastname}` : ''

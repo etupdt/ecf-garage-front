@@ -87,21 +87,95 @@
         this.garageServices = new Garage().deserialize(garage).services
 
         this.garageForm = this.formBuilder.group({
-          id: [{value: garage.id, disabled: true}],
-          raison: [garage.raison, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-          phone: [garage.phone, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-          address1: [garage.address1, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-          address2: [garage.address2, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-          zip: [garage.zip, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
-          locality: [garage.locality, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
+          raison: [
+            garage.raison,
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          phone: [
+            garage.phone,
+            [
+              Validators.required,
+              Validators.pattern(/^(0)[1-9]( \d{2}){4}$/),
+            ]
+          ],
+          address1: [
+            garage.address1,
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          address2: [
+            garage.address2,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          zip: [
+            garage.zip,
+            [
+              Validators.required,
+              Validators.pattern(/[0-9]{0,}/),
+              Validators.minLength(5),
+              Validators.maxLength(5),
+            ]
+          ],
+          locality: [
+            garage.locality,
+            [
+              Validators.required,
+              Validators.minLength(1),
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
           services: [this.garageServices],
-          day1hours: [garage.day1hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
-          day2hours: [garage.day2hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,_: \-]{0,}/)]],
-          day3hours: [garage.day3hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
-          day4hours: [garage.day4hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
-          day5hours: [garage.day5hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
-          day6hours: [garage.day6hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
-          day7hours: [garage.day7hours, [Validators.required, Validators.pattern(/[0-9a-zA-Z\,\: \-]{0,}/)]],
+          day1hours: [
+            garage.day1hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          day2hours: [
+            garage.day2hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          day3hours: [
+            garage.day3hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          day4hours: [
+            garage.day4hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          day5hours: [
+            garage.day5hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          day6hours: [
+            garage.day6hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
+          day7hours: [
+            garage.day7hours,
+            [
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            ]
+          ],
         })
 
         this.garageH3Label = garage ? `Garage ${garage.raison}` : ''

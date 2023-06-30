@@ -1,2 +1,10 @@
 
 @import '../../app.component.scss';
+
+.textarea {
+  max-height: 230px;
+}
+
+.mat-area {
+  height: 100%;
+}

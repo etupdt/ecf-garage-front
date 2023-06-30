@@ -85,9 +85,22 @@ export class OptionComponent implements OnInit {
     if (option) {
 
       this.optionForm = this.formBuilder.group({
-        id: [{value: option.id, disabled: true}],
-        name: [option.name, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
-        description: [option.description, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{6,}/)]],
+        name: [
+          option.name,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/^[a-zA-Z -\']*$/)
+          ]
+        ],
+        description: [
+          option.description,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]*$/),
+          ]
+        ],
       })
 
       this.optionH3Label = this.option ? `Option ${this.option.name}` : ''

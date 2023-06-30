@@ -1,4 +1,6 @@
 
+@import '../../app.component.scss';
+
 .modal-icon {
   color: white;
   background-color: #D92332;
@@ -18,7 +20,6 @@
 
 mat-form-field {
   width: 100%;
-  height: 90%;
 }
 
 .content {
@@ -39,8 +40,6 @@ mat-form-field {
 
 button {
   width: 100%;
-  height: 90%;
-  border: 1px solid black;
 }
 
 h3 {

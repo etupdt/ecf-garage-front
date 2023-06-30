@@ -36,10 +36,11 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const selectedTabIndex = localStorage.getItem('selectedTabIndex')
-    if (selectedTabIndex)
+    this.selectedTabIndex = 0
+    const selectedTabIndexTime = localStorage.getItem('selectedTabIndexTime')
+    if (selectedTabIndexTime && (new Date()).getTime() - +selectedTabIndexTime < 180000)
       this.selectedTabIndex = +localStorage.getItem('selectedTabIndex')!
-
+    this.callRoute()
   }
 
   signOut = () => {
@@ -68,6 +69,7 @@ export class HeaderComponent implements OnInit {
   callRoute = (target?: string) => {
 
     localStorage.setItem('selectedTabIndex', `${this.selectedTabIndex}`)
+    localStorage.setItem('selectedTabIndexTime', `${(new Date()).getTime()}`)
 
     this.burgerMenu = 'cache'
     if (target)

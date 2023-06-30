@@ -3,9 +3,9 @@
     <img src="{{useBackendImages + '/' + service.image.filename}}" alt="">
     <div class="text">
       <h4>{{service.name}}</h4>
-      <p>{{service.description}}</p>
-    </div>
+      <p *ngFor="let p of service.description.split('\n')">{{p}}</p>
+  </div>
   </div>
 </div>
 
-<app-comments [grandParentState]="'create'"></app-comments>
+<app-comments [fromParentHome]="true"></app-comments>

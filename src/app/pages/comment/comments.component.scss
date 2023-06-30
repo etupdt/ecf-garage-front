@@ -18,10 +18,12 @@
 }
 
 .comment {
-  width: 100%;
-  max-width: 100%;
-  min-width: 100%;
-  background-color: #EEEEEE;
+  border: solid 1px black;
+  p{
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+  }
 }
 
 .login-icon {

@@ -119,15 +119,61 @@ export class CarComponent implements OnInit {
 
       this.carForm = this.formBuilder.group({
         id: [{value: car.id, disabled: true}],
-        brand: [car.brand, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{2,}/)]],
-        model: [car.model, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{1,}/)]],
-        price: [car.price, [Validators.required, Validators.pattern(/[0-9]{1,}/)]],
-        year: [car.year, [Validators.required, Validators.pattern(/[0-9]{1,}/)]],
-        kilometer: [car.kilometer, [Validators.required, Validators.pattern(/[0-9]{1,}/)]],
-        description: [car.description, [Validators.required, Validators.pattern(/[0-9a-zA-Z ]{1,}/)]],
-        imageId: [car.image.id],
-        hash: [car.image.hash],
-        options: [this.carOptions],
+        brand: [
+          car.brand,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+          ]
+        ],
+        model: [
+          car.model,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+          ]
+        ],
+        price: [
+          car.price,
+          [
+            Validators.required,
+            Validators.pattern(/[0-9]{0,}/),
+            Validators.min(1),
+          ]
+        ],
+        year: [
+          car.year,
+          [
+            Validators.required,
+            Validators.pattern(/[0-9]{0,}/),
+            Validators.min(1950),
+            Validators.max((new Date()).getFullYear()),
+          ]
+        ],
+        kilometer: [
+          car.kilometer,
+          [
+            Validators.required,
+            Validators.pattern(/[0-9]{0,}/),
+            Validators.min(1),
+          ]
+        ],
+        description: [
+          car.description,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+          ]
+        ],
+        hash: [
+          car.image.hash
+        ],
+        options: [
+          this.carOptions
+        ],
         features: this.formBuilder.array([])
       })
 
@@ -159,8 +205,18 @@ export class CarComponent implements OnInit {
         car.features.forEach(feature => {
           this.features.push(this.formBuilder.group({
             id: [feature.id],
-            name: [feature.name, Validators.required],
-            description: [feature.description, Validators.required]
+            name: [
+              feature.name,
+              Validators.required,
+              Validators.minLength(2),
+              Validators.pattern(/^[a-zA-Z -\']*$/)
+            ],
+            description: [
+              feature.description,
+              Validators.required,
+              Validators.minLength(2),
+              Validators.pattern(/[0-9a-zA-Z -+*_='/]*$/),
+            ]
           }))
         })
       }

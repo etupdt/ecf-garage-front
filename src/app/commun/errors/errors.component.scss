@@ -1,0 +1,9 @@
+
+@import '../../app.component.scss';
+
+.alert {
+  > div {
+    color: red;
+    font-size: 12px;
+  }
+}

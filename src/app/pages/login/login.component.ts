@@ -1,7 +1,7 @@
 
 
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
@@ -31,8 +31,21 @@ export class LoginComponent {
 
   initForm = () => {
     this.signInForm = this.formBuilder.group({
-      email: ["vincent.parrot@garage.com", [Validators.required, Validators.email]],
-      password: ["achanger", [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
+      email: [
+        "vincent.parrot@garage.com",
+        [
+          Validators.required,
+          Validators.email
+        ]
+      ],
+      password: [
+        "achanger",
+        [
+          Validators.required,
+//          Validators.minLength(10),
+//          Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*\-\+\?\!])[0-9a-zA-Z\*\+\?\!]+$/)
+        ]
+      ],
     })
   }
 
@@ -68,5 +81,8 @@ export class LoginComponent {
     })
 
   }
+
+  get email() { return this.signInForm.get('email')! as FormControl }
+  get password() { return this.signInForm.get('password')! as FormControl }
 
 }

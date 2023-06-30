@@ -40,16 +40,20 @@ export class CommentsComponent implements OnInit {
   selectedIndex: number = 0
   newComment: Comment = this.commentService.initComment()
   parentState: string = 'display'
-  @Input() grandParentState!: string
+
+  fromHome: boolean = false
+  @Input() fromParentHome!: boolean
 
   ngOnInit(): void {
-
+console.log ('this.fromParentHome', this.fromParentHome)
+    this.fromHome = this.fromParentHome;
     this.loginService.listenLogin.subscribe((login) => {
       this.login$ = login as Login
-      if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.grandParentState) {
-        this.parentState = this.grandParentState
+      if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.fromParentHome) {
+        this.parentState = 'create'
       }
     })
+
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
     this.commentService.getCommentsByGarage(this.garage$.id).subscribe({
@@ -164,7 +168,7 @@ export class CommentsComponent implements OnInit {
     this.comments.push(comment);
     this.selectedComment = this.comments[this.comments.length - 1]
     this.updateDatasource()
-    if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.grandParentState) {
+    if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.fromParentHome) {
       this.selectedComment = this.commentService.initComment()
     } else {
       this.parentState = 'display'
@@ -172,7 +176,7 @@ export class CommentsComponent implements OnInit {
   }
 
   onSamecomment = (comment: Comment) => {
-    if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.grandParentState) {
+    if (this.login$.roles.indexOf('ROLE_USER') === -1 && this.fromParentHome) {
       this.selectedComment = this.commentService.initComment()
       this.parentState = 'create'
     } else {

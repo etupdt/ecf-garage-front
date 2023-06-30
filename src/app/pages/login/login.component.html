@@ -19,20 +19,28 @@
           <mat-form-field class="field" appearance="fill">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" type="email" name="email" placeholder="Email"/>
+            <app-errors [field]="email"></app-errors>
           </mat-form-field>
 
         </mat-grid-tile>
 
         <mat-grid-tile colspan="4">
 
-          <mat-form-field class="field">
+          <mat-form-field class="field" appearance="fill">
             <mat-label>Mot de passe</mat-label>
-            <input matInput formControlName="password" type="password" name="password" placeholder="Password"/>
+            <input matInput
+              formControlName="password"
+              type="password"
+              name="password"
+              placeholder="Password"
+            />
           </mat-form-field>
 
         </mat-grid-tile>
 
       </mat-grid-list>
+
+      <app-errors [field]="password" [type]="'password'"></app-errors>
 
     </div>
 
@@ -45,7 +53,12 @@
       <mat-grid-list cols="8" rowHeight="70px" mat-dialog-content class="composant-buttons">
 
         <mat-grid-tile colspan="8">
-          <button class="field" mat-raised-button [disabled]="signInForm.invalid" (click)="onSubmit()">Connexion</button>
+          <button
+            mat-raised-button
+            [disabled]="signInForm.invalid"
+            (click)="onSubmit()"
+            class="button"
+          >Connexion</button>
         </mat-grid-tile>
 
       </mat-grid-list>

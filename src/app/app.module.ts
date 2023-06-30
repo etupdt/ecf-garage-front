@@ -51,6 +51,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { FilterPipe } from './pages/occasions/filter.pipe';
 import { OccasionComponent } from './pages/occasions/occasion.component';
 import { ContactsComponent } from './pages/contact/contacts.component';
+import { ErrorsComponent } from './commun/errors/errors.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { ContactsComponent } from './pages/contact/contacts.component';
     FilterPipe,
     OccasionComponent,
     ContactsComponent,
+    ErrorsComponent,
   ],
   imports: [
     BrowserModule,

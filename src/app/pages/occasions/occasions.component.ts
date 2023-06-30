@@ -39,10 +39,10 @@ export class OccasionsComponent implements OnInit {
       name: 'Année',
       unit: '',
       inf: 1950,
-      sup: 2023,
+      sup: (new Date()).getFullYear(),
       step: 1,
       startValue: 1950,
-      endValue: 2023
+      endValue: (new Date()).getFullYear()
     },
   ]
 

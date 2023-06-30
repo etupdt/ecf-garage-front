@@ -9,7 +9,7 @@ export class Garage {
   phone!: string
   address1!: string
   address2!: string
-  zip!: number
+  zip!: string
   locality!: string
   day1hours!: string
   day2hours!: string
