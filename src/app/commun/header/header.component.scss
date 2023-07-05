@@ -105,6 +105,11 @@ mat-menu-content button {
     display: inline-block;
   }
 
+  mat-toolbar {
+    background-color: $color3;
+    height: inherit;
+  }
+
 }
 
 @media screen and (max-width: 520px) {

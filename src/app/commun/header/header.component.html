@@ -28,7 +28,7 @@
 
       <span class="title">Automobiles</span>
       <div class="login-zone">
-        <a mat-button (click)="callRoute('user')">{{login.email}}</a>
+        <a mat-button (click)="callRoute('user')" class="email">{{login.email}}</a>
         <mat-icon class="login-icon">
           <ng-container *ngIf="login.email === ''" [ngTemplateOutlet]="sign"></ng-container>
           <ng-container *ngIf="login.email !== ''" [ngTemplateOutlet]="signout"></ng-container>
@@ -41,12 +41,14 @@
       </div>
 
     </mat-toolbar-row>
-  <!--
 
-    <mat-toolbar-row *ngFor="let onglet of getRouterConfig()" class="burger-visible">
-      <a (click)="callRoute(onglet.path)" mat-button>{{onglet.path}}</a>
+    <mat-toolbar-row *ngFor="let onglet of onglets | slice:0:3; let i = index;" [ngClass]="(burgerMenu === 'cache') ? 'cache' : 'burger-visible'">
+      <a (click)="selectedTabIndex = i; callRoute()" mat-button>{{onglet.path}}</a>
     </mat-toolbar-row>
-  -->
+
+    <mat-toolbar-row *ngFor="let item of adminItems" [ngClass]="(burgerMenu === 'cache') ? 'cache' : 'burger-visible'">
+      <a (click)="selectedTabIndex = 3; callRoute('/Administration/' + item.path)" mat-button>{{item.path}}</a>
+    </mat-toolbar-row>
 
   </mat-toolbar>
 

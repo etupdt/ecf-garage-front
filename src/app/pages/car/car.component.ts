@@ -56,6 +56,8 @@ export class CarComponent implements OnInit {
 
   isUpdated = false
 
+  annee: number = 2022
+
   constructor(
     private formBuilder: FormBuilder,
     private carService: CarService,
@@ -67,6 +69,7 @@ export class CarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.annee = (new Date()).getFullYear()
     this.useBackendImages = environment.useBackendImages + '/'
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
     this.getOptions()
@@ -124,7 +127,7 @@ export class CarComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/)
           ]
         ],
         model: [
@@ -132,7 +135,7 @@ export class CarComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/)
           ]
         ],
         price: [
@@ -140,7 +143,7 @@ export class CarComponent implements OnInit {
           [
             Validators.required,
             Validators.pattern(/[0-9]{0,}/),
-            Validators.min(1),
+            Validators.min(1)
           ]
         ],
         year: [
@@ -149,7 +152,7 @@ export class CarComponent implements OnInit {
             Validators.required,
             Validators.pattern(/[0-9]{0,}/),
             Validators.min(1950),
-            Validators.max((new Date()).getFullYear()),
+            Validators.max(this.annee)
           ]
         ],
         kilometer: [
@@ -157,7 +160,7 @@ export class CarComponent implements OnInit {
           [
             Validators.required,
             Validators.pattern(/[0-9]{0,}/),
-            Validators.min(1),
+            Validators.min(1)
           ]
         ],
         description: [
@@ -165,8 +168,11 @@ export class CarComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/)
           ]
+        ],
+        imageId: [
+          car.image.id
         ],
         hash: [
           car.image.hash
