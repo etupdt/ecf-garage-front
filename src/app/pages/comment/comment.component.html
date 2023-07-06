@@ -1,12 +1,12 @@
 <div *ngIf="commentForm" [formGroup]="commentForm" class="col-1">
 
-  <mat-grid-list cols="13" rowHeight="50px">
+  <mat-grid-list cols="4" rowHeight="50px">
 
-    <mat-grid-tile colspan="9">
+    <mat-grid-tile colspan="2">
       <h3 mat-dialog-title>{{commentH3Label}}</h3>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile colspan="1">
       <button *ngIf="['create'].indexOf(state) >= 0 && isUpdated && !commentForm.invalid" class="button" mat-raised-button (click)="saveComment()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -16,7 +16,7 @@
       </button>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile colspan="1">
       <button *ngIf="['update', 'create'].indexOf(state) >= 0 &&
           (isUpdated || !fromHome || login$.roles.indexOf('ROLE_USER') >= 0)"
           class="button"
@@ -35,12 +35,13 @@
 
   <div class="mat-elevation-z8 detail">
 
-    <mat-grid-list cols="4" rowHeight="70px">
+    <mat-grid-list cols="{{sizeTable}}" rowHeight="70px" (window:resize)="onResizeTable($event)">
 
       <mat-grid-tile colspan="2">
         <mat-form-field enabled="'false'">
           <mat-label>Prénom</mat-label>
           <input matInput formControlName="firstname" type="firstname" name="firstname" placeholder="Prénom"/>
+          <app-errors [field]="firstname"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -48,6 +49,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Nom</mat-label>
           <input matInput formControlName="lastname" type="lastname" name="lastname" placeholder="Nom"/>
+          <app-errors [field]="lastname"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -59,6 +61,7 @@
         <mat-form-field class="mat-area">
           <mat-label>Commentaire</mat-label>
           <textarea matInput formControlName="comment" type="comment" name="comment" placeholder="Commentaire"></textarea>
+          <app-errors [field]="getComment"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 

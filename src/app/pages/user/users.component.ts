@@ -72,8 +72,12 @@ export class UsersComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isSelected = (index: number) => {
+  isSelectedClass = (index: number) => {
     return this.selectedUser.email === this.users[index].email && this.parentState !== 'create' ? "selected" : ""
+  }
+
+  isSelectedStyle = (index: number) => {
+    return this.selectedUser.email === this.users[index].email && this.parentState !== 'create' ? {'background': '#D9777F'} : []
   }
 
   displayUser = (index: number) => {

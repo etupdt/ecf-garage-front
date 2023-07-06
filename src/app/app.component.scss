@@ -49,7 +49,7 @@ $color5: #F2F2F2;
 
 .col-1 {
   width: 80%;
-  margin: 10px;
+  margin: auto;
 }
 
 h3 {
@@ -83,7 +83,7 @@ button {
 .selected {
   background-color: $color3;
   td, th, .delete-button, .update-button {
-    color: $color4;
+    color: $color5;
   }
 }
 
@@ -161,4 +161,34 @@ textarea {
 
 .star-enabled {
   color: rgb(253, 166, 3);
+}
+
+@media screen and (max-width: 1090px) {
+
+  .button {
+    svg {
+      display: none;
+    }
+  }
+
+}
+
+@media screen and (max-width: 880px) {
+
+  .falcultative {
+    display: none;
+  }
+
+  .button {
+    font-size: 12px;
+  }
+
+}
+
+@media screen and (max-width: 500px) {
+
+  .button {
+    font-size: 9px;
+  }
+
 }

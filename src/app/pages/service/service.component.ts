@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
@@ -307,5 +307,8 @@ export class ServiceComponent implements OnInit {
     })
 
   }
+
+  get name() { return this.serviceForm.get('name')! as FormControl }
+  get description() { return this.serviceForm.get('description')! as FormControl }
 
 }

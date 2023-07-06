@@ -55,8 +55,12 @@ export class ServicesComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isSelected = (index: number) => {
+  isSelectedClass = (index: number) => {
     return this.selectedService?.name === this.services[index].name && this.parentState !== 'create' ? "selected" : ""
+  }
+
+  isSelectedStyle = (index: number) => {
+    return this.selectedService.name === this.services[index].name && this.parentState !== 'create' ? {'background': '#D9777F'} : []
   }
 
   displayService = (index: number) => {

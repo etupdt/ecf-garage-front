@@ -42,18 +42,18 @@
         </ng-container>
 
         <ng-container matColumnDef="firstname">
-          <th mat-header-cell *matHeaderCellDef> Prénom </th>
-          <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+          <th mat-header-cell *matHeaderCellDef class="falcultative"> Prénom </th>
+          <td mat-cell *matCellDef="let element" class="falcultative"> {{element.firstname}} </td>
         </ng-container>
 
         <ng-container matColumnDef="lastname">
-          <th mat-header-cell *matHeaderCellDef> Nom </th>
-          <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+          <th mat-header-cell *matHeaderCellDef class="falcultative"> Nom </th>
+          <td mat-cell *matCellDef="let element" class="falcultative"> {{element.lastname}} </td>
         </ng-container>
 
         <ng-container matColumnDef="phone">
-          <th mat-header-cell *matHeaderCellDef> Téléphone </th>
-          <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+          <th mat-header-cell *matHeaderCellDef class="falcultative"> Téléphone </th>
+          <td mat-cell *matCellDef="let element" class="falcultative"> {{element.phone}} </td>
         </ng-container>
 
         <ng-container matColumnDef="update">
@@ -80,7 +80,12 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr [ngClass]="isSelected(i)" (click)="displayUser(i)" mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+        <tr
+          [ngStyle]="isSelectedStyle(i)"
+          [ngClass]="isSelectedClass(i)"
+          (click)="displayUser(i)"
+          mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
+        ></tr>
 
 <!--        <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" colspan="4">Pas d'utilisateur "{{input.value}}"</td>

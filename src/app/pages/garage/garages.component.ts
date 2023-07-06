@@ -47,8 +47,12 @@ export class GaragesComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isSelected = (index: number) => {
+  isSelectedClass = (index: number) => {
     return this.selectedGarage$.raison === this.garages[index].raison && this.parentState !== 'create' ? "selected" : ""
+  }
+
+  isSelectedStyle = (index: number) => {
+    return this.selectedGarage$.raison === this.garages[index].raison && this.parentState !== 'create' ? {'background': '#D9777F'} : []
   }
 
   displayGarage = (index: number) => {

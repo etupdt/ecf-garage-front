@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
@@ -65,7 +65,6 @@ export class CarComponent implements OnInit {
     private garageService: GarageService,
     private optionService: OptionService,
     private dialog: MatDialog,
-    private featureService: FeatureService
   ) {}
 
   ngOnInit(): void {
@@ -213,15 +212,19 @@ export class CarComponent implements OnInit {
             id: [feature.id],
             name: [
               feature.name,
-              Validators.required,
-              Validators.minLength(2),
-              Validators.pattern(/^[a-zA-Z -\']*$/)
+              [
+                Validators.required,
+                Validators.minLength(2),
+                Validators.pattern(/^.*$/)
+              ]
             ],
             description: [
               feature.description,
-              Validators.required,
-              Validators.minLength(2),
-              Validators.pattern(/[0-9a-zA-Z -+*_='/]*$/),
+              [
+                Validators.required,
+                Validators.minLength(2),
+                Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+              ]
             ]
           }))
         })
@@ -453,7 +456,7 @@ export class CarComponent implements OnInit {
 
     if (!this.isUpdated) {
       this.stateChange.emit('display')
-      this.samecar.emit(this.car)
+      this.samecar.emit(this.car.id === 0 ? undefined : this.car)
       return
     }
 
@@ -472,7 +475,7 @@ export class CarComponent implements OnInit {
         return
 
       this.stateChange.emit('display')
-      this.samecar.emit(this.car)
+      this.samecar.emit(this.car.id === 0 ? undefined : this.car)
 
     })
 
@@ -526,5 +529,12 @@ export class CarComponent implements OnInit {
     this.images = photos
     console.log('images', this.car.images)
   }
+
+  get brand() { return this.carForm.get('brand')! as FormControl }
+  get model() { return this.carForm.get('model')! as FormControl }
+  get price() { return this.carForm.get('price')! as FormControl }
+  get year() { return this.carForm.get('year')! as FormControl }
+  get kilometer() { return this.carForm.get('kilometer')! as FormControl }
+  get description() { return this.carForm.get('description')! as FormControl }
 
 }

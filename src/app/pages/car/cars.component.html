@@ -87,7 +87,12 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-          <tr [ngClass]="isSelected(i)" (click)="displayCar(i)" mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+          <tr
+            [ngStyle]="isSelectedStyle(i)"
+            [ngClass]="isSelectedClass(i)"
+            (click)="displayCar(i)"
+            mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
+          ></tr>
 
   <!--        <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" colspan="4">Pas d'utilisateur "{{input.value}}"</td>

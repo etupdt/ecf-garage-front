@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { Login } from 'src/app/interface/login.interface';
+import { Garage } from 'src/app/models/garage.model';
 import { User } from 'src/app/models/user.model';
+import { GarageService } from 'src/app/services/garage.service';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -29,6 +31,8 @@ export class UserComponent implements OnInit {
 
   userForm!: FormGroup
 
+  garage$!: Garage
+
   isUpdated = false
 
   login$: Login = {
@@ -40,6 +44,7 @@ export class UserComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private loginService: LoginService,
+    private garageService: GarageService,
     private dialog: MatDialog,
   ) {
   }
@@ -47,6 +52,7 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
 
     this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
     this.initForm(this.userService.initUser())
   }
@@ -104,11 +110,11 @@ export class UserComponent implements OnInit {
           ]
         ],
         password: [
-          user.password,
+          '',
           [
             Validators.required,
             Validators.minLength(10),
-            Validators.pattern(/[0-9a-zA-Z ]*$/)
+            Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[\*\-\+\?\!])[0-9a-zA-Z\*\-\+\?\!]+$/)
           ]
         ],
         firstname: [
@@ -141,7 +147,7 @@ export class UserComponent implements OnInit {
       this.userH3Label = this.user ? `${user.roles.indexOf('ROLE_ADMIN') >= 0 ? 'Administrateur' : 'Utilisateur'} ${user.firstname} ${user.lastname}` : ''
 
       this.userForm.disable()
-console.log(this.login$)
+
       switch (this.state) {
         case 'update' : {
           if (this.login$.roles.indexOf('ROLE_ADMIN') >= 0) {
@@ -155,16 +161,17 @@ console.log(this.login$)
         }
         case 'create' : {
           this.userForm.enable()
+          this.userForm.get('password')?.disable()
           this.userH3Label = 'Nouvel utilisateur'
           break
         }
       }
 
+      this.isUpdated = false
+
       this.userForm.valueChanges.subscribe(change => {
         this.isUpdated = this.checkChanges()
       })
-
-      this.isUpdated = false
 
     }
 
@@ -173,25 +180,26 @@ console.log(this.login$)
   checkChanges(): boolean {
 
     this.isUpdated = this.user.email !== this.userForm.get("email")!.value ||
-      this.user.password !== this.userForm.get("password")!.value ||
+      '' !== this.userForm.get("password")!.value ||
       this.user.firstname !== this.userForm.get("firstname")!.value ||
       this.user.lastname !== this.userForm.get("lastname")!.value ||
       this.user.phone !== this.userForm.get("phone")!.value
 
-    return this.isUpdated
+      return this.isUpdated
 
   }
 
   formatUser = (user: User): User => {
 
     return user.deserialize({
-      id: this.userForm.get("id")?.value,
+      id: this.user.id,
       email: this.userForm.get("email")?.value,
-      password: this.state === 'create' ? 'achanger' : this.userForm.get("password")?.value,
+      password: this.state === 'create' ? '!!aaaAAA11' : this.userForm.get("password")?.value,
       firstname: this.userForm.get("firstname")?.value,
       lastname: this.userForm.get("lastname")?.value,
       phone: this.userForm.get("phone")?.value,
-      roles: []
+      roles: [],
+      garage: this.garage$
     })
 
   }
@@ -285,5 +293,11 @@ console.log(this.login$)
     })
 
   }
+
+  get email() { return this.userForm.get('email')! as FormControl }
+  get password() { return this.userForm.get('password')! as FormControl }
+  get firstname() { return this.userForm.get('firstname')! as FormControl }
+  get lastname() { return this.userForm.get('lastname')! as FormControl }
+  get phone() { return this.userForm.get('phone')! as FormControl }
 
 }

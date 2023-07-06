@@ -9,11 +9,12 @@
 
   .confirm-buttons {
 
-    margin-left: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 
-    button {
-      height: 30px;
-      border-radius: 5px;
+    .confirm-button {
+      width: 60px;
     }
 
   }

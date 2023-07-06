@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
@@ -42,6 +42,8 @@ export class CommentComponent implements OnInit {
 
   garage$!: Garage
 
+  sizeTable = 4
+
   constructor(
     private formBuilder: FormBuilder,
     private commentService: CommentService,
@@ -53,13 +55,15 @@ export class CommentComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.sizeTable = window.innerWidth <= 800 ? 2 : 4;
+
     this.loginService.listenLogin.subscribe((login) => {this.login$ = login as Login})
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
     this.comment = this.commentService.initComment()
 
     this.initForm(this.comment)
-console.log(this.fromHome)
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -284,5 +288,14 @@ console.log(this.fromHome)
     })
 
   }
+
+  onResizeTable = (event: UIEvent) => {
+    this.sizeTable = ((event.target! as Window).innerWidth <= 800) ? 2 : 4;
+  }
+
+  get firstname() { return this.commentForm.get('firstname')! as FormControl }
+  get lastname() { return this.commentForm.get('lastname')! as FormControl }
+  get getComment() { return this.commentForm.get('comment')! as FormControl }
+  get note() { return this.commentForm.get('note')! as FormControl }
 
 }

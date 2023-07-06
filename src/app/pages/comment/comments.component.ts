@@ -75,7 +75,7 @@ console.log ('this.fromParentHome', this.fromParentHome)
     })
   }
 
-  displayedColumns: string[] = ['firstname', 'lastname', 'note', 'isApproved', 'delete']
+  displayedColumns: string[] = ['firstname', 'lastname', 'isApproved', 'delete']
 
   dataSource = new MatTableDataSource(this.comments);
 
@@ -84,8 +84,12 @@ console.log ('this.fromParentHome', this.fromParentHome)
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isSelected = (index: number) => {
+  isSelectedClass = (index: number) => {
     return this.selectedComment.id === this.comments[index].id && this.parentState !== 'create' ? "selected" : ""
+  }
+
+  isSelectedStyle = (index: number) => {
+    return this.selectedComment.id === this.comments[index].id && this.parentState !== 'create' ? {'background': '#D9777F'} : []
   }
 
   displayComment = (index: number) => {

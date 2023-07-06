@@ -36,6 +36,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Marque</mat-label>
           <input matInput formControlName="brand" type="brand" name="brand" placeholder="Marque"/>
+          <app-errors [field]="brand"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -43,6 +44,7 @@
         <mat-form-field>
           <mat-label>Modèle</mat-label>
           <input matInput formControlName="model" type="model" name="model" placeholder="Modèle">
+          <app-errors [field]="model"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -50,6 +52,7 @@
         <mat-form-field>
           <mat-label>Prix</mat-label>
           <input matInput formControlName="price" type="price" name="price" placeholder="Prix">
+          <app-errors [field]="price"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -57,6 +60,7 @@
         <mat-form-field>
           <mat-label>Année</mat-label>
           <input matInput formControlName="year" type="year" name="year" placeholder="Année">
+          <app-errors [field]="year"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -64,6 +68,7 @@
         <mat-form-field>
           <mat-label>Kilomêtre</mat-label>
           <input matInput formControlName="kilometer" type="kilometer" name="kilometer" placeholder="Kilomêtre">
+          <app-errors [field]="kilometer"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 

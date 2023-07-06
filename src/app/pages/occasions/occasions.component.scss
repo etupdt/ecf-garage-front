@@ -69,3 +69,23 @@ mat-slider {
 mat-label {
   margin-top: 50px;
 }
+
+@media screen and (max-width: 900px) {
+
+  .filters-slider {
+    margin: auto;
+    padding-right: 30px;
+    width: 220px;
+  }
+
+    .occasions {
+    display: flex;
+    flex-direction: column;
+
+    .car-card {
+      margin: auto;
+      margin-top: 10%;
+    }
+  }
+
+}

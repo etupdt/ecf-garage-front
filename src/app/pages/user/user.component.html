@@ -36,6 +36,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" name="email" placeholder="Email"/>
+          <app-errors [field]="email"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -43,6 +44,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Mot de passe</mat-label>
           <input matInput formControlName="password" type="password" name="password" placeholder="Mot de passe"/>
+          <app-errors [field]="password" [type]="'password'"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -50,6 +52,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Prénom</mat-label>
           <input matInput formControlName="firstname" type="firstname" name="firstname" placeholder="Prénom"/>
+          <app-errors [field]="firstname"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -57,6 +60,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Nom</mat-label>
           <input matInput formControlName="lastname" type="lastname" name="lastname" placeholder="Nom"/>
+          <app-errors [field]="lastname"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -64,6 +68,7 @@
         <mat-form-field enabled="'false'">
           <mat-label>Téléphone</mat-label>
           <input matInput formControlName="phone" type="phone" name="phone" placeholder="Téléphone"/>
+          <app-errors [field]="phone" [type]="'phone'"></app-errors>
         </mat-form-field>
       </mat-grid-tile>
 

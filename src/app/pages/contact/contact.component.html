@@ -2,13 +2,13 @@
 
   <div *ngIf="contactForm" [formGroup]="contactForm" class="col-1">
 
-    <mat-grid-list cols="13" rowHeight="50px">
+    <mat-grid-list cols="4" rowHeight="50px">
 
-      <mat-grid-tile colspan="9">
+      <mat-grid-tile colspan="2">
         <h3 mat-dialog-title>{{contactH3Label}}</h3>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="2">
+      <mat-grid-tile colspan="1">
         <button *ngIf="['create'].indexOf(state) >= 0 && isUpdated && !contactForm.invalid" class="button" mat-raised-button (click)="saveContact()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -18,7 +18,7 @@
         </button>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="2">
+      <mat-grid-tile colspan="1">
         <button *ngIf="['update', 'create'].indexOf(state) >= 0 && (isUpdated || !(subject || header))"
             class="button" mat-raised-button (click)="cancel()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -33,9 +33,9 @@
 
     <div class="mat-elevation-z8 detail">
 
-      <mat-grid-list cols="4" rowHeight="70px">
+      <mat-grid-list cols="{{sizeTable}}" rowHeight="70px" (window:resize)="onResizeTable($event)">
 
-        <mat-grid-tile colspan="4">
+        <mat-grid-tile colspan="{{sizeTable}}">
           <mat-form-field enabled="'false'">
             <mat-label>Sujet</mat-label>
             <input matInput formControlName="subject" type="text" name="subject" placeholder="Sujet"/>
@@ -59,7 +59,7 @@
           </mat-form-field>
         </mat-grid-tile>
 
-        <mat-grid-tile colspan="3">
+        <mat-grid-tile colspan="2">
           <mat-form-field enabled="'false'">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" type="email" name="email" placeholder="Email"/>
@@ -67,7 +67,7 @@
           </mat-form-field>
         </mat-grid-tile>
 
-        <mat-grid-tile colspan="1">
+        <mat-grid-tile colspan="2">
           <mat-form-field enabled="'false'">
             <mat-label>Téléphone</mat-label>
             <input matInput formControlName="phone" type="phone" name="phone" placeholder="Téléphone"/>

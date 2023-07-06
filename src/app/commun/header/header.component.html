@@ -50,6 +50,13 @@
       <a (click)="selectedTabIndex = 3; callRoute('/Administration/' + item.path)" mat-button>{{item.path}}</a>
     </mat-toolbar-row>
 
+    <mat-toolbar-row [ngClass]="(burgerMenu === 'cache') ? 'cache' : 'burger-visible'">
+      <mat-icon class="login-burger-icon">
+        <ng-container *ngIf="login.email === ''" [ngTemplateOutlet]="sign"></ng-container>
+        <ng-container *ngIf="login.email !== ''" [ngTemplateOutlet]="signout"></ng-container>
+      </mat-icon>
+    </mat-toolbar-row>
+
   </mat-toolbar>
 
 </header>

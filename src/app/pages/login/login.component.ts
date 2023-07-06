@@ -39,7 +39,7 @@ export class LoginComponent {
         ]
       ],
       password: [
-        "achanger",
+        "!!aaaAAA11",
         [
           Validators.required,
 //          Validators.minLength(10),

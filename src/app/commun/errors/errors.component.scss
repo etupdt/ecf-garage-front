@@ -7,3 +7,26 @@
     font-size: 12px;
   }
 }
+
+@media screen and (max-width: 650px) {
+
+  .alert {
+    > div {
+      color: red;
+      font-size: 8px;
+    }
+  }
+
+}
+
+@media screen and (max-width: 450px) {
+
+  .alert {
+    > div {
+      color: red;
+      font-size: 4px;
+    }
+  }
+
+}
+

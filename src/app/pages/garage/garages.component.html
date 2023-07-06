@@ -37,18 +37,18 @@
         </ng-container>
 
         <ng-container matColumnDef="address1">
-          <th mat-header-cell *matHeaderCellDef> Adresse </th>
-          <td mat-cell *matCellDef="let element"> {{element.address1}} </td>
+          <th mat-header-cell *matHeaderCellDef class="falcultative"> Adresse </th>
+          <td mat-cell *matCellDef="let element" class="falcultative"> {{element.address1}} </td>
         </ng-container>
 
         <ng-container matColumnDef="zip">
-          <th mat-header-cell *matHeaderCellDef> Code postal </th>
-          <td mat-cell *matCellDef="let element"> {{element.zip}} </td>
+          <th mat-header-cell *matHeaderCellDef class="falcultative"> Code postal </th>
+          <td mat-cell *matCellDef="let element" class="falcultative"> {{element.zip}} </td>
         </ng-container>
 
         <ng-container matColumnDef="locality">
-          <th mat-header-cell *matHeaderCellDef> Localité </th>
-          <td mat-cell *matCellDef="let element"> {{element.locality}} </td>
+          <th mat-header-cell *matHeaderCellDef class="falcultative"> Localité </th>
+          <td mat-cell *matCellDef="let element" class="falcultative"> {{element.locality}} </td>
         </ng-container>
 
         <ng-container matColumnDef="update">
@@ -75,7 +75,12 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr [ngClass]="isSelected(i)" (click)="displayGarage(i)" mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+        <tr
+          [ngStyle]="isSelectedStyle(i)"
+          [ngClass]="isSelectedClass(i)"
+          (click)="displayGarage(i)"
+          mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
+        ></tr>
 
 <!--        <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" colspan="4">Pas d'utilisateur "{{input.value}}"</td>

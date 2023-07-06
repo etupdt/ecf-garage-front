@@ -57,8 +57,12 @@ export class CarsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isSelected = (index: number) => {
+  isSelectedClass = (index: number) => {
     return this.selectedCar.id === this.cars[index].id && this.parentState !== 'create' ? "selected" : ""
+  }
+
+  isSelectedStyle = (index: number) => {
+    return this.selectedCar.id === this.cars[index].id && this.parentState !== 'create' ? {'background': '#D9777F'} : []
   }
 
   displayCar = (index: number) => {
@@ -146,6 +150,10 @@ export class CarsComponent implements OnInit {
   }
 
   onSamecar = (car: Car) => {
+    if (!car) {
+      this.selectedCar = this.cars[0]
+      return
+    }
     this.cars[this.cars.findIndex(car => car.id === this.selectedCar.id)] = car
     this.selectedCar = car
     this.updateDatasource()

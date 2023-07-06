@@ -40,6 +40,7 @@
             <mat-form-field enabled="'false'">
               <mat-label>Nom</mat-label>
               <input matInput formControlName="name" type="name" name="name" placeholder="Nom"/>
+              <app-errors [field]="name"></app-errors>
             </mat-form-field>
           </mat-grid-tile>
 
@@ -50,6 +51,7 @@
             <mat-form-field class="mat-area">
               <mat-label>Description</mat-label>
               <textarea matInput formControlName="description" type="description" name="description" placeholder="description"></textarea>
+              <app-errors [field]="description"></app-errors>
             </mat-form-field>
           </mat-grid-tile>
 

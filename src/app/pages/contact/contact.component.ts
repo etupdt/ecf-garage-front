@@ -46,6 +46,8 @@ export class ContactComponent implements OnInit {
 
   garage$!: Garage
 
+  sizeTable = 4
+
   constructor(
     private formBuilder: FormBuilder,
     private contactService: ContactService,
@@ -56,6 +58,8 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.sizeTable = window.innerWidth <= 800 ? 2 : 4;
 
     this.state = this.grandParentState ? this.grandParentState : this.state
 
@@ -312,10 +316,11 @@ export class ContactComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
 
-      if (result !== 'Oui')
+      if (result !== 'Oui') {
         return
+      }
 
-      if (this.subject || this.header) {
+      if (this.initSubject || this.header) {
         let contact: Contact = this.contactService.initContact()
         contact.subject = this.initSubject ? this.initSubject : ''
         this.initForm(contact)
@@ -326,6 +331,10 @@ export class ContactComponent implements OnInit {
 
     })
 
+  }
+
+  onResizeTable = (event: UIEvent) => {
+    this.sizeTable = ((event.target! as Window).innerWidth <= 800) ? 2 : 4;
   }
 
   get subject() { return this.contactForm.get('subject')! as FormControl }

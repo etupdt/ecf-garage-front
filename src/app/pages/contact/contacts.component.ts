@@ -80,8 +80,12 @@ export class ContactsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isSelected = (index: number) => {
+  isSelectedClass = (index: number) => {
     return this.selectedContact.id === this.contacts[index].id && this.parentState !== 'create' ? "selected" : ""
+  }
+
+  isSelectedStyle = (index: number) => {
+    return this.selectedContact.id === this.contacts[index].id && this.parentState !== 'create' ? {'background': '#D9777F'} : []
   }
 
   displayContact = (index: number) => {

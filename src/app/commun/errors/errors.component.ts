@@ -14,7 +14,7 @@ export class ErrorsComponent {
   patternMessage = () => {
     switch (this.type) {
       case 'password' : {
-        return 'Le mot de passe doit contenir au moins une lettre minuscule et majuscule, un chiffre et un caratère *-+?!'
+        return 'Au moins une lettre minuscule et majuscule, un chiffre et un caratère *-+?!'
       }
       case 'phone' : {
         return 'Doit être de la forme : 00 00 00 00 00'
