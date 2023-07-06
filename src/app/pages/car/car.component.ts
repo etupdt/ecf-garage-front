@@ -58,6 +58,8 @@ export class CarComponent implements OnInit {
 
   annee: number = 2022
 
+  sizeTable = 4
+
   constructor(
     private formBuilder: FormBuilder,
     private carService: CarService,
@@ -68,6 +70,7 @@ export class CarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sizeTable = window.innerWidth <= 800 ? 2 : 4;
     this.annee = (new Date()).getFullYear()
     this.useBackendImages = environment.useBackendImages + '/'
     this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
@@ -528,6 +531,10 @@ export class CarComponent implements OnInit {
     console.log('photos', photos)
     this.images = photos
     console.log('images', this.car.images)
+  }
+
+  onResizeTable = (event: UIEvent) => {
+    this.sizeTable = ((event.target! as Window).innerWidth <= 800) ? 2 : 4;
   }
 
   get brand() { return this.carForm.get('brand')! as FormControl }

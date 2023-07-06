@@ -1,16 +1,14 @@
 
 @import '../../app.component.scss';
 
-$photo-witdh: 620px;
+$photo-witdh: 100%;
 
 .mat-mdc-form-field {
   font-size: 14px;
 }
 
 .image-div {
-  width: 100%;
   aspect-ratio: 1 / 1;
-  text-align: center;
   margin-bottom: 10px;
 }
 

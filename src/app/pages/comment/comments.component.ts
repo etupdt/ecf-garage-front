@@ -26,7 +26,7 @@ export class CommentsComponent implements OnInit {
   ) { }
 
   comments!: Comment[]
-  commentsUpdated: Comment[] = []
+  commentsUpdated: number[] = []
   isApprovedDisabled: boolean = false
 
   login$: Login = {
@@ -45,7 +45,6 @@ export class CommentsComponent implements OnInit {
   @Input() fromParentHome!: boolean
 
   ngOnInit(): void {
-console.log ('this.fromParentHome', this.fromParentHome)
     this.fromHome = this.fromParentHome;
     this.loginService.listenLogin.subscribe((login) => {
       this.login$ = login as Login
@@ -202,30 +201,31 @@ console.log ('this.fromParentHome', this.fromParentHome)
     this.dataSource.connect().next(this.comments)
   }
 
-  commentsUpdate = (comment: Comment) => {
-    if (this.commentsUpdated.find(c => c.id === comment.id) === undefined) {
-      this.commentsUpdated.push(comment)
+  commentsUpdate = (index: number, checked: boolean) => {
+    this.commentsUpdated = this.commentsUpdated.filter(id => id !== index)
+    if (this.comments[index].isApproved !== checked) {
+      this.commentsUpdated.push(index)
     }
   }
 
   updateApproved = () => {
 
-    this.commentsUpdated.forEach(comment =>
-      this.commentService.putComment(comment).subscribe({
+    this.commentsUpdated.forEach(index => {
+      this.comments[index].isApproved = !this.comments[index].isApproved
+      this.commentService.putComment(this.comments[index]).subscribe({
         next: (res) => {
           this.commentsUpdated = []
-      },
-      error: (error: { error: { message: any; }; }) => {
-        this.dialog.open(MessageDialogComponent, {
-          data: {
-            type: 'Erreur',
-            message1: `Erreur lors de la modification du comment`,
-            message2: error.error.message,
-            delai: 0
-          }
+        },
+        error: (error: { error: { message: any; }; }) => {
+          this.dialog.open(MessageDialogComponent, {
+            data: {
+              type: 'Erreur',
+              message1: `Erreur lors de la modification du comment`,
+              message2: error.error.message,
+              delai: 0
+            }
         })
       }
-    }))
-
+    })})
   }
 }

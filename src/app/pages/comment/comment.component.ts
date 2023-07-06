@@ -67,7 +67,6 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesComment')
     if (this.state === 'create') {
       this.initForm(this.commentService.initComment()
     )} else {
@@ -164,7 +163,6 @@ export class CommentComponent implements OnInit {
       this.commentForm.valueChanges.subscribe(change => {
         this.isUpdated = this.checkChanges()
       })
-      console.log('toto', this.isUpdated, this.fromHome, (this.isUpdated || !this.fromHome))
 
       this.isUpdated = false
 

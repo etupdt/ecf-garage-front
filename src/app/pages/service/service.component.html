@@ -1,12 +1,12 @@
 <div *ngIf="serviceForm" [formGroup]="serviceForm" class="col-1">
 
-  <mat-grid-list cols="13" rowHeight="50px">
+  <mat-grid-list cols="4" rowHeight="50px">
 
-    <mat-grid-tile colspan="9">
+    <mat-grid-tile colspan="2">
       <h3 mat-dialog-title>{{serviceH3Label}}</h3>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile colspan="1">
       <button *ngIf="['update', 'create'].indexOf(state) >= 0 && isUpdated && !serviceForm.invalid" class="button" mat-raised-button (click)="saveService()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -16,7 +16,7 @@
       </button>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile colspan="1">
       <button *ngIf="['update', 'create'].indexOf(state) >= 0" class="button" mat-raised-button (click)="cancel()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>

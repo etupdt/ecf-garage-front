@@ -87,7 +87,7 @@
           <ng-container matColumnDef="isApproved">
             <th mat-header-cell *matHeaderCellDef> Approuvé </th>
             <td mat-cell *matCellDef="let element; let i = index">
-              <mat-checkbox [disabled]="['create', 'update'].indexOf(parentState) >= 0" [(ngModel)]="element.isApproved" (change)="commentsUpdate(element)"></mat-checkbox>
+              <mat-checkbox [disabled]="['create', 'update'].indexOf(parentState) >= 0" #isapproved [checked]="element.isApproved" (change)="commentsUpdate(i, isapproved.checked)"></mat-checkbox>
             </td>
           </ng-container>
 

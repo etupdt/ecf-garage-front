@@ -1,12 +1,12 @@
 <div *ngIf="carForm" [formGroup]="carForm" class="col-1">
 
-  <mat-grid-list cols="13" rowHeight="50px">
+  <mat-grid-list cols="4" rowHeight="50px">
 
-    <mat-grid-tile colspan="9">
+    <mat-grid-tile colspan="2">
       <h3 mat-dialog-title>{{carH3Label}}</h3>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile colspan="1">
       <button *ngIf="['update', 'create'].indexOf(state) >= 0 && isUpdated && !carForm.invalid" class="button" mat-raised-button (click)="saveCar()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -16,7 +16,7 @@
       </button>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile colspan="1">
       <button *ngIf="['update', 'create'].indexOf(state) >= 0" class="button" mat-raised-button (click)="cancel()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -30,9 +30,9 @@
 
   <div class="mat-elevation-z8 detail">
 
-    <mat-grid-list cols="12" rowHeight="70px">
+    <mat-grid-list cols="{{sizeTable}}" rowHeight="70px" (window:resize)="onResizeTable($event)">
 
-      <mat-grid-tile colspan="6">
+      <mat-grid-tile colspan="2">
         <mat-form-field enabled="'false'">
           <mat-label>Marque</mat-label>
           <input matInput formControlName="brand" type="brand" name="brand" placeholder="Marque"/>
@@ -40,7 +40,7 @@
         </mat-form-field>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="6">
+      <mat-grid-tile colspan="2">
         <mat-form-field>
           <mat-label>Modèle</mat-label>
           <input matInput formControlName="model" type="model" name="model" placeholder="Modèle">
@@ -48,7 +48,7 @@
         </mat-form-field>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="4">
+      <mat-grid-tile colspan="{{sizeTable}}">
         <mat-form-field>
           <mat-label>Prix</mat-label>
           <input matInput formControlName="price" type="price" name="price" placeholder="Prix">
@@ -56,7 +56,7 @@
         </mat-form-field>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="4">
+      <mat-grid-tile colspan="2">
         <mat-form-field>
           <mat-label>Année</mat-label>
           <input matInput formControlName="year" type="year" name="year" placeholder="Année">
@@ -64,7 +64,7 @@
         </mat-form-field>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="4">
+      <mat-grid-tile colspan="2">
         <mat-form-field>
           <mat-label>Kilomêtre</mat-label>
           <input matInput formControlName="kilometer" type="kilometer" name="kilometer" placeholder="Kilomêtre">
@@ -72,7 +72,7 @@
         </mat-form-field>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="12">
+      <mat-grid-tile colspan="{{sizeTable}}">
         <mat-form-field *ngIf="car" >
           <mat-label>Options</mat-label>
           <mat-select formControlName="options" multiple [(ngModel)]="carOptions" [compareWith]="compareOptions">
@@ -81,16 +81,13 @@
         </mat-form-field>
       </mat-grid-tile>
 
-      <mat-grid-tile colspan="4">
-        <button [disabled]="carForm.disabled" type="button" mat-raised-button (click)="fileInputPrincipale.click()">Image principale</button>
-      </mat-grid-tile>
+    </mat-grid-list>
 
-      <mat-grid-tile colspan="8">
-        <button [disabled]="carForm.disabled" type="button" mat-raised-button (click)="fileInputGallery.click()">Ajouter à la Gallery</button>
-      </mat-grid-tile>
+    <mat-grid-list cols="{{sizeTable}}" rowHeight="400px" (window:resize)="onResizeTable($event)">
 
-      <mat-grid-tile colspan="4" rowspan="4">
-        <div class="image-div">
+      <mat-grid-tile colspan="{{sizeTable}}">
+        <div>
+          <button [disabled]="carForm.disabled" type="button" mat-raised-button (click)="fileInputPrincipale.click()">Image principale</button>
           <img *ngIf="image !== null && image.filename !== ''" src="{{image.filename.indexOf('data:image') === 0? image.filename : useBackendImages + '/' + image.filename}}" alt="" [ngClass]="imageClass" >
         </div>
       </mat-grid-tile>
@@ -98,8 +95,9 @@
       <input hidden (change)="onFileSelected('gallery')" #fileInputGallery type="file" id="gallery">
       <input hidden (change)="onFileSelected('principale')" #fileInputPrincipale type="file" id="principale">
 
-      <mat-grid-tile colspan="8" rowspan="4">
+      <mat-grid-tile colspan="{{sizeTable}}">
         <div class="gallery">
+          <button [disabled]="carForm.disabled" type="button" mat-raised-button (click)="fileInputGallery.click()">Ajouter à la Gallery</button>
           <app-gallery
             class="defile"
             *ngIf="car"
@@ -144,30 +142,28 @@
 
       <div *ngFor="let featureForm of features.controls; let i = index">
 
-        <mat-grid-list cols="12" rowHeight="70px" [formGroupName]="i"
+        <mat-grid-list rowHeight="90px" [formGroupName]="i"
+          cols="{{sizeTable}}" (window:resize)="onResizeTable($event)"
         >
 
-          <mat-grid-tile colspan="3">
-            <mat-form-field enabled="'false'">
-              <mat-label>Nom</mat-label>
-              <input matInput formControlName="name" type="name" name="name" placeholder="Nom"/>
-            </mat-form-field>
-          </mat-grid-tile>
-
-          <mat-grid-tile colspan="8">
-            <mat-form-field>
-              <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description" type="description" name="description" placeholder="description"></textarea>
-            </mat-form-field>
-          </mat-grid-tile>
-
-          <mat-grid-tile colspan="1">
+          <mat-grid-tile colspan="2">
             <div *ngIf="['update', 'create'].indexOf(state) >= 0" (click)="deleteFeature(i)">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                 <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
               </svg>
             </div>
+            <mat-form-field enabled="'false'">
+              <mat-label>Nom</mat-label>
+              <input matInput formControlName="name" type="name" name="name" placeholder="Nom"/>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="2">
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" type="description" name="description" placeholder="description"></textarea>
+            </mat-form-field>
           </mat-grid-tile>
 
         </mat-grid-list>
