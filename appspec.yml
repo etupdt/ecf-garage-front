@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+#  - source: scripts/httpd-vhosts-443.conf
+#    destination: /etc/httpd/conf/
+hooks:
+   BeforeInstall:
+    - location: scripts/startapache.sh
+      runas: root
+   AfterInstall:
+    - location: scripts/restartapache.sh
+      runas: root
