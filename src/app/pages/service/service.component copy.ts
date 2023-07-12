@@ -48,7 +48,6 @@ export class ServiceComponent implements OnInit {
     .subscribe((event) => {
       filtre.unsubscribe()
       this.quit()
-      console.log(event);
     });*/
    }
   ngOnInit(): void {
@@ -254,9 +253,6 @@ export class ServiceComponent implements OnInit {
                   delai: 0
                 }
               })
-            },
-            complete () {
-              console.log('Sauvegarde put service complete')
             }
           })
 
@@ -291,9 +287,6 @@ export class ServiceComponent implements OnInit {
             delai: 0
           }
         })
-      },
-      complete () {
-        console.log('getServices complete')
       }
     })
 

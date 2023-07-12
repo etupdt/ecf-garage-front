@@ -33,7 +33,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const token = this.loginService.getToken();
-    console.log(this.loginService.login.pipe(last()))
     if (token && this.login$.roles.indexOf(route.data['role']) >= 0) {
       return true;
     } else {

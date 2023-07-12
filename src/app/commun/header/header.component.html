@@ -28,7 +28,7 @@
 
       <span class="title">Automobiles</span>
       <div class="login-zone">
-        <a mat-button (click)="callRoute('user')" class="email">{{login.email}}</a>
+        <a mat-button class="email">{{login.email}}</a>
         <mat-icon class="login-icon">
           <ng-container *ngIf="login.email === ''" [ngTemplateOutlet]="sign"></ng-container>
           <ng-container *ngIf="login.email !== ''" [ngTemplateOutlet]="signout"></ng-container>

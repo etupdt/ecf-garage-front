@@ -115,7 +115,7 @@ export class CommentComponent implements OnInit {
             Validators.required,
             Validators.minLength(2),
             Validators.maxLength(32),
-            Validators.pattern(/^[a-zA-Z -']{0,}$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         lastname: [
@@ -123,14 +123,14 @@ export class CommentComponent implements OnInit {
             Validators.required,
             Validators.minLength(2),
             Validators.maxLength(32),
-            Validators.pattern(/^[a-zA-Z -']{0,}$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         comment: [
           comment.comment, [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='\/]*$/),
           ]
         ],
         note: [
@@ -186,7 +186,7 @@ export class CommentComponent implements OnInit {
   formatComment = (comment: Comment): Comment => {
 
     return comment.deserialize({
-      id: this.commentForm.get("id")?.value,
+      id: this.comment ? this.comment.id : 0,
       firstname: this.commentForm.get("firstname")?.value,
       lastname: this.commentForm.get("lastname")?.value,
       comment: this.commentForm.get("comment")?.value,

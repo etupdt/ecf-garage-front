@@ -8,18 +8,11 @@ $photo-witdh: 100%;
 }
 
 .image-div {
-  aspect-ratio: 1 / 1;
-  margin-bottom: 10px;
-}
-
-.image-h {
-  width: 100%;
-  height: auto;
-}
-
-.image-v {
-  width: auto;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
   height: 100%;
+  justify-content: center;
 }
 
 .gallery {
@@ -41,4 +34,5 @@ $photo-witdh: 100%;
 
 .mat-area {
   height: 100%;
+  margin-top: 60px;
 }

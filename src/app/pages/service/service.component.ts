@@ -48,7 +48,6 @@ export class ServiceComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesService')
     if (this.state === 'create') {
       this.initForm(this.serviceService.initService()
     )} else {
@@ -98,7 +97,7 @@ export class ServiceComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/^[a-zA-Z -\']*$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         description: [
@@ -106,7 +105,7 @@ export class ServiceComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]*$/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='\/]*$/),
           ]
         ],
         hash: [
@@ -165,7 +164,7 @@ export class ServiceComponent implements OnInit {
   formatService = (service: Service): Service => {
 
     return service.deserialize({
-      id: this.serviceForm.get("id")?.value,
+      id: this.service ? this.service.id : 0,
       name: this.serviceForm.get("name")?.value,
       description: this.serviceForm.get("description")?.value,
       image: {

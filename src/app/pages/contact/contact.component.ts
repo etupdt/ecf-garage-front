@@ -79,8 +79,6 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesContact ' + this.state)
-
     if (this.state === 'create') {
       let contact: Contact = this.contactService.initContact()
       contact.subject = this.initSubject ? this.initSubject : ''
@@ -131,7 +129,7 @@ export class ContactComponent implements OnInit {
           contact.subject, [
             Validators.required,
             Validators.minLength(5),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/)
+            Validators.pattern(/^[a-zA-Z0-9 -éèàêç]*$/)
           ]
         ],
         firstname: [
@@ -139,7 +137,7 @@ export class ContactComponent implements OnInit {
             Validators.required,
             Validators.minLength(2),
             Validators.maxLength(32),
-            Validators.pattern(/^[0-9a-zA-Z -']{0,}$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         lastname: [
@@ -147,20 +145,21 @@ export class ContactComponent implements OnInit {
             Validators.required,
             Validators.minLength(2),
             Validators.maxLength(32),
-            Validators.pattern(/^[0-9a-zA-Z -']{0,}$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         message: [
           contact.message, [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]{0,}/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='\/]*$/),
           ]
         ],
         email: [
           contact.email, [
             Validators.required,
-            Validators.email
+            Validators.email,
+            Validators.pattern(/^.{3,}\@.+\..+$/)
           ]
         ],
         phone: [
@@ -215,7 +214,7 @@ export class ContactComponent implements OnInit {
   formatContact = (contact: Contact): Contact => {
 
     return contact.deserialize({
-      id: this.contactForm.get("id")?.value,
+      id: this.contact ? this.contact.id : 0,
       subject: this.contactForm.get("subject")?.value,
       firstname: this.contactForm.get("firstname")?.value,
       lastname: this.contactForm.get("lastname")?.value,
@@ -254,7 +253,6 @@ export class ContactComponent implements OnInit {
           })
         },
         error: (error: { error: {message: string} }) => {
-          console.log(error)
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Erreur',

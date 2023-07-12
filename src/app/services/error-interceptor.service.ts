@@ -17,7 +17,6 @@ export class ErrorInterceptorService {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         if (error.error.errors) {
           throw({
             error: {

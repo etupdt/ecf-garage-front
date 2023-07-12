@@ -4,7 +4,9 @@
   <div class="car-detail">
     <div class="car-photos">
       <h3>{{car.brand}} {{car.model}}</h3>
-      <img src="{{useBackendImages + '/' + car.image.filename}}" alt="">
+      <div class="image-div">
+        <img src="{{useBackendImages + '/' + car.image.filename}}" alt="">
+      </div>
       <div class="car-gallery">
         <div class="gallery">
           <app-gallery

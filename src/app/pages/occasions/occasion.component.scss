@@ -6,6 +6,14 @@
   flex-direction: row;
 }
 
+.image-div {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  height: 400px;
+  justify-content: center;
+}
+
 .car-gallery {
   margin-left: auto;
   margin-right: auto;

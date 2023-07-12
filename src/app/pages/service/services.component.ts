@@ -30,13 +30,16 @@ export class ServicesComponent implements OnInit {
     this.serviceService.getServices().subscribe({
       next: (res: Service[]) => {
         this.services = res
-        this.selectedService = this.services[0]
+        if (this.services[0])
+          this.selectedService = this.services[0]
+        else
+          this.serviceService.initService()
       },
       error: (error: { error: { message: any; }; }) => {
         this.dialog.open(MessageDialogComponent, {
           data: {
             type: 'Erreur',
-            message1: `Erreur lors de la création du service`,
+            message1: `Erreur lors de la lecture des services`,
             message2: error.error.message,
             delai: 0
           }

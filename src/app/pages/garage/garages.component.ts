@@ -30,7 +30,6 @@ export class GaragesComponent implements OnInit {
 
   ngOnInit(): void {
     this.garageService.listenGarage.subscribe((garage) => {
-      console.log(garage)
       this.garages = []
       this.garages.push(garage)
       this.selectedGarage$ = garage as Garage

@@ -58,7 +58,6 @@ export class UserComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesUser')
     if (this.state === 'create') {
       this.initForm(this.userService.initUser())
     } else {
@@ -106,15 +105,14 @@ export class UserComponent implements OnInit {
           user.email,
           [
             Validators.required,
-            Validators.email
+            Validators.email,
+            Validators.pattern(/^.{3,}\@.+\..+$/)
           ]
         ],
         password: [
           '',
           [
-            Validators.required,
-            Validators.minLength(10),
-            Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[\*\-\+\?\!])[0-9a-zA-Z\*\-\+\?\!]+$/)
+            Validators.pattern(/(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[\*\-\+\?\!])[0-9a-zA-Z\*\-\+\?\!]+|^$)/)
           ]
         ],
         firstname: [
@@ -123,7 +121,7 @@ export class UserComponent implements OnInit {
             Validators.required,
             Validators.minLength(2),
             Validators.maxLength(32),
-            Validators.pattern(/^[0-9a-zA-Z -']{0,}$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         lastname: [
@@ -132,7 +130,7 @@ export class UserComponent implements OnInit {
             Validators.required,
             Validators.minLength(2),
             Validators.maxLength(32),
-            Validators.pattern(/^[0-9a-zA-Z -']{0,}$/)
+            Validators.pattern(/^[a-zA-Z -éèàêç]*$/)
           ]
         ],
         phone: [
@@ -192,7 +190,7 @@ export class UserComponent implements OnInit {
   formatUser = (user: User): User => {
 
     return user.deserialize({
-      id: this.user.id,
+      id: this.user ? this.user.id : 0,
       email: this.userForm.get("email")?.value,
       password: this.state === 'create' ? '!!aaaAAA11' : this.userForm.get("password")?.value,
       firstname: this.userForm.get("firstname")?.value,

@@ -34,27 +34,6 @@ const routes: Routes = [
     canActivateChild: [AuthGuard],
     children: [
       {
-        path: 'Garage',
-        component: GaragesComponent,
-        data: {
-          role: 'ROLE_ADMIN'
-        }
-      },
-      {
-        path: 'Service',
-        component: ServicesComponent,
-        data: {
-          role: 'ROLE_ADMIN'
-        }
-      },
-      {
-        path: 'User',
-        component: UsersComponent,
-        data: {
-          role: 'ROLE_USER'
-        }
-      },
-      {
         path: 'Car',
         component: CarsComponent,
         data: {
@@ -76,12 +55,33 @@ const routes: Routes = [
         }
       },
       {
+        path: 'Garage',
+        component: GaragesComponent,
+        data: {
+          role: 'ROLE_ADMIN'
+        }
+      },
+      {
         path: 'Option',
         component: OptionsComponent,
         data: {
           role: 'ROLE_USER'
         }
       },
+      {
+        path: 'Service',
+        component: ServicesComponent,
+        data: {
+          role: 'ROLE_ADMIN'
+        }
+      },
+      {
+        path: 'User',
+        component: UsersComponent,
+        data: {
+          role: 'ROLE_USER'
+        }
+      }
     ]
   },
   {

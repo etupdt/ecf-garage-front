@@ -64,7 +64,7 @@ export class CommentsComponent implements OnInit {
         this.dialog.open(MessageDialogComponent, {
           data: {
             type: 'Erreur',
-            message1: `Erreur lors de la création du service`,
+            message1: `Erreur lors de la lecture des commentaires`,
             message2: error.error.message,
             delai: 0
           }

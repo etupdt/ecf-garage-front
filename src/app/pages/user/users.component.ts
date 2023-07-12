@@ -53,7 +53,7 @@ export class UsersComponent implements OnInit {
         this.dialog.open(MessageDialogComponent, {
           data: {
             type: 'Erreur',
-            message1: `Erreur lors de la création du service`,
+            message1: `Erreur lors de la lecture des utilisateurs`,
             message2: error.error.message,
             delai: 0
           }
@@ -67,7 +67,6 @@ export class UsersComponent implements OnInit {
   dataSource = new MatTableDataSource(this.users);
 
   applyFilter(event: Event) {
-    console.log((event.target as HTMLInputElement).value)
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }

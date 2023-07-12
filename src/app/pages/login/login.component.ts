@@ -1,11 +1,11 @@
 
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { LoginService } from 'src/app/services/login.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +20,7 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
+    private userService: UserService,
     private router: Router,
     public dialog: MatDialog
   ) {
@@ -35,15 +36,16 @@ export class LoginComponent {
         "vincent.parrot@garage.com",
         [
           Validators.required,
-          Validators.email
+          Validators.email,
+          Validators.pattern(/^.{3,}\@.+\..+$/)
         ]
       ],
       password: [
         "!!aaaAAA11",
         [
           Validators.required,
-//          Validators.minLength(10),
-//          Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*\-\+\?\!])[0-9a-zA-Z\*\+\?\!]+$/)
+          Validators.minLength(10),
+          Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[\*\-\+\?\!])[0-9a-zA-Z\-\*\+\?\!]+$/)
         ]
       ],
     })
@@ -73,6 +75,35 @@ export class LoginComponent {
           data: {
             type: 'Erreur',
             message1: `Erreur de connexion pour l'email : ${email}`,
+            message2: error.error.message,
+            delai: 0
+          }
+        })
+      }
+    })
+
+  }
+
+  sendPasswordMail = () => {
+
+    const email = this.signInForm.get("email")!.value
+
+    this.userService.reinitPassword(email).subscribe({
+      next: (res: any) => {
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Information',
+            message1: `Votre demande de réinitialisation du mot de passe a été envoyé par mail !`,
+            message2: '',
+            delai: 0
+          }
+        })
+      },
+      error: (error: any) => {
+        this.dialog.open(MessageDialogComponent, {
+          data: {
+            type: 'Erreur',
+            message1: `Erreur lors de la demande de réinitialisation du mot de passe : ${email}`,
             message2: error.error.message,
             delai: 0
           }

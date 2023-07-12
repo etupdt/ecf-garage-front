@@ -47,7 +47,6 @@ export class GarageComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesGarage', changes)
     if (this.state === 'create') {
       this.initForm(new Garage().deserialize(this.garageService.garageInit)
     )} else {
@@ -244,7 +243,7 @@ export class GarageComponent implements OnInit {
   formatGarage = (garage: Garage): Garage => {
 
     return garage.deserialize({
-      id: this.garage.id,
+      id: this.garage ? this.garage.id : 0,
       raison: this.garageForm.get("raison")?.value,
       address1: this.garageForm.get("address1")?.value,
       address2: this.garageForm.get("address2")?.value,
@@ -271,7 +270,7 @@ export class GarageComponent implements OnInit {
 
       this.garageService.postGarage(garage).subscribe({
         next: (res) => {
-          this.newgarage.emit(garage)
+          this.newgarage.emit(new Garage().deserialize(res[0]))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -298,7 +297,8 @@ export class GarageComponent implements OnInit {
 
       this.garageService.putGarage(garage).subscribe({
         next: (res) => {
-          this.samegarage.emit(garage)
+          console.log(res)
+          this.samegarage.emit(new Garage().deserialize(res))
           this.dialog.open(MessageDialogComponent, {
             data: {
               type: 'Information',
@@ -368,7 +368,6 @@ export class GarageComponent implements OnInit {
         res.forEach((service: Service) => {
           const serviceDeserialized = new Service().deserialize(service as Service)
           this.serviceList.push(serviceDeserialized)
-          console.log('res', serviceDeserialized)
         })
       },
       error: (error: { error: { message: any; }; }) => {

@@ -84,4 +84,11 @@ export class UserService {
 
   }
 
+  reinitPassword = (email: string) => {
+    return this.http.post(
+      environment.useBackend + `/api/user/reinit`,
+      {email: email}
+    )
+  }
+
 }

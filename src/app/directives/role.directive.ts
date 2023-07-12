@@ -35,7 +35,6 @@ export class RoleDirective {
         }
 
         default : {
-          console.log('roles', `ROLE_${r}`)
           if (login.roles.indexOf(`ROLE_${r}`) < 0) {
             this.viewContainer.clear()
           } else {

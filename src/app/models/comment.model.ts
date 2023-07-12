@@ -40,7 +40,7 @@ export class Comment {
   }
 
   deserialize(data: any) {
-    console.log(data)
+
     this.id = data.id
     this.firstname = data.firstname
     this.lastname = data.lastname

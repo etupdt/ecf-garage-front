@@ -41,7 +41,6 @@ export class OptionComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('onChangesOption')
     if (this.state === 'create') {
       this.initForm(this.optionService.initOption()
     )} else {
@@ -90,7 +89,7 @@ export class OptionComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/^[a-zA-Z -\']*$/)
+            Validators.pattern(/^[a-zA-Z0-9 -éèàêç]*$/)
           ]
         ],
         description: [
@@ -98,7 +97,7 @@ export class OptionComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.pattern(/[0-9a-zA-Z -+*_='/]*$/),
+            Validators.pattern(/[0-9a-zA-Z -+*_='\/]*$/),
           ]
         ],
       })
@@ -143,7 +142,7 @@ export class OptionComponent implements OnInit {
   formatOption = (option: Option): Option => {
 
     return option.deserialize({
-      id: this.optionForm.get("id")?.value,
+      id: this.option ? this.option.id : 0,
       name: this.optionForm.get("name")?.value,
       description: this.optionForm.get("description")?.value,
     })

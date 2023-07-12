@@ -141,7 +141,7 @@ export class CarComponent implements OnInit {
           ]
         ],
         price: [
-          car.price,
+          car.price === 0 ? '' : car.price,
           [
             Validators.required,
             Validators.pattern(/[0-9]{0,}/),
@@ -149,7 +149,7 @@ export class CarComponent implements OnInit {
           ]
         ],
         year: [
-          car.year,
+          car.year === 0 ? '' : car.year,
           [
             Validators.required,
             Validators.pattern(/[0-9]{0,}/),
@@ -158,7 +158,7 @@ export class CarComponent implements OnInit {
           ]
         ],
         kilometer: [
-          car.kilometer,
+          car.kilometer === 0 ? '' : car.kilometer,
           [
             Validators.required,
             Validators.pattern(/[0-9]{0,}/),
@@ -311,7 +311,7 @@ export class CarComponent implements OnInit {
     }
 
     return car.deserialize({
-      id: this.carForm.get("id")?.value,
+      id: this.car ? this.car.id : 0,
       brand: this.carForm.get("brand")?.value,
       model: this.carForm.get("model")?.value,
       description: this.carForm.get("description")?.value,
@@ -369,7 +369,6 @@ export class CarComponent implements OnInit {
 
       this.carService.putCar(this.frontImage).subscribe({
         next: (res) => {
-          console.log('res', res)
           car = new Car().deserialize(res)
           this.samecar.emit(car)
           this.dialog.open(MessageDialogComponent, {
@@ -417,13 +416,11 @@ export class CarComponent implements OnInit {
         if (origine === 'principale') {
           this.frontImage.append("car_image", inputNode.files[0]);
           this.carForm.get("hash")?.setValue(hash)
-          console.log('image', this.image)
           this.image = new MImage().deserialize({
             id: 0,
             filename: reader.result as string,
             hash: hash
           } as MImage)
-          console.log('image', this.image)
         } else {
           this.frontImage.append(`${this.imageGalleryIndex}_image`, inputNode.files[0]);
           this.images.push({
@@ -528,9 +525,7 @@ export class CarComponent implements OnInit {
   }
 
   onSamephotos = (photos: Photo[]) => {
-    console.log('photos', photos)
     this.images = photos
-    console.log('images', this.car.images)
   }
 
   onResizeTable = (event: UIEvent) => {
