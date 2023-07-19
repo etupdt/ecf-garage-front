@@ -143,6 +143,14 @@ $photo-witdh: 600px;
     max-width: $photo-witdh;
   }
 
+  .div-image {
+
+    width: 330px;
+    height: 180px;
+    margin: auto;
+
+  }
+
 }
 
 @media screen and (max-width: 450px) {

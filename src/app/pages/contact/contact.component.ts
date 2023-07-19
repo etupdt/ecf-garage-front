@@ -129,7 +129,7 @@ export class ContactComponent implements OnInit {
           contact.subject, [
             Validators.required,
             Validators.minLength(5),
-            Validators.pattern(/^[a-zA-Z0-9 -éèàêç]*$/)
+            Validators.pattern(/^[a-zA-Z0-9 -éèàêç€]*$/)
           ]
         ],
         firstname: [
