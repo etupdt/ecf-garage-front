@@ -5,16 +5,38 @@
   width: 270px;
 }
 
-.image-div {
-  border-radius: 6px 6px 0px 0px;
+.car-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.div-image {
+
   display: flex;
-  align-items: center;
-  overflow: hidden;
+  flex-direction: column;
   justify-content: center;
-  img {
-    width: 100%;
+
+  width: 270px;
+  height: 147px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 6px 6px 0px 0px;
+
+  div {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: auto;
+
+    img {
+      margin: auto;
+      width: 100%;
+      height: auto;
+    }
+
   }
-  max-height: 147px;
+
 }
 
 .occasions {

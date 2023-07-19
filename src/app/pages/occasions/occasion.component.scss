@@ -30,6 +30,37 @@ $photo-witdh: 600px;
   }
 }
 
+.div-image {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 540px;
+  height: 294px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 6px 6px 0px 0px;
+
+  div {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: auto;
+
+    img {
+      margin: auto;
+      width: 100%;
+      height: auto;
+    }
+
+  }
+
+}
+
+
+
 .gallery {
   overflow-x: hidden;
   max-width: $photo-witdh;

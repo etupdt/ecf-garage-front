@@ -95,6 +95,16 @@
         </div>
       </mat-grid-tile>
 
+    </mat-grid-list>
+
+    <div class="div-image">
+      <div>
+        <img *ngIf="image !== null && image.filename !== ''" src="{{image.filename.indexOf('data:image') === 0? image.filename : useBackendImages + '/' + image.filename}}" alt="" [ngClass]="imageClass" >
+      </div>
+    </div>
+
+    <mat-grid-list cols="{{sizeTable}}" rowHeight="400px" (window:resize)="onResizeTable($event)">
+
       <input hidden (change)="onFileSelected('gallery')" #fileInputGallery type="file" id="gallery">
       <input hidden (change)="onFileSelected('principale')" #fileInputPrincipale type="file" id="principale">
 

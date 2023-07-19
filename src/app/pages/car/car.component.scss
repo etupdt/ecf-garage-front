@@ -8,11 +8,40 @@ $photo-witdh: 100%;
 }
 
 .image-div {
+  aspect-ratio: 1 / 1;
+  margin-bottom: 10px;
+}
+
+.div-image {
+
   display: flex;
-  align-items: center;
-  overflow: hidden;
-  height: 100%;
+  flex-direction: column;
   justify-content: center;
+
+  width: 500px;
+  height: 273px;
+  margin: auto;
+  overflow: hidden;
+
+  div {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: auto;
+
+  }
+
+}
+
+.image-h {
+  width: 500px;
+  height: auto;
+
+}
+
+.image-v {
+  width: auto;
 }
 
 .gallery {
