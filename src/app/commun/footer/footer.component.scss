@@ -14,6 +14,11 @@ footer {
   width: 100%;
 }
 
+.reseaux-sociaux {
+  display: flex;
+  flex-direction: row;
+}
+
 .icon-facebook {
   background: url('/assets/img/facebook.svg') no-repeat center;
 }
@@ -38,15 +43,19 @@ ul {
 
 .hours {
   width: 100%;
-  span {
-    text-align: center;
+  text-align: center;
+  margin: 5px;
+  > span {
+    width: 100%;
   }
-  div ul {
+  ul {
+    margin-top: 5px;
     li {
       p {
         width: 200px;
         margin: 0px;
         padding-left: 20px;
+        text-align: center;
       }
       display: flex;
       flex-direction: row;

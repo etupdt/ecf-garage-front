@@ -39,7 +39,9 @@ export class HttpInterceptorService {
 
         return next.handle(request)
 
-      } else {
+      }
+
+      else {
 
         return next.handle(request)
 

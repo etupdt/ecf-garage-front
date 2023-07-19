@@ -33,6 +33,7 @@ export class FooterComponent implements OnInit {
       img: 'icon-instagram icon'
     },
   ]
+  
   constructor(
     private garageService: GarageService,
     private dialog: MatDialog

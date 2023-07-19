@@ -21,13 +21,16 @@
   <div *ngIf="cars" class="car-cards">
 
     <mat-card *ngFor="let car of (cars | filter:filters:filtre)" class="car-card">
-      <div class="image-div">
-        <img
-          mat-card-image
-          src="{{useBackendImages + '/' + car.image.filename}}"
-          alt="Photo of a Shiba Inu"
-          orientable
-        >
+      <div class="div-image">
+        <div>
+          <img
+            mat-card-image
+            src="{{useBackendImages + '/' + car.image.filename}}"
+            alt="Photo of a Shiba Inu"
+            orientable
+            [routerLink]="['/occasion', car.id]"
+          >
+        </div>
       </div>
       <mat-card-content>
         <mat-card-header>

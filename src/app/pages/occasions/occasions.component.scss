@@ -10,23 +10,33 @@
   background-size: cover;
 }
 
-.image-div {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  text-align: center;
+.div-image {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 270px;
+  height: 147px;
   margin: auto;
+  overflow: hidden;
   border-radius: 6px 6px 0px 0px;
-}
 
-.image-h {
-  margin: auto;
-  width: 100%;
-  height: auto;
-}
+  div {
 
-.image-v {
-  margin: auto;
-  width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: auto;
+
+    img {
+      margin: auto;
+      width: 100%;
+      height: auto;
+    }
+
+  }
+
 }
 
 .occasions {
