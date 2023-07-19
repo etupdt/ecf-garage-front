@@ -95,7 +95,7 @@
       </div>
     </div>
 
-    <mat-grid-list cols="{{sizeTable}}" rowHeight="400px" (window:resize)="onResizeTable($event)">
+    <mat-grid-list cols="{{sizeTable}}" rowHeight="70px" (window:resize)="onResizeTable($event)">
 
       <input hidden (change)="onFileSelected('gallery')" #fileInputGallery type="file" id="gallery">
       <input hidden (change)="onFileSelected('principale')" #fileInputPrincipale type="file" id="principale">
