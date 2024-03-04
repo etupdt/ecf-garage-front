@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -90,7 +90,13 @@ export class GarageService {
 
     return this.http.post(
       environment.useBackend + `/api/garage/raison`,
-      {raison: raison}
+      {raison: raison},
+      // { 
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Request-Headers': 'X-Requested-With'
+      //   })
+      // }
     )
 
   }

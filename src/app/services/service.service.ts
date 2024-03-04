@@ -34,7 +34,7 @@ export class ServiceService {
 
   putService(service: FormData): Observable<any> {
 
-    return this.http.post(
+    return this.http.put(
       environment.useBackend + `/api/service`,
       service
     )
