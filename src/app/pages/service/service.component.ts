@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
 import { Service } from 'src/app/models/service.model';
+import { GarageService } from 'src/app/services/garage.service';
 import { ServiceService } from 'src/app/services/service.service';
 import { environment } from 'src/environments/environment';
 import { Md5 } from 'ts-md5';

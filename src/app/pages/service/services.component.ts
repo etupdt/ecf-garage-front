@@ -3,7 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { MessageDialogComponent } from 'src/app/dialogs/message-dialog/message-dialog.component';
+import { Garage } from 'src/app/models/garage.model';
 import { Service } from 'src/app/models/service.model';
+import { GarageService } from 'src/app/services/garage.service';
 import { ServiceService } from 'src/app/services/service.service';
 
 @Component({
@@ -16,16 +18,20 @@ export class ServicesComponent implements OnInit {
 
   constructor(
     private serviceService: ServiceService,
+    private garageService: GarageService,
     public dialog: MatDialog,
   ) { }
 
   services!: Service[]
+  garage$!: Garage
 
   selectedService: Service = this.serviceService.initService()
   newService!: Service
   parentState: string = 'display'
 
   ngOnInit(): void {
+
+    this.garageService.listenGarage.subscribe((garage) => {this.garage$ = garage as Garage})
 
     this.serviceService.getServices().subscribe({
       next: (res: Service[]) => {
@@ -150,6 +156,9 @@ export class ServicesComponent implements OnInit {
   }
 
   onSameservice = (service: Service) => {
+    let index
+    if (index = this.garage$.services.findIndex(service => service.id === this.selectedService?.id))
+      this.garage$.services[index] = service
     this.services[this.services.findIndex(service => service.id === this.selectedService?.id)] = service
     this.selectedService = service
     this.updateDatasource()

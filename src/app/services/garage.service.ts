@@ -18,7 +18,7 @@ export class GarageService {
     address1: '',
     address2: '',
     zip: '',
-    locality: '',
+    locality: '', 
     day1hours: '',
     day2hours: '',
     day3hours: '',

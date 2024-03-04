@@ -9,7 +9,7 @@ import { ImageService } from './image.service';
   providedIn: 'root'
 })
 export class ServiceService {
-
+ 
   constructor(
     private http: HttpClient,
     private imageService: ImageService
@@ -34,7 +34,7 @@ export class ServiceService {
 
   putService(service: FormData): Observable<any> {
 
-    return this.http.put(
+    return this.http.post(
       environment.useBackend + `/api/service`,
       service
     )
