@@ -1,5 +1,5 @@
 
-$content = 'GIT_REPO=https://github.com/etupdt/ecf-garage-front.git --branch feature/security' + "`n`r"
+$content = 'GIT_REPO=https://github.com/etupdt/ecf-garage-front.git --branch dev' + "`n`r"
 $content += 'BUILD_OPTIONS=--no-cache' + "`n`r"
 # $content += 'ENV=development'
 $content += 'ENV=production'
