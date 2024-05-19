@@ -297,7 +297,6 @@ export class GarageComponent implements OnInit {
 
       this.garageService.putGarage(garage).subscribe({
         next: (res) => {
-          console.log(res)
           this.samegarage.emit(new Garage().deserialize(res))
           this.dialog.open(MessageDialogComponent, {
             data: {
